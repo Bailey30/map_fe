@@ -1,0 +1,6 @@
+.userMarker{
+    height: 30px;
+}
+.userMarker > img {
+    height: 100%;
+}
