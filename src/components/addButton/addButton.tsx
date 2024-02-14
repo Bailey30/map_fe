@@ -6,6 +6,7 @@ import { TOGGLE_IS_ADDING } from "@/redux/controlsSlice"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { usePathname } from "next/navigation"
+import path from "path"
 
 export default function AddButton() {
     const dispatch = useAppDispatch()
@@ -13,8 +14,9 @@ export default function AddButton() {
     const pathname = usePathname()
     const isAdding = useAppSelector((state) => state.controls.isAdding)
     function onClick() {
+        console.log(pathname)
         dispatch(TOGGLE_IS_ADDING())
-       if (pathname === "/review"){
+       if (pathname.includes("/review")){
            router.push("/")
        }
     }

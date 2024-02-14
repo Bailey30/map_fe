@@ -12,13 +12,17 @@ export const controlsSlice = createSlice({
     reducers: {
         TOGGLE_IS_ADDING: (state:controlsState) =>{
             state.isAdding = !state.isAdding
+        },
+        SET_IS_ADDING:(state:controlsState, action)=> {
+            state.isAdding = action.payload
         }
     }
 })
 
 
 export const {
-    TOGGLE_IS_ADDING
-}= controlsSlice.actions
+    TOGGLE_IS_ADDING,
+    SET_IS_ADDING
+} = controlsSlice.actions
 
 export default controlsSlice.reducer

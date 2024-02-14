@@ -1,0 +1,17 @@
+.pageContainer {
+    position: absolute;
+    z-index: 102;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

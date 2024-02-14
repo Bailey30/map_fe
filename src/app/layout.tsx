@@ -3,6 +3,7 @@ import "./globals.css";
 import StoreProvider from "@/components/storeProvider";
 import QueryProvider from "@/utils/queryProvider";
 import MainContainer from "@/components/mainContainer/mainContainer";
+import RouteChangeListener from "@/utils/routeChangeListener";
 
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
                     <StoreProvider>
                         <main style={{ "position": "relative" }}>
                             <MainContainer />
+                            <RouteChangeListener/>
                             {children}
                         </main>
                     </StoreProvider>

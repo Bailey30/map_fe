@@ -11,10 +11,17 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import useMarkers from "@/utils/markers"
 import { Review } from "@/utils/types"
 import { UserMarker } from "../userMarker/userMarker"
+import test from "../mainContainer/test"
+import useTest from "../mainContainer/test"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
-export default function MapComponent({data}:any) {
+export default function MapComponent({ data }: any) {
     const dispatch = useAppDispatch()
     const viewState = useAppSelector((state) => state.map)
+    const router = useRouter()
+
+    // could move into a hook called useMapControls
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -25,7 +32,7 @@ export default function MapComponent({data}:any) {
             console.log("geolocation not happenin")
         }
 
-  }, [])
+    }, [])
 
     function onMove(e: any) {
         const { longitude, latitude, zoom } = e.viewState
@@ -33,13 +40,13 @@ export default function MapComponent({data}:any) {
         console.log(e.viewState)
     }
 
-    function onClick(e: any){
+    function onClick(e: any) {
         console.log(e)
     }
 
     const markers = useMemo(() => data?.map((mark: Review) => {
         console.log("mapping over markers")
-        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} />
+        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => router.push(`/location/${mark.id}`)}></Marker>
     }), [data])
 
     return (
@@ -53,8 +60,8 @@ export default function MapComponent({data}:any) {
                 onMove={onMove}
                 onClick={onClick}
             >
-            {data && markers}
-                <UserMarker/>
+                {data && markers}
+                <UserMarker />
             </Map>
         </div>
     )

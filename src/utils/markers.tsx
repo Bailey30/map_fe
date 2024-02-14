@@ -30,6 +30,9 @@ export default function useMarkers() {
 export async function useNextCacheMarkers(){
     console.log("calling usenextcacheMarkers")
     const res = await fetch(process.env.NEXT_PUBLIC_REVIEW_ENDPOINT, {next: {tags: ["reviews"]}})
+    // change to get locations directly from db??
     const data = await res.json()
+    console.log("test")
+    console.log("test")
     return data.items
 }

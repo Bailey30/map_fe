@@ -1,4 +1,10 @@
 import styles from "../review.module.css"
+
+
+async function getReview(id: string){
+    const res = await fetch(process.env.NEXT_PUBIC_REVIEW_ENDPOINT + "/" + id)
+}
+
 export default function GetReviewPanel() {
     // server action?
     return (
