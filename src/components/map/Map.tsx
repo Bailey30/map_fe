@@ -1,38 +1,57 @@
 "use client"
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo } from "react"
 import styles from "./map.module.css"
 import { Map, Marker } from "react-map-gl"
-import { useDispatch } from "react-redux"
 import { MOVE_TO } from "@/redux/slice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
-import markers, { Markers, useNextCacheMarkers } from "@/utils/markers"
-
 import "mapbox-gl/dist/mapbox-gl.css";
-import useMarkers from "@/utils/markers"
 import { Review } from "@/utils/types"
 import { UserMarker } from "../userMarker/userMarker"
-import test from "../mainContainer/test"
-import useTest from "../mainContainer/test"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { Location } from "@/utils/types"
 
-export default function MapComponent({ data }: any) {
+interface Props {
+    data: Location[] | undefined
+}
+
+export default function MapComponent({ data }: Props) {
     const dispatch = useAppDispatch()
     const viewState = useAppSelector((state) => state.map)
     const router = useRouter()
 
+    useEffect(() => {
+        console.log({ viewState })
+    }, [viewState])
     // could move into a hook called useMapControls
 
     useEffect(() => {
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(position => {
-                dispatch(MOVE_TO({ longitude: position.coords.longitude, latitude: position.coords.latitude, zoom: viewState.zoom }))
-            });
+            // if there is coords stored in session storage - use them 
+            // if not - do this 
+            const sessionLat = sessionStorage.getItem("latitude")
+            const sessionLong = sessionStorage.getItem("longitude")
+            if (sessionLat && sessionLong) {
+                dispatch(MOVE_TO({ longitude: parseFloat(sessionLong), latitude: parseFloat(sessionLat), zoom: viewState.zoom }))
+            } else {
+
+                navigator.geolocation.getCurrentPosition(position => {
+                    dispatch(MOVE_TO({ longitude: position.coords.longitude, latitude: position.coords.latitude, zoom: viewState.zoom }))
+                });
+            }
         } else {
             console.log("geolocation not happenin")
         }
+        return () => {
+            console.log("RETURN FUNC")
+        }
 
     }, [])
+
+    window.onbeforeunload = function() {
+        console.log("before reload")
+            sessionStorage.setItem("latitude", String(viewState.latitude))
+            sessionStorage.setItem("longitude", String(viewState.longitude))
+    }
 
     function onMove(e: any) {
         const { longitude, latitude, zoom } = e.viewState
@@ -44,7 +63,7 @@ export default function MapComponent({ data }: any) {
         console.log(e)
     }
 
-    const markers = useMemo(() => data?.map((mark: Review) => {
+    const markers = useMemo(() => data?.map((mark: Location) => {
         console.log("mapping over markers")
         return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => router.push(`/location/${mark.id}`)}></Marker>
     }), [data])

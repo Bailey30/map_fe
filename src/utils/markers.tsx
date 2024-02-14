@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios, { AxiosResponse } from "axios";
+import { Location } from "./types";
 
 type review = {
     id: number,
@@ -39,23 +40,19 @@ export default function useMarkers() {
 // }
 
 
-export async function useNextCacheMarkers() {
+export async function useNextCacheMarkers(): Promise<Location[] | undefined> {
     console.log("calling useNextCacheMarkers")
     try {
-        // call route handler so you can cache the data
-        return await fetch("http://localhost:3000/api/review", { next: { tags: ["reviews"] } })
+        // setting "no-store" so the data is fetched dynamically every request
+        // setting the tag "reviews" to cause a data refetch when manually revalidatin the tag in a server action
+        return await fetch("http://localhost:3000/api/review", { cache: "no-store", next: { tags: ["reviews"] } })
             .then(async (response) => {
                 if (!response.ok) {
                     return new Error("Failed to fetch data")
-
                 }
                 return await response.json()
             })
             .then((json) => {
-                json.reviews.forEach((rev: any) => {
-                    console.log(rev.name)
-                    console.log(rev.Review)
-                })
                 return json.reviews
             })
     } catch (error: any) {

@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import prisma from "../lib/db"
 import bcrypt from "bcrypt"
-import { signIn } from "./auth";
+import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
 
 export async function validateRegisterInputs(formData: FormData) {
@@ -74,7 +74,8 @@ export async function login(prevState: any, formData: any) {
     try {
         const user = await signIn("credentials", {
             email,
-            password
+            password,
+            // redirect: false
         })
     } catch (error: any) {
         if (error instanceof AuthError) {
@@ -89,3 +90,12 @@ export async function login(prevState: any, formData: any) {
         throw error;
     }
 }
+
+export async function logOut() {
+    console.log("logging out")
+        await signOut()
+}
+
+
+
+

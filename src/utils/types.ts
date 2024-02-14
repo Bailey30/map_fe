@@ -1,10 +1,22 @@
+import { number } from "zod"
+
 export type Review = {
     id: string,
-    location: string
+    createdAt: string,
+    updatedAt: string,
     price: number,
+    comments: string,
     rating: number,
-    latitude: number,
-    longitude: number
+    locationId: number,
+    creatorId: number
 }
 
 export type ReviewRequest = Omit<Review, "id">
+
+export type Location = {
+    id: number,
+    name: string,
+    latitude: number,
+    longitude: number,
+    Review: Review[]
+}

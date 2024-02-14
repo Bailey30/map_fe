@@ -1,7 +1,5 @@
 .addButtonContainer {
     position: absolute;
-    top: 5px;
-    right: 5px;
     z-index: 100;
     height: 100%;
     width: 100%;;
@@ -9,13 +7,26 @@
     display: flex;
     justify-content: right;
 }
+
+.topBarButtons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px;
+}
+
+.topBarButtons button {
+    pointer-events: auto;
+}
+
 .addButton {
     border: 1px solid red;
-    pointer-events: auto;
     display: inline-block;
     height: 25px;
     position: relative;
+    margin-left: auto;
 }
+
 .saveButton {
     position: absolute;
     bottom: 10px;

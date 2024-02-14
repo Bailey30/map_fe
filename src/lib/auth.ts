@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../lib/db"
 import { authConfig } from "./auth.config";
+import { redirect } from "next/navigation";
 
 // https://authjs.dev/guides/upgrade-to-v5
 // npm i next-auth@beta
@@ -51,7 +52,7 @@ export const {
             // called after any redirect. Login causes a redirect
             console.log({baseUrl, url})
             if (url.includes("/login")){
-                return baseUrl + "/"
+                return baseUrl
             }
             return url
         }
@@ -60,6 +61,9 @@ export const {
         async signIn({ user, account }) {
             console.log("sign in event")
             console.log(user, account)
+        },
+        async signOut(){
+            console.log("sign out event")
         }
     }
 })
