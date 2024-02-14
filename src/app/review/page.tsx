@@ -3,13 +3,13 @@ import { useFormState, useFormStatus } from "react-dom";
 import styles from "./review.module.css"
 import { createReview, createReviewSQL } from "@/lib/server_actions";
 import { useAppSelector } from "@/redux/hooks";
+import { auth } from "@/lib/auth";
 
 export default function CreateReviewPanel() {
     const location = useAppSelector((state) => state.map)
     const createReviewWithLocation = createReviewSQL.bind(null, location)
     const { pending, data } = useFormStatus();
     const [message, formAction] = useFormState(createReviewWithLocation, null)
-
     return (
         <div className={styles.infoPanel}>
             <form action={formAction}>

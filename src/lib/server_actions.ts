@@ -6,6 +6,7 @@ import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import prisma from "../lib/db"
+import { auth } from "./auth"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -45,11 +46,26 @@ export async function createReview(location: MapState, prevState: any, formData:
 
 
 
-export async function createUser() {
+export async function getUser() {
 
+    const authData = await auth()
+    if (!authData || !authData.user?.email) {
+        throw new Error('Authentication data is missing or invalid.');
+    }
+
+    const user = await prisma.user.findFirst({
+        where: {
+            email: authData.user.email
+        }
+    })
+    if (!user) {
+        throw new Error('User not found.');
+    }
+
+    return user
 }
 
-async function createLocation(coordinates, name) {
+async function createLocation(coordinates:MapState, name: string) {
     try {
         const location = await prisma?.location.create({
             data: {
@@ -67,25 +83,32 @@ async function createLocation(coordinates, name) {
 
 export async function createReviewSQL(coordinates: MapState, prevState: any, formData: FormData) {
     console.log("creating review with SQL")
-    const { latitude, longitude } = coordinates
 
     try {
+        const { latitude, longitude } = coordinates
+
         const data = CreateReview.parse({
             ...Object.fromEntries(formData), latitude, longitude
         })
 
+        const user = await getUser()
+
         const location = await createLocation(coordinates, data.location)
-        await prisma?.review.create({
+
+        const newReview = await prisma?.review.create({
             data: {
-                locationId: location!.id,
-                creatorId: 2, // come back to this after creating user login
+                locationId: location.id,
+                creatorId: user.id,
                 rating: parseInt(data.rating),
                 price: parseFloat(data.price),
                 comments: data.comments
             }
         })
 
+        console.log({ newReview })
+
         revalidateTag("reviews")
+
         return {
             success: true,
             review: { ...formData, latitude, longitude }
