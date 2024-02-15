@@ -6,6 +6,8 @@ import { authConfig } from "./auth.config";
 import { redirect } from "next/navigation";
 
 // https://authjs.dev/guides/upgrade-to-v5
+// https://authjs.dev/reference/nextjs
+// https://authjs.dev/reference/nextjs#nextauthconfig
 // npm i next-auth@beta
 export const {
     handlers: { GET, POST },
@@ -42,13 +44,16 @@ export const {
             }
         })
     ],
-    callbacks: { // When using the Credentials Provider the user object is the response returned from the authorize callback and the profile object is the raw body of the HTTP POST submission.
+    callbacks: { 
+      
+        // When using the Credentials Provider the user object is the response returned from the authorize callback and the profile object is the raw body of the HTTP POST submission.
         async signIn({ user, account }) {
             console.log("sign in callback")
             console.log(user, account)
             return true
         },
         async redirect({url, baseUrl}){
+            console.log("redirect callbac")
             // called after any redirect. Login causes a redirect
             console.log({baseUrl, url})
             if (url.includes("/login")){
