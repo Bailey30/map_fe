@@ -22,41 +22,35 @@ export const {
             async authorize(credentials: any, req: any) {
                 console.log("calling authorize")
                 const { email, password } = credentials;
-                console.log({ email, password })
                 const user = await prisma.user.findFirst({
                     where: {
                         email: email
                     }
                 })
                 if (!user) {
-                    console.log("returning null, !user")
                     return null
                 }
                 const isValid = bcrypt.compare(
                     password as string, user.password
                 )
                 if (!isValid) {
-                    console.log("retuning null, !valid")
                     return null
                 }
-                console.log("returning user")
                 return user
             }
         })
     ],
-    callbacks: { 
-      
+    callbacks: {
         // When using the Credentials Provider the user object is the response returned from the authorize callback and the profile object is the raw body of the HTTP POST submission.
         async signIn({ user, account }) {
             console.log("sign in callback")
-            console.log(user, account)
             return true
         },
-        async redirect({url, baseUrl}){
+        async redirect({ url, baseUrl }) {
             console.log("redirect callbac")
             // called after any redirect. Login causes a redirect
-            console.log({baseUrl, url})
-            if (url.includes("/login")){
+            console.log({ baseUrl, url })
+            if (url.includes("/login")) {
                 return baseUrl
             }
             return url
@@ -65,9 +59,8 @@ export const {
     events: {
         async signIn({ user, account }) {
             console.log("sign in event")
-            console.log(user, account)
         },
-        async signOut(){
+        async signOut() {
             console.log("sign out event")
         }
     }
