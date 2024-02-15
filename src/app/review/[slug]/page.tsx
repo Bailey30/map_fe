@@ -1,15 +1,18 @@
 import styles from "../review.module.css"
 
 
-async function getReview(id: string){
-    const res = await fetch(process.env.NEXT_PUBIC_REVIEW_ENDPOINT + "/" + id)
+async function getReviews(id: string) {
+console.log("calling get reviews")
+    const res = await fetch("http://localhost:3000/api/review/"+ id)
 }
 
-export default function GetReviewPanel() {
-    // server action?
+export default async function GetReviewPanel({ params }: { params: { slug: string } }) {
+    console.log("get reivew panale", { params })
+    const locationId = params.slug
+    const locationAndReviews = await getReviews(locationId)
     return (
         <div className={styles.infoPanel}>
-        <div>one review</div>
+            <div>one review</div>
             <label htmlFor="location">Location</label>
             <input name="location"></input>
             <label htmlFor="price">price</label>

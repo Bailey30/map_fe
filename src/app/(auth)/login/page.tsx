@@ -1,13 +1,16 @@
 "use client";
-import {  login } from "@/lib/user_server_actions";
+import { login } from "@/lib/user_server_actions";
 import { auth, signIn } from "@/lib/auth";
 import React, { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import styles from "../auth.module.css"
+import Link from "next/link";
 
 const LoginPage = () => {
     const [errorMessage, dispatch] = useFormState(login, undefined);
     const { pending } = useFormStatus();
+
+    console.log({ pending })
 
     useEffect(() => {
         console.log("login error", errorMessage);
@@ -23,6 +26,7 @@ const LoginPage = () => {
                     Log in
                 </button>
                 {errorMessage && <p>{errorMessage}</p>}
+                <Link href="/register">Don't have an account? Create one.</Link>
             </form>
         </div>
     );

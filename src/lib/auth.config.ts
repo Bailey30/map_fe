@@ -19,14 +19,11 @@ export const authConfig: any = {
             const isLoggedIn = !!auth?.user
             console.log(auth)
             if (!isLoggedIn){
-                console.log("isNot Logged In")
                 // return false if they are on any of the routes that require auth
                 return !requiresAuthRoutes.some((route)=> nextUrl.pathname.startsWith(route)) 
             }
             if (isLoggedIn){
-                console.log("is logged in")
                 if(alreadySignedIn.some((route: string)=>nextUrl.pathname.startsWith(route))){
-                    console.log("is on a route they shouldnt be")
                     console.log(nextUrl)
                     return NextResponse.redirect(nextUrl.origin)
                 }

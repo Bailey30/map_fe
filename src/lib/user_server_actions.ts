@@ -4,55 +4,42 @@ import prisma from "../lib/db"
 import bcrypt from "bcrypt"
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
-
-export async function validateRegisterInputs(formData: FormData) {
-    const errors: any = {}
-    const { email, password, passwordRepeat } = Object.fromEntries(formData)
-
-    if (password !== passwordRepeat) {
-        errors["password"] = "password does not match";
-    }
-    if (!email) {
-        errors["email"] = "email is required";
-    }
-    if (!password) {
-        errors["password"] = "password is required";
-    }
-    return errors;
-}
-
+import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
+import { InputErrors } from "@/utils/types";
 
 
 export async function register(prevData: any, formData: FormData) {
     console.log("calling register")
-    const { email, password } = Object.fromEntries(formData)
+    const { username, email, password } = Object.fromEntries(formData)
 
-    const errors: any = await validateRegisterInputs(formData)
-
-    if (Object.keys(errors).length > 0) {
-        return errors
-    }
+    let errors: InputErrors = {}
 
     try {
         const user = await prisma.user.findFirst({
             where: {
-                email: String(email)
+                OR: [
+                    {
+                        email: String(email),
+                    },
+                    {
+                        username: String(username)
+                    }
+                ]
             }
         })
 
-        if (user) {
-            console.log("email already exists")
-            errors["email"] = "email already exists"
+        errors = await validateRegisterInputs(formData, user)
+        if (Object.keys(errors).length > 0) {
             return errors
         }
-
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password as string, salt)
+       
+        const hashedPassword = await generatePassword(password as string)
 
         await prisma.user.create({
             data: {
                 email: email as string,
-                password: hashedPassword
+                password: hashedPassword,
+                username: username as string
             }
         })
 
@@ -93,7 +80,7 @@ export async function login(prevState: any, formData: any) {
 
 export async function logOut() {
     console.log("logging out")
-        await signOut()
+    await signOut()
 }
 
 

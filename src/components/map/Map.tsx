@@ -65,7 +65,7 @@ export default function MapComponent({ data }: Props) {
 
     const markers = useMemo(() => data?.map((mark: Location) => {
         console.log("mapping over markers")
-        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => router.push(`/location/${mark.id}`)}></Marker>
+        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => router.push(`/review/${mark.id}`)}></Marker>
     }), [data])
 
     return (

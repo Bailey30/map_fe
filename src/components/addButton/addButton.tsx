@@ -25,7 +25,6 @@ export default function AddButton({ session }: Props) {
             router.push("/")
         }
     }
-    console.log({session})
     return (
         <div className={styles.addButtonContainer}>
             <div className={styles.topBarButtons}>

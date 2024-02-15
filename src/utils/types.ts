@@ -20,3 +20,9 @@ export type Location = {
     longitude: number,
     Review: Review[]
 }
+
+export type InputErrors ={
+    username?: string |undefined
+    password?: string |undefined
+    email?: string |undefined
+}
