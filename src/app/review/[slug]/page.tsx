@@ -1,31 +1,27 @@
+import ReviewsDisplay from "@/components/reviewsDisplay/reviewsDisplay"
 import styles from "../review.module.css"
 
 
 async function getReviews(id: string) {
-console.log("calling get reviews")
-    const res = await fetch("http://localhost:3000/api/review/"+ id)
+    console.log("calling get reviews")
+    return await fetch("http://localhost:3000/api/review/" + id)
+        .then((res) => { // will it find newly added reviews or only get ones from the cache?
+            return res.json()
+        })
+        .then((json) => {
+            return json.location
+        })
 }
 
 export default async function GetReviewPanel({ params }: { params: { slug: string } }) {
     console.log("get reivew panale", { params })
     const locationId = params.slug
-    const locationAndReviews = await getReviews(locationId)
+    const location = await getReviews(locationId)
+    console.log({location})
     return (
         <div className={styles.infoPanel}>
-            <div>one review</div>
-            <label htmlFor="location">Location</label>
-            <input name="location"></input>
-            <label htmlFor="price">price</label>
-            <input name="price" type="number"></input>
-            <label htmlFor="rating">rating</label>
-            <input name="rating" type="number" />
-            <label htmlFor="comments">comments</label>
-            <input type="text" />
-            <div className={styles.buttonContainer}>
-
-                <button className={styles.save}>Save</button>
-                <button className={styles.cancel}>Cancel</button>
-            </div>
+            <h2>{location.name}</h2>
+<ReviewsDisplay reviews={location.Review}/>
         </div>
     )
 }

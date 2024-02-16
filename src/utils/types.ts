@@ -9,6 +9,7 @@ export type Review = {
     rating: number,
     locationId: number,
     creatorId: number
+    creator: {username: string}
 }
 
 export type ReviewRequest = Omit<Review, "id">

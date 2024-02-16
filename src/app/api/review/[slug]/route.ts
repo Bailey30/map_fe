@@ -26,11 +26,8 @@ type reviewsResponse = ({
 type reviewRouteResponse = {status: number, location: reviewsResponse} | {status:number, error: string}
 
 export const GET = async (request: Request, { params }: { params: { slug: string } }): Promise<NextResponse<reviewRouteResponse>> => {
-    console.log("in one location get request")
-    console.log({ params })
     try {
         const id = params.slug
-        console.log("id in one location get request: ", id)
         const reviews = await prisma.location.findUnique({
             where: {
                 id: parseInt(id)

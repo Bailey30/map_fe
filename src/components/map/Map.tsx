@@ -5,7 +5,6 @@ import { Map, Marker } from "react-map-gl"
 import { MOVE_TO } from "@/redux/slice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Review } from "@/utils/types"
 import { UserMarker } from "../userMarker/userMarker"
 import { useRouter } from "next/navigation"
 import { Location } from "@/utils/types"

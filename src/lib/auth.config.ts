@@ -18,12 +18,12 @@ export const authConfig: any = {
             console.log("authorized callback")
             const isLoggedIn = !!auth?.user
             console.log(auth)
-            if (!isLoggedIn){
+            if (!isLoggedIn) {
                 // return false if they are on any of the routes that require auth
-                return !requiresAuthRoutes.some((route)=> nextUrl.pathname.startsWith(route)) 
+                return !requiresAuthRoutes.some((route) => nextUrl.pathname === route)
             }
-            if (isLoggedIn){
-                if(alreadySignedIn.some((route: string)=>nextUrl.pathname.startsWith(route))){
+            if (isLoggedIn) {
+                if (alreadySignedIn.some((route: string) => nextUrl.pathname.startsWith(route))) {
                     console.log(nextUrl)
                     return NextResponse.redirect(nextUrl.origin)
                 }
