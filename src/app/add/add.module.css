@@ -1,0 +1,49 @@
+
+.addingOverlayContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    z-index: 99;
+    pointer-events: none;
+}
+
+.instructions {
+    position: absolute;
+    top: 0;
+    width: 100dvw;
+    color: black;
+    text-align: center;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+.active {
+    display: block;
+}
+.marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30px;
+    width: auto;
+}
+.saveButton {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    height: 25px;
+    transform: translateX(-50%);
+    z-index: 100;
+    border: 1px solid black;
+    width: 50px;
+    background: grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}

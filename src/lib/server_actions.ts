@@ -1,12 +1,12 @@
 "use server"
 import { MapState } from "@/redux/slice"
-import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import prisma from "../lib/db"
 import { auth } from "./auth"
+import { hasErrors, validate } from "@/utils/formValidator"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -18,6 +18,16 @@ const FromSchema = z.object({
     longitude: z.number()
 })
 const CreateReview = FromSchema.omit({ id: true })
+
+type FormState = {
+    id?: string,
+    location?: string,
+    price: string,
+    rating: string,
+    comments: string,
+    latitude: number,
+    longitude: number
+}
 
 
 export async function createReview(location: MapState, prevState: any, formData: FormData) {
@@ -65,7 +75,7 @@ export async function getUser() {
     return user
 }
 
-async function createLocation(coordinates:MapState, name: string) {
+async function createLocation(coordinates: MapState, name: string) {
     try {
         const location = await prisma?.location.create({
             data: {
@@ -81,19 +91,63 @@ async function createLocation(coordinates:MapState, name: string) {
     }
 }
 
+async function getLocation(id: string) {
+    try {
+        const location = await prisma?.location.findUnique({
+            where: {
+                id: parseInt(id)
+            }
+        })
+        return location
+    } catch (error: any) {
+        console.log("error getting location", error)
+        throw new Error("error creating location", error)
+    }
+}
+
 export async function createReviewSQL(coordinates: MapState, prevState: any, formData: FormData) {
     console.log("creating review with SQL")
+    console.log(formData)
 
     try {
         const { latitude, longitude } = coordinates
 
-        const data = CreateReview.parse({
-            ...Object.fromEntries(formData), latitude, longitude
-        })
+        const form = Object.fromEntries(formData)
+        const data = Object.fromEntries(
+            Object.entries(form).map(([key, value])=> [key, value as string])
+        )
+
+       
+
+        const errors = validate([{
+            field: "price",
+            value: data.price ,
+            required: true,
+        }, {
+            field: "rating",
+            value: data.rating,
+            required: true
+        }, {
+            field: data.id ? "id" : "location",
+            value: data.id ? data.id  : data.location,
+            required: true
+        }])
+
+        // Leave function if there are form errors
+        if (hasErrors(errors)) {
+            console.log("form errors", errors)
+            return {
+                success: "field errors",
+                errors: errors
+            }
+        }
 
         const user = await getUser()
 
-        const location = await createLocation(coordinates, data.location)
+        const location = data.id ? await getLocation(data.id) : await createLocation(coordinates, data.location)
+        if (!location) {
+            throw new Error("error creating location")
+        }
 
         const newReview = await prisma?.review.create({
             data: {
@@ -119,7 +173,7 @@ export async function createReviewSQL(coordinates: MapState, prevState: any, for
             success: false
         }
     } finally {
-        redirect("/")
+        // redirect("/")
     }
 }
 

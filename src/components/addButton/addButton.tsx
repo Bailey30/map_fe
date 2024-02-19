@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styles from "./addButton.module.css"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { TOGGLE_IS_ADDING } from "@/redux/controlsSlice"
@@ -14,15 +14,17 @@ interface Props {
     session: Session
 }
 export default function AddButton({ session }: Props) {
-    const dispatch = useAppDispatch()
     const router = useRouter()
     const pathname = usePathname()
-    const isAdding = useAppSelector((state) => state.controls.isAdding)
+    const isNotOnAddPage = !pathname.includes("/add")
     function onClick() {
         console.log(pathname)
-        dispatch(TOGGLE_IS_ADDING())
         if (pathname.includes("/review")) {
+        }
+        if (pathname.includes("/add")) {
             router.push("/")
+        } else {
+            router.push("/add")
         }
     }
     return (
@@ -34,17 +36,15 @@ export default function AddButton({ session }: Props) {
                     </Link>
                     :
                     <>
-                        {!isAdding &&
+                        {isNotOnAddPage &&
                             <form action={logOut}>
                                 <button>Log out</button>
                             </form>
                         }
-                        <button onClick={onClick} className={styles.addButton}>{!isAdding ? "Add Guinness" : "Cancel"}</button>
+                        <button onClick={onClick} className={styles.addButton}>{isNotOnAddPage ? "Add new Guinness location" : "Cancel"}</button>
                     </>
                 }
             </div>
-            {isAdding &&
-                <Link href="/review" className={styles.saveButton}>Add</Link>}
         </div>
     )
 }

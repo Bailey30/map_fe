@@ -9,10 +9,10 @@ import {auth} from "@/lib/auth"
 export default async function MainContainer({ children }: any) {
     const data: Location[]| undefined = await useNextCacheMarkers()
     const session = await auth()
+    /* <AddingOverlay /> */
     return (
         <div className={styles.mainContainer}>{children}
             <AddButton session={session}/>
-            <AddingOverlay />
             <MapComponent data={data} />
         </div>
     )

@@ -8,6 +8,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { UserMarker } from "../userMarker/userMarker"
 import { useRouter } from "next/navigation"
 import { Location } from "@/utils/types"
+import { SET_IS_ADDING, TOGGLE_IS_ADDING } from "@/redux/controlsSlice"
 
 interface Props {
     data: Location[] | undefined
@@ -48,8 +49,8 @@ export default function MapComponent({ data }: Props) {
 
     window.onbeforeunload = function() {
         console.log("before reload")
-            sessionStorage.setItem("latitude", String(viewState.latitude))
-            sessionStorage.setItem("longitude", String(viewState.longitude))
+        sessionStorage.setItem("latitude", String(viewState.latitude))
+        sessionStorage.setItem("longitude", String(viewState.longitude))
     }
 
     function onMove(e: any) {
@@ -62,9 +63,13 @@ export default function MapComponent({ data }: Props) {
         console.log(e)
     }
 
+    function onMarkerClick(mark: Location) {
+        router.push(`/review/${mark.id}`)
+    }
+
     const markers = useMemo(() => data?.map((mark: Location) => {
         console.log("mapping over markers")
-        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => router.push(`/review/${mark.id}`)}></Marker>
+        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={()=>onMarkerClick(mark)}></Marker>
     }), [data])
 
     return (

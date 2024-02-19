@@ -14,14 +14,12 @@ async function getReviews(id: string) {
 }
 
 export default async function GetReviewPanel({ params }: { params: { slug: string } }) {
-    console.log("get reivew panale", { params })
     const locationId = params.slug
     const location = await getReviews(locationId)
-    console.log({location})
+    console.log({ location })
     return (
         <div className={styles.infoPanel}>
-            <h2>{location.name}</h2>
-<ReviewsDisplay reviews={location.Review}/>
+            <ReviewsDisplay location={location} />
         </div>
     )
 }
