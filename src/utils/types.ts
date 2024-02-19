@@ -9,7 +9,7 @@ export type Review = {
     rating: number,
     locationId: number,
     creatorId: number
-    creator: {username: string}
+    creator: { username: string }
 }
 
 export type ReviewRequest = Omit<Review, "id">
@@ -22,8 +22,8 @@ export type Location = {
     Review: Review[]
 }
 
-export type InputErrors ={
-    username?: string |undefined
-    password?: string |undefined
-    email?: string |undefined
+export type InputErrors = {
+    username?: string | undefined
+    password?: string | undefined
+    email?: string | undefined
 }
