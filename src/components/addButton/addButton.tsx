@@ -1,14 +1,10 @@
 "use client"
-import { useEffect, useState } from "react"
 import styles from "./addButton.module.css"
-import { useAppDispatch, useAppSelector } from "@/redux/hooks"
-import { TOGGLE_IS_ADDING } from "@/redux/controlsSlice"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { usePathname } from "next/navigation"
-import path from "path"
 import { Session } from "next-auth"
-import { logOut, login } from "@/lib/user_server_actions"
+import { logOut } from "@/lib/user_server_actions"
 
 interface Props {
     session: Session

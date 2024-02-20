@@ -3,7 +3,6 @@ import clsx from "clsx"
 import { Location, Review } from "@/utils/types"
 import { Dispatch, SetStateAction, useState } from "react"
 import styles from "./reviewsDisplay.module.css"
-import Link from "next/link"
 import { createReviewSQL } from "@/lib/server_actions"
 import { useFormState, useFormStatus } from "react-dom"
 import { useRouter } from "next/navigation"
@@ -82,7 +81,6 @@ function ReviewList({ reviews }: ReviewListProps) {
 interface AddNewReviewToLocationProps {
     location: Location
     cancel: Dispatch<SetStateAction<"show" | "add">>
-
 }
 
 function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProps) {
@@ -100,7 +98,7 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
             {message?.success !== true &&
                 <form action={formAction}>
                 /* <label htmlFor="id" className={clsx(styles.hidden)} /> */
-                    <input name="id" className={clsx(styles.hidden)} value={location.id}></input>
+                    <input name="id" className={clsx(styles.hidden)} value={location.id} readOnly></input>
                     <label htmlFor="location" className={clsx(styles.hidden)}>Location</label>
                     <input name="location" className={clsx(styles.hidden)}></input>
 

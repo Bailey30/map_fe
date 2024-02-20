@@ -105,6 +105,7 @@ async function getLocation(id: string) {
     }
 }
 
+// Creates reviews on locations that already exist and create locations when they dont
 export async function createReviewSQL(coordinates: MapState, prevState: any, formData: FormData) {
     console.log("creating review with SQL")
     console.log(formData)
@@ -114,24 +115,34 @@ export async function createReviewSQL(coordinates: MapState, prevState: any, for
 
         const form = Object.fromEntries(formData)
         const data = Object.fromEntries(
-            Object.entries(form).map(([key, value])=> [key, value as string])
+            Object.entries(form).map(([key, value]) => [key, value as string])
         )
 
-       
-
-        const errors = validate([{
-            field: "price",
-            value: data.price ,
-            required: true,
-        }, {
-            field: "rating",
-            value: data.rating,
-            required: true
-        }, {
-            field: data.id ? "id" : "location",
-            value: data.id ? data.id  : data.location,
-            required: true
-        }])
+        const errors = validate([
+            {
+                field: "price",
+                value: data.price,
+                required: {
+                    is: true,
+                    customResponse: "please add how much the guinness cost",
+                },
+            },
+            {
+                field: "rating",
+                value: data.rating,
+                required: true,
+            },
+            {
+                field: data.id ? "id" : "location",
+                value: data.id ? data.id : data.location,
+                required: true,
+                minLen: {
+                    is: 3,
+                    customResponse: "atleast 3",
+                },
+                maxLen: 30,
+            },
+        ]);
 
         // Leave function if there are form errors
         if (hasErrors(errors)) {

@@ -8,7 +8,6 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { UserMarker } from "../userMarker/userMarker"
 import { useRouter } from "next/navigation"
 import { Location } from "@/utils/types"
-import { SET_IS_ADDING, TOGGLE_IS_ADDING } from "@/redux/controlsSlice"
 
 interface Props {
     data: Location[] | undefined

@@ -1,5 +1,7 @@
 // import {validate(), allErrors}
 
+import { POST } from "@/lib/auth"
+
 
 // const errors = {
 //     username: ["too long", "already exists"],
@@ -18,25 +20,30 @@
 type errorsObj = {
     [key: string]: string
 }
+type Options = {
+    is: any,
+    customResponse?: string
+}
 type Config = {
     field: string,
     value: string | undefined,
-    required?: boolean,
-    minLen?: number
+    required?: boolean | Options,
+    minLen?: number | Options,
+    maxLen?: number | Options
+    isEqual?: any | Options,
 }
 type ConfigArray = Config[]
-
 type ValidationResponse = {
     valid: boolean,
     message?: string
 }
 type FieldName = string | undefined
-
-type ValidationFunction = (value: any, configValue?: any, fieldName?: FieldName) => ValidationResponse
-
+type ValidationFunction = (input: Config, configValue?: any) => ValidationResponse
 enum ValidationFunctionNames {
     required = "required",
-    minLen = "minLen"
+    minLen = "minLen",
+    maxLen = "maxLen",
+    isEqual = "isEqual",
 }
 type ValidationFunctions = {
     [Key in ValidationFunctionNames]: ValidationFunction
@@ -45,38 +52,60 @@ type ValidationFunctions = {
 const validationFunction: ValidationFunctions = {
     [ValidationFunctionNames.required]: required,
     [ValidationFunctionNames.minLen]: minLen,
+    [ValidationFunctionNames.isEqual]: isEqual,
+    [ValidationFunctionNames.maxLen]: maxLen
 }
 
-function required(value: any, configValue: boolean, fieldName: FieldName) {
-    if (!value) {
-        return { valid: false, message: `${fieldName} is required` }
+
+// Validation functions
+
+function required(input: Config, options: Options) {
+    if (!input.value) {
+        return { valid: false, message: options.customResponse ?? `${input.field} is required` }
     } else {
         return { valid: true }
     }
 }
 
-function minLen(value: any, configValue: number, fieldName: FieldName) {
-    if (value.length < configValue) {
-        return { valid: false, message: `${fieldName} needs to be atleast ${configValue} characters long` }
+function minLen(input: Config, options: Options) {
+    if (input.value && input.value.length < options.is) {
+        return { valid: false, message: options.customResponse ?? `${input.field} needs to be atleast ${options.is} characters long` }
     } else {
         return { valid: true }
     }
 }
 
+function maxLen(input: Config, options: Options) {
+    if (input.value && input.value.length > options.is) {
+        return { valid: false, message: options.customResponse ?? `${input.field} needs to be less than ${options.is} characters long` }
+    } else {
+        return { valid: true }
+    }
+}
+
+function isEqual(input: Config, options: Options) {
+    if (input.value && input.value === options.is) {
+        return { valid: false, message: options.customResponse ?? `${input.field} already exists` }
+    } else {
+        return { valid: true }
+    }
+}
+
+// Main export
 export function validate(config: ConfigArray) {
     const errors: errorsObj = {}
 
     config.forEach((input: Config) => {
 
         Object.entries(input).forEach(entry => {
-            const [key, value]: [string, any] = entry
+            const [key, configValue]: [string, any] = entry
             const functionKey = key as ValidationFunctionNames
 
-            if (["field", "value"].includes(functionKey)) return
+            if (notFunctions.includes(functionKey)) return
 
             const func: ValidationFunction = validationFunction[functionKey]
 
-            const isValid: ValidationResponse = func(input.value, value, input.field)
+            const isValid: ValidationResponse = func(input, isOptions(configValue))
 
             if (isValid.valid === false) {
                 errors[input.field] = isValid.message!
@@ -86,6 +115,29 @@ export function validate(config: ConfigArray) {
     return errors
 }
 
+
+// Internal utils
+
+const notFunctions = ["field", "value"]
+
+function isOptions(value: any | Options): Options {
+    console.log({ value })
+    if ((value as Options)) {
+        return value
+    } else {
+        return createOptions(value)
+    }
+}
+
+function createOptions(value: any): Options {
+    return {
+        is: value
+    }
+}
+
+
+// External utils
+
 export function hasErrors(errors: errorsObj) {
     if (Object.keys(errors).length > 0) {
         return true
@@ -94,12 +146,6 @@ export function hasErrors(errors: errorsObj) {
     }
 }
 
-const config: ConfigArray = [{
-    field: "username",
-    value: "john",
-    required: true,
-    minLen: 8
-}]
 
 
 
