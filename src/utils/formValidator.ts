@@ -1,6 +1,5 @@
 // import {validate(), allErrors}
 
-import { POST } from "@/lib/auth"
 
 
 // const errors = {
@@ -105,6 +104,7 @@ export function validate(config: ConfigArray) {
 
             const func: ValidationFunction = validationFunction[functionKey]
 
+            // run the validation function. If value given is not an object, convert to options object
             const isValid: ValidationResponse = func(input, isOptions(configValue))
 
             if (isValid.valid === false) {

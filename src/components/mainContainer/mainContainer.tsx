@@ -9,7 +9,7 @@ export default async function MainContainer({ children }: any) {
     const data: Location[]| undefined = await useNextCacheMarkers()
     const session = await auth()
     return (
-        <div className={styles.mainContainer}>{children}
+        <div className={styles.mainContainer} id="main">{children}
             <AddButton session={session}/>
             <MapComponent data={data} />
         </div>

@@ -6,6 +6,7 @@ import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
 import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
 import { InputErrors } from "@/utils/types";
+import { validate } from "@/utils/formValidator";
 
 
 export async function register(prevData: any, formData: FormData) {
@@ -27,6 +28,19 @@ export async function register(prevData: any, formData: FormData) {
                 ]
             }
         })
+
+        // const errors = validate([
+        //     {
+        //         field: "username",
+        //         value: username as string,
+        //         required: true,
+        //         isEqual: {
+        //         for:    user?.username,
+        //             customResponse: ""
+        //         }
+        //
+        //     }
+        // ]
 
         errors = await validateRegisterInputs(formData, user)
         if (Object.keys(errors).length > 0) {

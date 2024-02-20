@@ -1,0 +1,65 @@
+.camera {
+    border: 1px solid red;
+    position: absolute;
+    z-index: 101;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.openCamera {
+    display: block;
+}
+
+.camera video {
+    width: 100vw;;
+    max-height: 100vh;
+}
+
+.confirmingOutput {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 102;
+    display: none;
+}
+.confirmingOutput.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.confirmingOutput img {
+    height: auto;
+    max-width: 100%;
+    max-height: 100vh;
+    border: 4px solid green;
+    aspect-ratio: var(--photoAspectRation);
+ 
+}
+ .optionButtons {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+}
+
+.canvas {
+    display: none;
+}
+
+.output {
+    width: 100px;
+    height: 100px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.output img {
+    width: 100%;
+}
