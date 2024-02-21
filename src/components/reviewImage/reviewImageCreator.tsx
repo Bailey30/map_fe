@@ -51,6 +51,8 @@ export default function ReviewImageCreator() {
 
                     if (window.innerWidth < window.innerHeight) {
                         video.current?.setAttribute("width", window.innerHeight.toString())
+                        canvas.current!.width = video.current!.videoWidth
+                        canvas.current!.height = video.current!.videoHeight
                     } else {
                         video.current?.setAttribute("height", window.innerHeight.toString())
                     }
@@ -114,8 +116,14 @@ export default function ReviewImageCreator() {
 
         // FOR DESKTOP / LANDSCAPE
         // opposites for mobile
-        previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
-        previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
+        //
+        if (window.innerWidth < window.innerHeight) {
+            previewCanvas.current!.width = video.current!.videoWidth
+            previewCanvas.current!.height = video.current!.videoHeight
+        } else {
+            previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
+            previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
+        }
 
         // FOR DESKTOP / LANDSCAPE
         context!.drawImage(video.current!,
