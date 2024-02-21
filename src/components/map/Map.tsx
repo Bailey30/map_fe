@@ -18,6 +18,8 @@ export default function MapComponent({ data }: Props) {
     const viewState = useAppSelector((state) => state.map)
     const router = useRouter()
 
+    console.log({ data })
+
     useEffect(() => {
         console.log({ viewState })
     }, [viewState])
@@ -68,7 +70,7 @@ export default function MapComponent({ data }: Props) {
 
     const markers = useMemo(() => data?.map((mark: Location) => {
         console.log("mapping over markers")
-        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={()=>onMarkerClick(mark)}></Marker>
+        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => onMarkerClick(mark)}></Marker>
     }), [data])
 
     return (
