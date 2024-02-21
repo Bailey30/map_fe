@@ -42,10 +42,11 @@ export default function useMarkers() {
 
 export async function useNextCacheMarkers(): Promise<Location[] | undefined> {
     console.log("calling useNextCacheMarkers")
+    console.log(process.env.NEXT_PUBLIC_URL)
     try {
         // setting "no-store" so the data is fetched dynamically every request
         // setting the tag "reviews" to cause a data refetch when manually revalidatin the tag in a server action
-        return await fetch("http://localhost:3000/api/review", { cache: "no-store", next: { tags: ["reviews"] } })
+        return await fetch(process.env.NEXT_PUBLIC_URL as string +"/api/review", { cache: "no-store", next: { tags: ["reviews"] } })
             .then(async (response) => {
                 if (!response.ok) {
                     return new Error("Failed to fetch data")

@@ -4,7 +4,7 @@ import styles from "../review.module.css"
 
 async function getReviews(id: string) {
     console.log("calling get reviews")
-    return await fetch("http://localhost:3000/api/review/" + id)
+    return await fetch(process.env.NEXT_PUBLIC_URL as string + "/api/review/" + id)
         .then((res) => { // will it find newly added reviews or only get ones from the cache?
             return res.json()
         })
