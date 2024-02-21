@@ -169,7 +169,6 @@ export default function ReviewImageCreator() {
     }
 
     return <>
-        <CameraPortal>
             <div className={clsx(takingPicture && styles.openCamera, styles.camera)}>
                 <div className={styles.captureImage}>
                     <video id="video" ref={video}>Video stream not available</video>
@@ -188,7 +187,6 @@ export default function ReviewImageCreator() {
                     </div>
                 </div>
             </div>
-        </CameraPortal>
 
         <button id="startButton" ref={startButton} onClick={startCamera}>Take photo</button>
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
