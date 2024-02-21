@@ -6,7 +6,7 @@ import { useAppSelector } from "@/redux/hooks"
 
 export default function AddingOverlay() {
     const isAdding = useAppSelector((state) => state.controls.isAdding)
-    if(!isAdding) return 
+    if (!isAdding) return
     return (
         <div className={styles.addingOverlayContainer}>
             <Image src={guinness} alt={"guinness marker"} className={styles.marker} />

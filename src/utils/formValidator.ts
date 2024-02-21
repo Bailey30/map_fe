@@ -44,7 +44,7 @@ enum ValidationFunctionNames {
     maxLen = "maxLen",
     isEqual = "isEqual",
 }
-type ValidationFunctions = {
+    type ValidationFunctions = {
     [Key in ValidationFunctionNames]: ValidationFunction
 }
 

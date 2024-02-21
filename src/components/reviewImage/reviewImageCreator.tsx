@@ -4,12 +4,14 @@ import styles from "./reviewImageCreator.module.css"
 import { start } from "repl"
 import clsx from "clsx"
 import CameraPortal from "./CameraPortal"
+import { current } from "@reduxjs/toolkit"
 export default function ReviewImageCreator() {
     const [streaming, setStreaming] = useState<boolean>(false)
     const [width, setWidth] = useState<number>(window.innerWidth)
     const [height, setHeight] = useState<number>(0)
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
+    const previewCanvas = useRef<HTMLCanvasElement>(null)
     const video = useRef<HTMLVideoElement>(null)
     const canvas = useRef<HTMLCanvasElement>(null)
     const photo = useRef<HTMLImageElement>(null)
@@ -42,10 +44,10 @@ export default function ReviewImageCreator() {
                     console.log(localHeight)
                     setHeight(localHeight)
 
-                    video.current?.setAttribute("width", width.toString())
-                    video.current?.setAttribute("height", localHeight.toString())
-                    canvas.current?.setAttribute("width", width.toString())
-                    canvas.current?.setAttribute("height", localHeight.toString())
+                    // video.current?.setAttribute("width", window.innerHeight.toString())
+                    video.current?.setAttribute("height", window.innerHeight.toString())
+                    canvas.current?.setAttribute("width", (width).toString())
+                    canvas.current?.setAttribute("height", (localHeight).toString())
                     setStreaming(true)
                     video.current!.setAttribute('autoplay', '');
                     video.current!.setAttribute('muted', '');
@@ -72,12 +74,25 @@ export default function ReviewImageCreator() {
         const context = canvas.current?.getContext("2d")
         console.log({ width })
         console.log({ height })
+
         if (width && height) {
             setTakingPicture(true)
             console.log("takingPicture")
             canvas.current!.width = width
             canvas.current!.height = height
+            // the original that works
             context?.drawImage(video.current!, 0, 0, width, height)
+            // context?.drawImage(video.current!,
+            // 0, height/4, 500, 500, 0, 0, height, height)
+            //
+            // maybe do this at the moment of taking the picture?
+            // context!.drawImage(video.current!,
+            //     height / 4, 0, // from x and y
+            //     height, height, // take square
+            //     0, 0, // draw to canvas
+            //     height, height // size that is drawn
+            // )
+
         } else {
             console.log("clearingPhoto")
             clearPhoto()
@@ -86,13 +101,29 @@ export default function ReviewImageCreator() {
     }
 
     function takePicture() {
+        const context = previewCanvas.current?.getContext("2d")
+
+        // FOR DESKTOP / LANDSCAPE
+        // opposites for mobile
+        previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
+        previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
+       
+        // FOR DESKTOP / LANDSCAPE
+        context!.drawImage(video.current!,
+            Math.abs((video.current!.videoWidth / 2) - (video.current!.videoHeight /2)), 0, // from x and y // video.videowidth
+            video.current!.videoHeight, video.current!.videoHeight, // take square
+            0, 0, // draw to canvas
+            previewCanvas.current!.width, previewCanvas.current!.height, // size that is drawn
+        )
+
         const data = canvas.current!.toDataURL("image/png")
         photo.current!.setAttribute("src", data)
 
         const aspectRatio = canvas.current!.width / canvas.current!.height
-        setConfirmingPicture(true)
         let root = document.querySelector(":root") as any
         root.style.setProperty('--photoAspectRatio', aspectRatio.toString());
+
+        setConfirmingPicture(true)
     }
 
     useEffect(() => {
@@ -108,7 +139,7 @@ export default function ReviewImageCreator() {
         setConfirmingPicture(false)
         setTakingPicture(false)
 
-        const data = canvas.current!.toDataURL("image/png")
+        const data = previewCanvas.current!.toDataURL("image/png")
         finalPhoto.current!.setAttribute("src", data)
     }
     function retakePicture() {
@@ -131,6 +162,7 @@ export default function ReviewImageCreator() {
                     </div>
                 </div>
                 <div className={clsx(confirmingPicture && styles.show, styles.confirmingOutput)}>
+                    <canvas ref={previewCanvas} className={styles.previewCanvas} />
                     <img ref={photo} id="photo" />
                     <div className={styles.optionButtons}>
                         <button onClick={savePicture}>Save</button>
