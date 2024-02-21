@@ -7,7 +7,7 @@ import { Session } from "next-auth"
 import { logOut } from "@/lib/user_server_actions"
 
 interface Props {
-    session: Session
+    session: Session | null
 }
 export default function AddButton({ session }: Props) {
     const router = useRouter()

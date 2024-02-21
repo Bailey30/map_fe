@@ -19,7 +19,7 @@ export const {
     providers: [
         CredentialsProvider({
             // this is to login in a previously created user
-            async authorize(credentials: any, req: any) {
+            async authorize(credentials: any, _: any): Promise<any> {
                 console.log("calling authorize")
                 const { email, password } = credentials;
                 const user = await prisma.user.findFirst({

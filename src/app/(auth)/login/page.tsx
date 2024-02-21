@@ -26,7 +26,7 @@ const LoginPage = () => {
                     Log in
                 </button>
                 {errorMessage && <p>{errorMessage}</p>}
-                <Link href="/register">Don't have an account? Create one.</Link>
+                <Link href="/register">Don&apos;t have an account? Create one.</Link>
             </form>
         </div>
     );

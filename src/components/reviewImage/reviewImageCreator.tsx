@@ -163,7 +163,7 @@ export default function ReviewImageCreator() {
                 </div>
                 <div className={clsx(confirmingPicture && styles.show, styles.confirmingOutput)}>
                     <canvas ref={previewCanvas} className={styles.previewCanvas} />
-                    <img ref={photo} id="photo" />
+                    <img ref={photo} id="photo" alt="temporary image to confirm before saving" />
                     <div className={styles.optionButtons}>
                         <button onClick={savePicture}>Save</button>
                         <button onClick={retakePicture}>Retake</button>
@@ -177,7 +177,7 @@ export default function ReviewImageCreator() {
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
 
         <div className={styles.output}>
-            <img ref={finalPhoto} />
+            <img ref={finalPhoto} alt="the saved photo to be uploaded"/>
         </div>
     </>
 }

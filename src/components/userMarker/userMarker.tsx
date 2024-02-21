@@ -14,13 +14,13 @@ export const UserMarker = memo(function UserMarker() {
     useEffect(() => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(position => {
-                setUserLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+                setUserLocation({ latitude: position.coords.latitude.toString(), longitude: position.coords.longitude.toString() })
             });
         }
     }, [])
     return (
         <div className={styles.userMarker}>
-            <Marker latitude={userLocation.latitude} longitude={userLocation.longitude} >
+            <Marker latitude={parseInt(userLocation.latitude)} longitude={parseInt(userLocation.longitude)} >
                 <Image src={userMarker} alt={"location of user"} height={30} width={30} />
             </Marker>
         </div>
