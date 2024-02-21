@@ -19,6 +19,7 @@ export default function MapComponent({ data }: Props) {
     const router = useRouter()
 
     console.log({ data })
+    console.log("build")
 
     useEffect(() => {
         console.log({ viewState })
