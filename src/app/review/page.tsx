@@ -3,12 +3,17 @@ import { useFormState, useFormStatus } from "react-dom";
 import styles from "./review.module.css"
 import { createReviewSQL } from "@/lib/server_actions";
 import { useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
+import Pending from "@/components/pending/pending";
 
 export default function CreateReviewPanel() {
+    const router = useRouter()
     const location = useAppSelector((state) => state.map)
     const createReviewWithLocation = createReviewSQL.bind(null, location)
-    const { pending, data } = useFormStatus();
     const [message, formAction] = useFormState(createReviewWithLocation, null)
+    function back() {
+        router.push("/")
+    }
     return (
         <div className={styles.infoPanel}>
             {message?.success !== true ?
@@ -27,14 +32,17 @@ export default function CreateReviewPanel() {
 
                     <div className={styles.buttonContainer}>
                         <button className={styles.save} type="submit">Save</button>
-                        <button className={styles.cancel}>Cancel</button>
+                        <button className={styles.cancel} onClick={back}>Cancel</button>
                     </div>
-
-                    {pending && <p>creating review...</p>}
+                    <Pending />
                     {message?.success === false && <div>An error occured</div>}
                 </form>
                 :
-                <div>Guinness successfully added</div>
+                <div>
+
+                    <div>Guinness successfully added</div>
+                    <button onClick={back}>Back</button>
+                </div>
             }
         </div>
     )

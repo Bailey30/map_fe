@@ -7,9 +7,12 @@ import { createReviewSQL } from "@/lib/server_actions"
 import { useFormState, useFormStatus } from "react-dom"
 import { useRouter } from "next/navigation"
 import ReviewImageCreator from "../reviewImage/reviewImageCreator"
+import { Session } from "next-auth"
+import Pending from "../pending/pending"
 
 interface Props {
     location: Location
+    session: Session | null
 }
 
 function formatDate(dateString: string) {
@@ -17,14 +20,22 @@ function formatDate(dateString: string) {
     return parsedDate.toLocaleString()
 }
 
-export default function ReviewsDisplay({ location }: Props) {
+export default function ReviewsDisplay({ location, session }: Props) {
     const router = useRouter()
     const [showOrAdd, setShowOrAdd] = useState<"show" | "add">("show")
     function handleAddShowButton() {
-        showOrAdd === "add" ? setShowOrAdd("show") : setShowOrAdd("add")
+        if (session) {
+
+            showOrAdd === "add" ? setShowOrAdd("show") : setShowOrAdd("add")
+        } else {
+            router.push("/login")
+        }
     }
     function close() {
         router.push("/")
+    }
+    const buttonMessage = () => {
+        return session ? "Add guinness for this location" : "Sign in to add guinness for this location"
     }
     return (
         <div className={styles.displayContainer}>
@@ -37,7 +48,8 @@ export default function ReviewsDisplay({ location }: Props) {
                 :
                 <AddNewReviewToLocation location={location} cancel={() => setShowOrAdd("show")} />
             }
-            <button onClick={handleAddShowButton} className={styles.addButton}>{showOrAdd === "show" ? "Add guinness for this location" : "Back"}</button>
+            <button onClick={handleAddShowButton} className={styles.addButton}>{showOrAdd === "show" ? buttonMessage()
+                : "Back"}</button>
         </div>
     )
 }
@@ -92,7 +104,6 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
         zoom: 10
     }
     const createReviewWithLocation = createReviewSQL.bind(null, coordindates)
-    const { pending, data } = useFormStatus();
     const [message, formAction] = useFormState(createReviewWithLocation, null)
 
     return (
@@ -107,17 +118,18 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
                     <label htmlFor="price">price</label>
                     <input name="price" type="number"></input>
                     {message?.errors?.price && <p className={styles.errorMessage}>{message?.errors?.price}</p>}
+
                     <label htmlFor="rating">rating</label>
                     <input name="rating" type="number" />
                     {message?.errors?.rating && <p className={styles.errorMessage}>{message?.errors?.rating}</p>}
+
                     <label htmlFor="comments">comments</label>
                     <input type="text" name="comments" />
 
                     <div className={styles.buttonContainer}>
                         <button className={styles.save} type="submit">Save</button>
                     </div>
-
-                    {pending && <p>creating review...</p>}
+                    <Pending />
                     {message?.success === false && <p className={styles.errorMessage}>An error occured</p>}
                 </form>
             }

@@ -1,5 +1,6 @@
 import ReviewsDisplay from "@/components/reviewsDisplay/reviewsDisplay"
 import styles from "../review.module.css"
+import { auth } from "@/lib/auth"
 
 
 async function getReviews(id: string) {
@@ -14,12 +15,13 @@ async function getReviews(id: string) {
 }
 
 export default async function GetReviewPanel({ params }: { params: { slug: string } }) {
-    const locationId = params.slug
+    const locationId = params .slug
+    const session = await auth()
     const location = await getReviews(locationId)
     console.log({ location })
     return (
         <div className={styles.infoPanel}>
-            <ReviewsDisplay location={location} />
+            <ReviewsDisplay location={location} session={session}/>
         </div>
     )
 }

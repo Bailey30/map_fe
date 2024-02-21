@@ -18,6 +18,7 @@ export default function ReviewImageCreator() {
     const finalPhoto = useRef<HTMLImageElement>(null)
     const startButton = useRef<HTMLButtonElement>(null)
 
+    // maybe only call this when they click to add a photo
     function startUp() {
         console.log("startUp")
         if (!video.current) return
@@ -25,9 +26,15 @@ export default function ReviewImageCreator() {
         if (!photo.current) return
         if (!startButton.current) return
         let localHeight = 0
+
         navigator.mediaDevices
-            .getUserMedia({ video: true, audio: false })
-            .then((stream) => {
+            .getUserMedia({ video: { facingMode: "environment" }, audio: false })
+            .then((stream: any) => {
+                if ('srcObject' in video.current!) {
+                    video.current!.srcObject = stream
+                } else {
+                    video.current!.src = URL.createObjectURL(stream)
+                }
                 video!.current!.srcObject = stream
                 video!.current!.play()
             })
@@ -39,16 +46,18 @@ export default function ReviewImageCreator() {
             "canplay",
             (ev) => {
                 if (!streaming) {
-                    console.log("about to set height and width")
                     localHeight = (video!.current!.videoHeight / video!.current!.videoWidth) * width
-                    console.log(localHeight)
                     setHeight(localHeight)
 
-                    // video.current?.setAttribute("width", window.innerHeight.toString())
-                    video.current?.setAttribute("height", window.innerHeight.toString())
+                    if (window.innerWidth < window.innerHeight) {
+                        video.current?.setAttribute("width", window.innerHeight.toString())
+                    } else {
+                        video.current?.setAttribute("height", window.innerHeight.toString())
+                    }
                     canvas.current?.setAttribute("width", (width).toString())
                     canvas.current?.setAttribute("height", (localHeight).toString())
                     setStreaming(true)
+
                     video.current!.setAttribute('autoplay', '');
                     video.current!.setAttribute('muted', '');
                     video.current!.setAttribute('playsinline', '')
@@ -107,10 +116,10 @@ export default function ReviewImageCreator() {
         // opposites for mobile
         previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
         previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
-       
+
         // FOR DESKTOP / LANDSCAPE
         context!.drawImage(video.current!,
-            Math.abs((video.current!.videoWidth / 2) - (video.current!.videoHeight /2)), 0, // from x and y // video.videowidth
+            Math.abs((video.current!.videoWidth / 2) - (video.current!.videoHeight / 2)), 0, // from x and y // video.videowidth
             video.current!.videoHeight, video.current!.videoHeight, // take square
             0, 0, // draw to canvas
             previewCanvas.current!.width, previewCanvas.current!.height, // size that is drawn
@@ -177,7 +186,7 @@ export default function ReviewImageCreator() {
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
 
         <div className={styles.output}>
-            <img ref={finalPhoto} alt="the saved photo to be uploaded"/>
+            <img ref={finalPhoto} alt="the saved photo to be uploaded" />
         </div>
     </>
 }

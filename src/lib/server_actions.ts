@@ -137,7 +137,7 @@ export async function createReviewSQL(coordinates: MapState, prevState: any, for
                 value: data.id ? data.id : data.location,
                 required: true,
                 minLen: {
-                    is: 3,
+                    is: data.id ? 0 : 3,
                     customResponse: "atleast 3",
                 },
                 maxLen: 30,
