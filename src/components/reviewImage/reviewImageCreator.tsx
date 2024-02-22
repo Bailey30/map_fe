@@ -12,13 +12,15 @@ export default function ReviewImageCreator() {
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
     const previewCanvas = useRef<HTMLCanvasElement>(null)
+    const captureArea = useRef<HTMLDivElement>(null)
     const video = useRef<HTMLVideoElement>(null)
     const canvas = useRef<HTMLCanvasElement>(null)
-    // const photo = useRef<HTMLImageElement>(null)
     const finalPhoto = useRef<HTMLImageElement>(null)
     const startButton = useRef<HTMLButtonElement>(null)
 
-    // maybe only call this when they click to add a photo
+    const isMobile = window.innerWidth < window.innerHeight
+    const isDesktop = window.innerWidth > window.innerHeight
+
     function startUp(e: any) {
         console.log("startUp")
         if (!video.current) return
@@ -49,35 +51,20 @@ export default function ReviewImageCreator() {
         context!.fillRect(0, 0, canvas.current!.width, canvas.current!.height)
 
         const data = canvas.current!.toDataURL("image/png")
-        // photo.current!.setAttribute("src", data)
     }
 
     // paintToCanvas
     function startCamera() {
-        console.log("startCamera")
         const context = canvas.current?.getContext("2d")
-        console.log({ width })
-        console.log({ height })
 
         if (width) {
             setTakingPicture(true)
-            console.log("takingPicture")
             canvas.current!.width = width
             canvas.current!.height = height
             // the original that works
             return setInterval(() => {
                 context?.drawImage(video.current!, 0, 0, width, height)
             }, 16)
-            // context?.drawImage(video.current!,
-            // 0, height/4, 500, 500, 0, 0, height, height)
-            //
-            // maybe do this at the moment of taking the picture?
-            // context!.drawImage(video.current!,
-            //     height / 4, 0, // from x and y
-            //     height, height, // take square
-            //     0, 0, // draw to canvas
-            //     height, height // size that is drawn
-            // )
 
         } else {
             console.log("clearingPhoto")
@@ -88,7 +75,8 @@ export default function ReviewImageCreator() {
     function takePicture() {
         const context = previewCanvas.current?.getContext("2d")
 
-        if (window.innerWidth < window.innerHeight) {
+        // handles setting the size of the preview image and capture area
+        if (isMobile) {
             // MOBILE
             previewCanvas.current!.setAttribute("width", window.innerWidth.toString())
             previewCanvas.current!.setAttribute("height", window.innerWidth.toString())
@@ -98,7 +86,10 @@ export default function ReviewImageCreator() {
             previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
         }
 
-        if (window.innerWidth < window.innerHeight) {
+        const h = previewCanvas.current!.getAttribute("width")
+        console.log({ h })
+        // handles drawing the preview image
+        if (isMobile) {
             // MOBILE
             context!.drawImage(video.current!,
                 0, (video.current!.videoHeight / 2) - (video.current!.videoWidth / 2),
@@ -116,20 +107,23 @@ export default function ReviewImageCreator() {
             )
         }
 
-        const data = canvas.current!.toDataURL("image/png")
-        // photo.current!.setAttribute("src", data)
-
-        const aspectRatio = canvas.current!.width / canvas.current!.height
-        let root = document.querySelector(":root") as any
-        root.style.setProperty('--photoAspectRatio', aspectRatio.toString());
-
         setConfirmingPicture(true)
     }
 
     useEffect(() => {
+        // do this to prevent native IOS video overlay
         video.current!.setAttribute('autoplay', '');
         video.current!.setAttribute('muted', '');
         video.current!.setAttribute('playsinline', '')
+
+
+        if (isMobile) {
+            captureArea.current!.style.width = window.innerWidth.toString() + "px"
+            captureArea.current!.style.height = window.innerWidth.toString() + "px"
+        } else {
+            captureArea.current!.style.width = window.innerHeight.toString() + "px"
+            captureArea.current!.style.height = window.innerHeight.toString() + "px"
+        }
 
         video!.current!.addEventListener(
             "canplay",
@@ -140,15 +134,16 @@ export default function ReviewImageCreator() {
                     setHeight(localHeight)
 
                     // mobile
-                    if (window.innerWidth < window.innerHeight) {
-                        video.current?.setAttribute("width", window.innerHeight.toString())
+                    if (isMobile) {
+                        // video.current?.setAttribute("width", window.innerHeight.toString())
                         canvas.current!.width = video.current!.videoWidth
                         canvas.current!.height = video.current!.videoHeight
                     } else {
                         video.current?.setAttribute("height", window.innerHeight.toString())
+
                     }
-                    canvas.current?.setAttribute("width", (width).toString())
-                    canvas.current?.setAttribute("height", (localHeight).toString())
+                    // canvas.current?.setAttribute("width", (width).toString())
+                    // canvas.current?.setAttribute("height", (localHeight).toString())
                     setStreaming(true)
 
 
@@ -187,6 +182,9 @@ export default function ReviewImageCreator() {
     return <>
         <CameraPortal>
             <div className={clsx(takingPicture && styles.openCamera, styles.camera)}>
+            <div className={styles.captureAreaContainer}>
+                <div className={styles.captureArea} ref={captureArea}></div>
+                </div>
                 <div className={styles.captureImage}>
                     <video id="video" ref={video}>Video stream not available</video>
                     <div className={styles.optionButtons}>
