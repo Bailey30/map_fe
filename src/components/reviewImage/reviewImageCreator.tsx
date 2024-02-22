@@ -52,6 +52,7 @@ export default function ReviewImageCreator() {
         // photo.current!.setAttribute("src", data)
     }
 
+    // paintToCanvas
     function startCamera() {
         console.log("startCamera")
         const context = canvas.current?.getContext("2d")
@@ -64,7 +65,9 @@ export default function ReviewImageCreator() {
             canvas.current!.width = width
             canvas.current!.height = height
             // the original that works
-            context?.drawImage(video.current!, 0, 0, width, height)
+            return setInterval(() => {
+                context?.drawImage(video.current!, 0, 0, width, height)
+            }, 16)
             // context?.drawImage(video.current!,
             // 0, height/4, 500, 500, 0, 0, height, height)
             //
@@ -87,8 +90,6 @@ export default function ReviewImageCreator() {
 
         if (window.innerWidth < window.innerHeight) {
             // MOBILE
-            // previewCanvas.current!.width = video.current!.videoWidth
-            // previewCanvas.current!.height = video.current!.videoHeight
             previewCanvas.current!.setAttribute("width", window.innerWidth.toString())
             previewCanvas.current!.setAttribute("height", window.innerWidth.toString())
         } else {
@@ -96,6 +97,7 @@ export default function ReviewImageCreator() {
             previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
             previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
         }
+
         if (window.innerWidth < window.innerHeight) {
             // MOBILE
             context!.drawImage(video.current!,
