@@ -74,8 +74,15 @@
     /* height: 766px; */
     /* width: 766px; */
     /* height: 400px;; */
-    /* width: 400px; */
+/* width: 400px; */
 }
+@media (max-width: 500px){
+    .previewCanvas{
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
 .optionButtons {
     position: absolute;
     left: 50%;

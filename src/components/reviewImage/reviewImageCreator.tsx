@@ -19,7 +19,7 @@ export default function ReviewImageCreator() {
     const startButton = useRef<HTMLButtonElement>(null)
 
     // maybe only call this when they click to add a photo
-    function startUp(e:any) {
+    function startUp(e: any) {
         console.log("startUp")
         // e.preventDefault()
         if (!video.current) return
@@ -42,8 +42,8 @@ export default function ReviewImageCreator() {
             .catch((err) => {
                 console.error(`an error occurred: ${err}`)
             })
-     //
-     // 
+        //
+        // 
 
         // clearPhoto()
         e.preventDefault()
@@ -91,24 +91,32 @@ export default function ReviewImageCreator() {
     function takePicture() {
         const context = previewCanvas.current?.getContext("2d")
 
-        // FOR DESKTOP / LANDSCAPE
-        // opposites for mobile
-        //
         if (window.innerWidth < window.innerHeight) {
+            // MOBILE
             previewCanvas.current!.width = video.current!.videoWidth
             previewCanvas.current!.height = video.current!.videoHeight
         } else {
+            // FOR DESKTOP / LANDSCAPE
             previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
             previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
         }
-
-        // FOR DESKTOP / LANDSCAPE
-        context!.drawImage(video.current!,
-            Math.abs((video.current!.videoWidth / 2) - (video.current!.videoHeight / 2)), 0, // from x and y // video.videowidth
-            video.current!.videoHeight, video.current!.videoHeight, // take square
-            0, 0, // draw to canvas
-            previewCanvas.current!.width, previewCanvas.current!.height, // size that is drawn
-        )
+        if (window.innerWidth < window.innerHeight) {
+            // MOBILE
+            context!.drawImage(video.current!,
+                0, (video.current!.videoHeight / 2) - (video.current!.videoWidth / 2),
+                video.current!.videoWidth, video.current!.videoWidth,
+                0, 0,
+                previewCanvas.current!.width, previewCanvas.current!.height
+            )
+        } else {
+            // FOR DESKTOP / LANDSCAPE
+            context!.drawImage(video.current!,
+                Math.abs((video.current!.videoWidth / 2) - (video.current!.videoHeight / 2)), 0, // from x and y // video.videowidth
+                video.current!.videoHeight, video.current!.videoHeight, // take square
+                0, 0, // draw to canvas
+                previewCanvas.current!.width, previewCanvas.current!.height, // size that is drawn
+            )
+        }
 
         const data = canvas.current!.toDataURL("image/png")
         // photo.current!.setAttribute("src", data)
@@ -144,7 +152,7 @@ export default function ReviewImageCreator() {
                     video.current!.setAttribute('autoplay', '');
                     video.current!.setAttribute('muted', '');
                     video.current!.setAttribute('playsinline', '')
-                    
+
                     startCamera()
                 }
                 ev.preventDefault()
