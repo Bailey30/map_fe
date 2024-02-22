@@ -1,7 +1,7 @@
 "use client"
 import clsx from "clsx"
 import { Location, Review } from "@/utils/types"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import styles from "./reviewsDisplay.module.css"
 import { createReviewSQL } from "@/lib/server_actions"
 import { useFormState, useFormStatus } from "react-dom"
@@ -98,6 +98,7 @@ interface AddNewReviewToLocationProps {
 }
 
 function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProps) {
+    const formRef = useRef<HTMLFormElement>(null)
     const coordindates = {
         latitude: location.latitude,
         longitude: location.longitude,
@@ -106,6 +107,12 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
     const createReviewWithLocation = createReviewSQL.bind(null, coordindates)
     const [message, formAction] = useFormState(createReviewWithLocation, null)
 
+    // useEffect(() => {
+    //     if(!formRef.current) return 
+    //     formRef.current!.addEventListener("submit", function(e: any) {
+    //         e.preventDefault()
+    //     })
+    // }, [])
     return (
         <div className={styles.infoPanel}>
             {message?.success !== true &&
@@ -115,6 +122,7 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
                     <input name="location" className={clsx(styles.hidden)}></input>
 
                     <ReviewImageCreator />
+
                     <label htmlFor="price">price</label>
                     <input name="price" type="number"></input>
                     {message?.errors?.price && <p className={styles.errorMessage}>{message?.errors?.price}</p>}

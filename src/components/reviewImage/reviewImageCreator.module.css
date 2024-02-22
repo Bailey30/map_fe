@@ -66,7 +66,7 @@
 }
 
 .previewCanvas {
-    /* border: 2px solid red; */
+    border: 2px solid blue;
     position: absolute;
     top: 0%;
     /* transform: translateY(-50%); */

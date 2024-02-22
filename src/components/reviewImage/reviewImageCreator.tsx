@@ -14,16 +14,17 @@ export default function ReviewImageCreator() {
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const video = useRef<HTMLVideoElement>(null)
     const canvas = useRef<HTMLCanvasElement>(null)
-    const photo = useRef<HTMLImageElement>(null)
+    // const photo = useRef<HTMLImageElement>(null)
     const finalPhoto = useRef<HTMLImageElement>(null)
     const startButton = useRef<HTMLButtonElement>(null)
 
     // maybe only call this when they click to add a photo
     function startUp(e:any) {
         console.log("startUp")
+        // e.preventDefault()
         if (!video.current) return
         if (!canvas.current) return
-        if (!photo.current) return
+        // if (!photo.current) return
         if (!startButton.current) return
         let localHeight = 0
 
@@ -41,6 +42,8 @@ export default function ReviewImageCreator() {
             .catch((err) => {
                 console.error(`an error occurred: ${err}`)
             })
+     //
+     // 
 
         // clearPhoto()
         e.preventDefault()
@@ -52,7 +55,7 @@ export default function ReviewImageCreator() {
         context!.fillRect(0, 0, canvas.current!.width, canvas.current!.height)
 
         const data = canvas.current!.toDataURL("image/png")
-        photo.current!.setAttribute("src", data)
+        // photo.current!.setAttribute("src", data)
     }
 
     function startCamera() {
@@ -68,7 +71,16 @@ export default function ReviewImageCreator() {
             canvas.current!.height = height
             // the original that works
             context?.drawImage(video.current!, 0, 0, width, height)
-        
+            // context?.drawImage(video.current!,
+            // 0, height/4, 500, 500, 0, 0, height, height)
+            //
+            // maybe do this at the moment of taking the picture?
+            // context!.drawImage(video.current!,
+            //     height / 4, 0, // from x and y
+            //     height, height, // take square
+            //     0, 0, // draw to canvas
+            //     height, height // size that is drawn
+            // )
 
         } else {
             console.log("clearingPhoto")
@@ -81,6 +93,7 @@ export default function ReviewImageCreator() {
 
         // FOR DESKTOP / LANDSCAPE
         // opposites for mobile
+        //
         if (window.innerWidth < window.innerHeight) {
             previewCanvas.current!.width = video.current!.videoWidth
             previewCanvas.current!.height = video.current!.videoHeight
@@ -97,14 +110,12 @@ export default function ReviewImageCreator() {
             previewCanvas.current!.width, previewCanvas.current!.height, // size that is drawn
         )
 
-        // possible not needed
         const data = canvas.current!.toDataURL("image/png")
-        photo.current!.setAttribute("src", data)
+        // photo.current!.setAttribute("src", data)
 
         const aspectRatio = canvas.current!.width / canvas.current!.height
         let root = document.querySelector(":root") as any
         root.style.setProperty('--photoAspectRatio', aspectRatio.toString());
-        //////////
 
         setConfirmingPicture(true)
     }
@@ -136,6 +147,7 @@ export default function ReviewImageCreator() {
                     
                     startCamera()
                 }
+                ev.preventDefault()
             },
             false
         )
@@ -177,7 +189,6 @@ export default function ReviewImageCreator() {
                 </div>
                 <div className={clsx(confirmingPicture && styles.show, styles.confirmingOutput)}>
                     <canvas ref={previewCanvas} className={styles.previewCanvas} />
-                    <img ref={photo} id="photo" alt="temporary image to confirm before saving" />
                     <div className={styles.optionButtons}>
                         <button onClick={savePicture}>Save</button>
                         <button onClick={retakePicture}>Retake</button>
