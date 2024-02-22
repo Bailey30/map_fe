@@ -21,12 +21,9 @@ export default function ReviewImageCreator() {
     // maybe only call this when they click to add a photo
     function startUp(e: any) {
         console.log("startUp")
-        // e.preventDefault()
         if (!video.current) return
         if (!canvas.current) return
-        // if (!photo.current) return
         if (!startButton.current) return
-        let localHeight = 0
 
         navigator.mediaDevices
             .getUserMedia({ video: { facingMode: "environment" }, audio: false })
@@ -42,10 +39,7 @@ export default function ReviewImageCreator() {
             .catch((err) => {
                 console.error(`an error occurred: ${err}`)
             })
-        //
-        // 
 
-        // clearPhoto()
         e.preventDefault()
     }
 
@@ -93,8 +87,10 @@ export default function ReviewImageCreator() {
 
         if (window.innerWidth < window.innerHeight) {
             // MOBILE
-            previewCanvas.current!.width = video.current!.videoWidth
-            previewCanvas.current!.height = video.current!.videoHeight
+            // previewCanvas.current!.width = video.current!.videoWidth
+            // previewCanvas.current!.height = video.current!.videoHeight
+            previewCanvas.current!.setAttribute("width", window.innerWidth.toString())
+            previewCanvas.current!.setAttribute("height", window.innerWidth.toString())
         } else {
             // FOR DESKTOP / LANDSCAPE
             previewCanvas.current!.setAttribute("width", window.innerHeight.toString())
