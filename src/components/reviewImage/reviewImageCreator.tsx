@@ -19,7 +19,7 @@ export default function ReviewImageCreator() {
     const startButton = useRef<HTMLButtonElement>(null)
 
     // maybe only call this when they click to add a photo
-    function startUp() {
+    function startUp(e:any) {
         console.log("startUp")
         if (!video.current) return
         if (!canvas.current) return
@@ -42,33 +42,8 @@ export default function ReviewImageCreator() {
                 console.error(`an error occurred: ${err}`)
             })
 
-        video!.current!.addEventListener(
-            "canplay",
-            (ev) => {
-                if (!streaming) {
-                    localHeight = (video!.current!.videoHeight / video!.current!.videoWidth) * width
-                    setHeight(localHeight)
-
-                    if (window.innerWidth < window.innerHeight) {
-                        video.current?.setAttribute("width", window.innerHeight.toString())
-                        canvas.current!.width = video.current!.videoWidth
-                        canvas.current!.height = video.current!.videoHeight
-                    } else {
-                        video.current?.setAttribute("height", window.innerHeight.toString())
-                    }
-                    canvas.current?.setAttribute("width", (width).toString())
-                    canvas.current?.setAttribute("height", (localHeight).toString())
-                    setStreaming(true)
-
-                    video.current!.setAttribute('autoplay', '');
-                    video.current!.setAttribute('muted', '');
-                    video.current!.setAttribute('playsinline', '')
-                }
-            },
-            false
-        )
-
-        clearPhoto()
+        // clearPhoto()
+        e.preventDefault()
     }
 
     function clearPhoto() {
@@ -80,35 +55,25 @@ export default function ReviewImageCreator() {
         photo.current!.setAttribute("src", data)
     }
 
-    function startCamera(e: any) {
+    function startCamera() {
         console.log("startCamera")
         const context = canvas.current?.getContext("2d")
         console.log({ width })
         console.log({ height })
 
-        if (width && height) {
+        if (width) {
             setTakingPicture(true)
             console.log("takingPicture")
             canvas.current!.width = width
             canvas.current!.height = height
             // the original that works
             context?.drawImage(video.current!, 0, 0, width, height)
-            // context?.drawImage(video.current!,
-            // 0, height/4, 500, 500, 0, 0, height, height)
-            //
-            // maybe do this at the moment of taking the picture?
-            // context!.drawImage(video.current!,
-            //     height / 4, 0, // from x and y
-            //     height, height, // take square
-            //     0, 0, // draw to canvas
-            //     height, height // size that is drawn
-            // )
+        
 
         } else {
             console.log("clearingPhoto")
             clearPhoto()
         }
-        e.preventDefault()
     }
 
     function takePicture() {
@@ -116,7 +81,6 @@ export default function ReviewImageCreator() {
 
         // FOR DESKTOP / LANDSCAPE
         // opposites for mobile
-        //
         if (window.innerWidth < window.innerHeight) {
             previewCanvas.current!.width = video.current!.videoWidth
             previewCanvas.current!.height = video.current!.videoHeight
@@ -133,18 +97,48 @@ export default function ReviewImageCreator() {
             previewCanvas.current!.width, previewCanvas.current!.height, // size that is drawn
         )
 
+        // possible not needed
         const data = canvas.current!.toDataURL("image/png")
         photo.current!.setAttribute("src", data)
 
         const aspectRatio = canvas.current!.width / canvas.current!.height
         let root = document.querySelector(":root") as any
         root.style.setProperty('--photoAspectRatio', aspectRatio.toString());
+        //////////
 
         setConfirmingPicture(true)
     }
 
     useEffect(() => {
-        startUp()
+        video!.current!.addEventListener(
+            "canplay",
+            (ev) => {
+                let localHeight = 0;
+                if (!streaming) {
+                    localHeight = (video!.current!.videoHeight / video!.current!.videoWidth) * width
+                    setHeight(localHeight)
+
+                    // mobile
+                    if (window.innerWidth < window.innerHeight) {
+                        video.current?.setAttribute("width", window.innerHeight.toString())
+                        canvas.current!.width = video.current!.videoWidth
+                        canvas.current!.height = video.current!.videoHeight
+                    } else {
+                        video.current?.setAttribute("height", window.innerHeight.toString())
+                    }
+                    canvas.current?.setAttribute("width", (width).toString())
+                    canvas.current?.setAttribute("height", (localHeight).toString())
+                    setStreaming(true)
+
+                    video.current!.setAttribute('autoplay', '');
+                    video.current!.setAttribute('muted', '');
+                    video.current!.setAttribute('playsinline', '')
+                    
+                    startCamera()
+                }
+            },
+            false
+        )
     }, [])
 
     useEffect(() => {
@@ -152,20 +146,23 @@ export default function ReviewImageCreator() {
     }, [height])
 
 
-    function savePicture() {
+    function savePicture(e: any) {
         setConfirmingPicture(false)
         setTakingPicture(false)
 
         const data = previewCanvas.current!.toDataURL("image/png")
         finalPhoto.current!.setAttribute("src", data)
+        e.preventDefault()
     }
-    function retakePicture() {
+    function retakePicture(e: any) {
         setConfirmingPicture(false)
+        e.preventDefault()
     }
-    function cancelTakingPicture() {
+    function cancelTakingPicture(e: any) {
         setConfirmingPicture(false)
         setTakingPicture(false)
         clearPhoto()
+        e.preventDefault()
     }
 
     return <>
@@ -190,7 +187,7 @@ export default function ReviewImageCreator() {
             </div>
         </CameraPortal>
 
-        <button id="startButton" ref={startButton} onClick={startCamera}>Take photo</button>
+        <button id="startButton" ref={startButton} onClick={startUp}>Take photo</button>
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
 
         <div className={styles.output}>
