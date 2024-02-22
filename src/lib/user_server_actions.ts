@@ -1,12 +1,10 @@
 "use server"
 import { redirect } from "next/navigation";
 import prisma from "../lib/db"
-import bcrypt from "bcrypt"
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
 import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
 import { InputErrors } from "@/utils/types";
-import { validate } from "@/utils/formValidator";
 
 
 export async function register(prevData: any, formData: FormData) {
@@ -20,10 +18,10 @@ export async function register(prevData: any, formData: FormData) {
             where: {
                 OR: [
                     {
-                        email: String(email),
+                        email: String(email).toLowerCase(),
                     },
                     {
-                        username: String(username)
+                        username: String(username).toLowerCase()
                     }
                 ]
             }
@@ -51,9 +49,9 @@ export async function register(prevData: any, formData: FormData) {
 
         await prisma.user.create({
             data: {
-                email: email as string,
+                email: String(email).toLowerCase(),
                 password: hashedPassword,
-                username: username as string
+                username: String(username).toLowerCase()
             }
         })
 
@@ -74,7 +72,7 @@ export async function login(prevState: any, formData: any) {
 
     try {
         const user = await signIn("credentials", {
-            email,
+            email: email.toLowerCase(),
             password,
             // redirect: false
         })

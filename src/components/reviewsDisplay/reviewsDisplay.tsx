@@ -107,12 +107,6 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
     const createReviewWithLocation = createReviewSQL.bind(null, coordindates)
     const [message, formAction] = useFormState(createReviewWithLocation, null)
 
-    // useEffect(() => {
-    //     if(!formRef.current) return 
-    //     formRef.current!.addEventListener("submit", function(e: any) {
-    //         e.preventDefault()
-    //     })
-    // }, [])
     return (
         <div className={styles.infoPanel}>
             {message?.success !== true &&

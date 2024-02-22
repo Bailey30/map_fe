@@ -24,29 +24,24 @@ export default function MapComponent({ data }: Props) {
     useEffect(() => {
         console.log({ viewState })
     }, [viewState])
+    //
     // could move into a hook called useMapControls
-
     useEffect(() => {
-        if ("geolocation" in navigator) {
-            // if there is coords stored in session storage - use them 
-            // if not - do this 
-            const sessionLat = sessionStorage.getItem("latitude")
-            const sessionLong = sessionStorage.getItem("longitude")
-            if (sessionLat && sessionLong) {
-                dispatch(MOVE_TO({ longitude: parseFloat(sessionLong), latitude: parseFloat(sessionLat), zoom: viewState.zoom }))
-            } else {
-
+        // if there is coords stored in session storage - use them 
+        const sessionLat = sessionStorage.getItem("latitude")
+        const sessionLong = sessionStorage.getItem("longitude")
+        if (sessionLat && sessionLong && sessionLat !== "0" && sessionLong !== "0") {
+            dispatch(MOVE_TO({ longitude: parseFloat(sessionLong), latitude: parseFloat(sessionLat), zoom: viewState.zoom }))
+        } else {
+            if ("geolocation" in navigator) {
+                // if not - do this 
                 navigator.geolocation.getCurrentPosition(position => {
                     dispatch(MOVE_TO({ longitude: position.coords.longitude, latitude: position.coords.latitude, zoom: viewState.zoom }))
                 });
+            } else {
+                console.log("geolocation not happenin")
             }
-        } else {
-            console.log("geolocation not happenin")
         }
-        return () => {
-            console.log("RETURN FUNC")
-        }
-
     }, [])
 
     window.onbeforeunload = function() {

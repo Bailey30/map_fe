@@ -182,8 +182,8 @@ export default function ReviewImageCreator() {
     return <>
         <CameraPortal>
             <div className={clsx(takingPicture && styles.openCamera, styles.camera)}>
-            <div className={styles.captureAreaContainer}>
-                <div className={styles.captureArea} ref={captureArea}></div>
+                <div className={styles.captureAreaContainer}>
+                    <div className={styles.captureArea} ref={captureArea}></div>
                 </div>
                 <div className={styles.captureImage}>
                     <video id="video" ref={video}>Video stream not available</video>
