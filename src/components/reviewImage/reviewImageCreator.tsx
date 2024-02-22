@@ -127,6 +127,10 @@ export default function ReviewImageCreator() {
     }
 
     useEffect(() => {
+        video.current!.setAttribute('autoplay', '');
+        video.current!.setAttribute('muted', '');
+        video.current!.setAttribute('playsinline', '')
+
         video!.current!.addEventListener(
             "canplay",
             (ev) => {
@@ -147,9 +151,6 @@ export default function ReviewImageCreator() {
                     canvas.current?.setAttribute("height", (localHeight).toString())
                     setStreaming(true)
 
-                    video.current!.setAttribute('autoplay', '');
-                    video.current!.setAttribute('muted', '');
-                    video.current!.setAttribute('playsinline', '')
 
                     startCamera()
                 }
