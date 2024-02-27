@@ -7,6 +7,8 @@ import { z } from "zod"
 import prisma from "../lib/db"
 import { auth } from "./auth"
 import { hasErrors, validate } from "@/utils/formValidator"
+import { ReviewData } from "@/utils/types"
+import uploadImage from "./uploadImage"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -19,15 +21,6 @@ const FromSchema = z.object({
 })
 const CreateReview = FromSchema.omit({ id: true })
 
-type FormState = {
-    id?: string,
-    location?: string,
-    price: string,
-    rating: string,
-    comments: string,
-    latitude: number,
-    longitude: number
-}
 
 
 export async function createReview(location: MapState, prevState: any, formData: FormData) {
@@ -106,13 +99,12 @@ async function getLocation(id: string) {
 }
 
 // Creates reviews on locations that already exist and create locations when they dont
-export async function createReviewSQL(coordinates: MapState, prevState: any, formData: FormData) {
+export async function createReviewSQL(reviewData: ReviewData, prevState: any, formData: FormData) {
     console.log("creating review with SQL")
     console.log(formData)
 
     try {
-        const { latitude, longitude } = coordinates
-
+        const { latitude, longitude } = reviewData.mapState
         const form = Object.fromEntries(formData)
         const data = Object.fromEntries(
             Object.entries(form).map(([key, value]) => [key, value as string])
@@ -155,7 +147,7 @@ export async function createReviewSQL(coordinates: MapState, prevState: any, for
 
         const user = await getUser()
 
-        const location = data.id ? await getLocation(data.id) : await createLocation(coordinates, data.location)
+        const location = data.id ? await getLocation(data.id) : await createLocation(reviewData.mapState, data.location)
         if (!location) {
             throw new Error("error creating location")
         }
@@ -171,6 +163,11 @@ export async function createReviewSQL(coordinates: MapState, prevState: any, for
         })
 
         console.log({ newReview })
+
+        if (reviewData.imageData) {
+            const key = newReview.id
+            await uploadImage(reviewData.imageData, key)
+        }
 
         revalidateTag("reviews")
 

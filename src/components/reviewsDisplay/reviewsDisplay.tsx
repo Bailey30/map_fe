@@ -4,11 +4,13 @@ import { Location, Review } from "@/utils/types"
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import styles from "./reviewsDisplay.module.css"
 import { createReviewSQL } from "@/lib/server_actions"
-import { useFormState, useFormStatus } from "react-dom"
+import { useFormState } from "react-dom"
 import { useRouter } from "next/navigation"
 import ReviewImageCreator from "../reviewImage/reviewImageCreator"
 import { Session } from "next-auth"
 import Pending from "../pending/pending"
+import { MapState } from "@/redux/slice"
+import Image from "next/image"
 
 interface Props {
     location: Location
@@ -59,6 +61,7 @@ interface ReviewListProps {
 }
 
 function ReviewList({ reviews }: ReviewListProps) {
+    const [imageData, setImageData] = useState<any>()
     const [active, setActive] = useState<number>(0)
     const totalReviews = reviews.length
     const reviewNumber = active + 1
@@ -74,11 +77,27 @@ function ReviewList({ reviews }: ReviewListProps) {
         }
     }
 
+    useEffect(() => {
+        // make it so it only try to get an image if it knows there is one saved
+        console.log(reviews[active].id)
+        fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${reviews[active].locationId}&review=${reviews[active].id}`, { method: "GET" })
+            .then((res) => {
+                console.log({ res })
+                return res.json()
+            })
+            .then((res) => {
+                console.log({res})
+                setImageData(res.image)
+            })
+
+    }, [active])
+
     return (
         <div className={styles.detailsContainer}>
             <div className={clsx(styles.arrow, styles.right)} onClick={previous}>{`<`}</div>
             <div className={styles.detailsInner}>
                 <p className={styles.reviewDetail}>{reviewNumber}/{totalReviews}</p>
+                <Image src={imageData} alt="guinness for the associated review" height={100} width={100}/>
                 <p className={styles.reviewDetail}>price: {reviews[active].price}</p>
                 <p className={styles.reviewDetail}>rating: {reviews[active].rating}</p>
                 <p className={styles.reviewDetail}>comments: {reviews[active].comments}</p>
@@ -99,12 +118,17 @@ interface AddNewReviewToLocationProps {
 
 function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProps) {
     const formRef = useRef<HTMLFormElement>(null)
-    const coordindates = {
+    const [imageData, setImageData] = useState<any>()
+    const mapState: MapState = {
         latitude: location.latitude,
         longitude: location.longitude,
         zoom: 10
     }
-    const createReviewWithLocation = createReviewSQL.bind(null, coordindates)
+    const reviewData: { mapState: MapState, imageData: string | undefined } = {
+        mapState,
+        imageData,
+    }
+    const createReviewWithLocation = createReviewSQL.bind(null, reviewData)
     const [message, formAction] = useFormState(createReviewWithLocation, null)
 
     return (
@@ -115,7 +139,7 @@ function AddNewReviewToLocation({ location, cancel }: AddNewReviewToLocationProp
                     <label htmlFor="location" className={clsx(styles.hidden)}>Location</label>
                     <input name="location" className={clsx(styles.hidden)}></input>
 
-                    <ReviewImageCreator />
+                    <ReviewImageCreator setImageData={setImageData} />
 
                     <label htmlFor="price">price</label>
                     <input name="price" type="number"></input>

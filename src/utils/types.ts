@@ -1,3 +1,4 @@
+import { MapState } from "@/redux/slice"
 import { number } from "zod"
 
 export type Review = {
@@ -26,4 +27,9 @@ export type InputErrors = {
     username?: string | undefined
     password?: string | undefined
     email?: string | undefined
+}
+
+export type ReviewData = {
+    mapState: MapState
+    imageData?: string | undefined
 }

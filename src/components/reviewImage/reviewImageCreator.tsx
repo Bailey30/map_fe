@@ -1,16 +1,19 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
+import { SetStateAction, useEffect, useRef, useState } from "react"
 import styles from "./reviewImageCreator.module.css"
 import { start } from "repl"
 import clsx from "clsx"
 import CameraPortal from "./CameraPortal"
-import { current } from "@reduxjs/toolkit"
-export default function ReviewImageCreator() {
+
+interface Props {
+    setImageData: React.Dispatch<SetStateAction<any>>
+}
+export default function ReviewImageCreator({ setImageData }: Props) {
     const [streaming, setStreaming] = useState<boolean>(false)
     const [width, setWidth] = useState<number>(window.innerWidth)
     const [height, setHeight] = useState<number>(0)
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
+
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const captureArea = useRef<HTMLDivElement>(null)
     const video = useRef<HTMLVideoElement>(null)
@@ -19,7 +22,6 @@ export default function ReviewImageCreator() {
     const startButton = useRef<HTMLButtonElement>(null)
 
     const isMobile = window.innerWidth < window.innerHeight
-    const isDesktop = window.innerWidth > window.innerHeight
 
     function startUp(e: any) {
         console.log("startUp")
@@ -63,7 +65,7 @@ export default function ReviewImageCreator() {
             canvas.current!.height = height
             // the original that works
             return setInterval(() => {
-                context?.drawImage(video.current!, 0, 0, width, height)
+                context && context?.drawImage(video.current!, 0, 0, width, height)
             }, 16)
 
         } else {
@@ -155,17 +157,15 @@ export default function ReviewImageCreator() {
         )
     }, [])
 
-    useEffect(() => {
-        console.log({ height })
-    }, [height])
-
 
     function savePicture(e: any) {
         setConfirmingPicture(false)
         setTakingPicture(false)
 
-        const data = previewCanvas.current!.toDataURL("image/png")
+        const data = previewCanvas.current!.toDataURL("image/jpeg")
+        console.log("iamge data", data)
         finalPhoto.current!.setAttribute("src", data)
+        setImageData(data)
         e.preventDefault()
     }
     function retakePicture(e: any) {

@@ -29,6 +29,7 @@ export default function useMarkers() {
     return useQuery({ queryKey: ["reviews"], queryFn: getMarkers })
 }
 
+
 // export async function useNextCacheMarkers(){
 //     console.log("calling usenextcacheMarkers")
 //     const res = await fetch(process.env.NEXT_PUBLIC_REVIEW_ENDPOINT, {next: {tags: ["reviews"]}})
@@ -45,7 +46,7 @@ export async function useNextCacheMarkers(): Promise<Location[] | undefined> {
     console.log(process.env.NEXT_PUBLIC_URL)
     try {
         // setting "no-store" so the data is fetched dynamically every request
-        // setting the tag "reviews" to cause a data refetch when manually revalidatin the tag in a server action
+        // setting the tag "reviews" to cause a data refetch when manually revalidating the tag in a server action
         return await fetch(process.env.NEXT_PUBLIC_URL as string +"/api/review", { cache: "no-store", next: { tags: ["reviews"] } })
             .then(async (response) => {
                 if (!response.ok) {
