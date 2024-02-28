@@ -9,11 +9,16 @@ import Pending from "@/components/pending/pending";
 export default function CreateReviewPanel() {
     const router = useRouter()
     const location = useAppSelector((state) => state.map)
-    const createReviewWithLocation = createReviewSQL.bind(null, location)
+    const reviewData = {
+        mapState: location
+    }
+    const createReviewWithLocation = createReviewSQL.bind(null, reviewData)
     const [message, formAction] = useFormState(createReviewWithLocation, null)
+
     function back() {
         router.push("/")
     }
+
     return (
         <div className={styles.infoPanel}>
             {message?.success !== true ?
