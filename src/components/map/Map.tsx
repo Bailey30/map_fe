@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useMemo } from "react"
 import styles from "./map.module.css"
-import { Map, Marker } from "react-map-gl"
+import { GeolocateControl, Map, Marker } from "react-map-gl"
 import { MOVE_TO } from "@/redux/slice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -83,6 +83,7 @@ export default function MapComponent({ data }: Props) {
             >
                 {data && markers}
                 <UserMarker />
+                <GeolocateControl />
             </Map>
         </div>
     )

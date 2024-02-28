@@ -89,6 +89,8 @@ body {
 }
 main {
     height: 100vh;
+    position: absolute;
+    top: 0;
 }
 
 body {
@@ -115,3 +117,21 @@ a {
 .mapboxgl-control-container {
     display: none;
 }
+.mapboxgl-control-container {
+    display: block;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    left:15px;
+    top: 40px;
+    z-index: 105;
+}
+.mapboxgl-ctrl-top-left,
+/* .mapboxgl-ctrl-top-right, */
+.mapboxgl-ctrl-bottom-left,
+.mapboxgl-ctrl-bottom-right,
+.mapboxgl-user-location-accuracy-circle,
+.mapboxgl-user-location-dot{
+    display: none;
+}
+
