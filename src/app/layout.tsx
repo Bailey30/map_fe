@@ -4,6 +4,8 @@ import StoreProvider from "@/components/storeProvider";
 import QueryProvider from "@/utils/queryProvider";
 import MainContainer from "@/components/mainContainer/mainContainer";
 import RouteChangeListener from "@/utils/routeChangeListener";
+import { Suspense } from "react";
+import MapLoader from "@/components/loaders/mapLoader";
 
 
 export const metadata: Metadata = {
@@ -22,7 +24,9 @@ export default function RootLayout({
                 <QueryProvider>
                     <StoreProvider>
                         <main style={{ "position": "relative" }}>
+                        <Suspense fallback={<MapLoader/>}>
                             <MainContainer />
+                            </Suspense>
                             <RouteChangeListener/>
                             {children}
                         </main>

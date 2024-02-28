@@ -1,5 +1,4 @@
 import axios from "axios"
-import { sign } from "crypto";
 
 async function blobify(data:string) {
     try {
@@ -21,9 +20,9 @@ export default async function uploadImage(imageData: string, key: number) {
             headers: {
             "Content-Type": "image/jpeg"
         }})
+        console.log("upload image result",result.body)
     } catch (err: any) {
         console.log("error uploading image", err)
         throw new Error("error uploading image", err)
     }
-
 }

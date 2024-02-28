@@ -158,16 +158,27 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
                 creatorId: user.id,
                 rating: parseInt(data.rating),
                 price: parseFloat(data.price),
-                comments: data.comments
+                comments: data.comments,
             }
         })
 
-        console.log({ newReview })
-
         if (reviewData.imageData) {
+            console.log("updating with image id")
             const key = newReview.id
             await uploadImage(reviewData.imageData, key)
+
+            await prisma?.review.update({
+                where: {
+                    id: newReview.id
+                },
+                data: {
+                    imageId: newReview.id
+                }
+            })
+        } else {
+            console.log("no image id")
         }
+
 
         revalidateTag("reviews")
 

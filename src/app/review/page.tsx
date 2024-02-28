@@ -5,15 +5,18 @@ import { createReviewSQL } from "@/lib/server_actions";
 import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import Pending from "@/components/pending/pending";
+import ReviewImageCreator from "@/components/reviewImage/reviewImageCreator";
+import UseCreateReview from "@/utils/useCreateReview";
 
 export default function CreateReviewPanel() {
     const router = useRouter()
-    const location = useAppSelector((state) => state.map)
-    const reviewData = {
-        mapState: location
-    }
-    const createReviewWithLocation = createReviewSQL.bind(null, reviewData)
-    const [message, formAction] = useFormState(createReviewWithLocation, null)
+    const { setImageData, message, formAction } = UseCreateReview()
+    // const location = useAppSelector((state) => state.map)
+    // const reviewData = {
+    // mapState: location
+    // }
+    // const createReviewWithLocation = createReviewSQL.bind(null, reviewData)
+    // const [message, formAction] = useFormState(createReviewWithLocation, null)
 
     function back() {
         router.push("/")
@@ -23,6 +26,7 @@ export default function CreateReviewPanel() {
         <div className={styles.infoPanel}>
             {message?.success !== true ?
                 <form action={formAction}>
+                    <ReviewImageCreator setImageData={setImageData} />
                     <label htmlFor="location">Location</label>
                     <input name="location"></input>
                     {message?.errors?.location && <div>{message?.errors?.location}</div>}

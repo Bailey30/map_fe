@@ -43,10 +43,12 @@ export default function MapComponent({ data }: Props) {
         }
     }, [])
 
-    window.onbeforeunload = function() {
-        console.log("before reload")
-        sessionStorage.setItem("latitude", String(viewState.latitude))
-        sessionStorage.setItem("longitude", String(viewState.longitude))
+    if (typeof window !== "undefined") {
+        window.onbeforeunload = function() {
+            console.log("before reload")
+            sessionStorage.setItem("latitude", String(viewState.latitude))
+            sessionStorage.setItem("longitude", String(viewState.longitude))
+        }
     }
 
     function onMove(e: any) {

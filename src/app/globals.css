@@ -84,7 +84,11 @@
 html,
 body {
   max-width: 100vw;
+  height: 100vh;
   overflow-x: hidden;
+}
+main {
+    height: 100vh;
 }
 
 body {
@@ -106,4 +110,8 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.mapboxgl-control-container {
+    display: none;
 }

@@ -11,6 +11,7 @@ export type Review = {
     locationId: number,
     creatorId: number
     creator: { username: string }
+    imageId?: number
 }
 
 export type ReviewRequest = Omit<Review, "id">
