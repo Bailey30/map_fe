@@ -80,13 +80,13 @@ function ReviewList({ reviews }: ReviewListProps) {
     useEffect(() => {
         // make it so it only try to get an image if it knows there is one saved
         console.log(reviews[active].id)
-        fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${reviews[active].locationId}&review=${reviews[active].id}`, { method: "GET" })
+        fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${reviews[active].locationId}&review=${reviews[active].id}`, { method: "GET", cache: "force-cache" })
             .then((res) => {
                 console.log({ res })
                 return res.json()
             })
             .then((res) => {
-                console.log({res})
+                console.log({ res })
                 setImageData(res.image)
             })
 
@@ -97,7 +97,7 @@ function ReviewList({ reviews }: ReviewListProps) {
             <div className={clsx(styles.arrow, styles.right)} onClick={previous}>{`<`}</div>
             <div className={styles.detailsInner}>
                 <p className={styles.reviewDetail}>{reviewNumber}/{totalReviews}</p>
-                <Image src={imageData} alt="guinness for the associated review" height={100} width={100}/>
+                <Image src={imageData} alt="guinness for the associated review" height={100} width={100} />
                 <p className={styles.reviewDetail}>price: {reviews[active].price}</p>
                 <p className={styles.reviewDetail}>rating: {reviews[active].rating}</p>
                 <p className={styles.reviewDetail}>comments: {reviews[active].comments}</p>
