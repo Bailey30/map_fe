@@ -52,9 +52,10 @@
     position: absolute;
     top: 0%;
 }
+
 .captureAreaContainer {
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
     height: 100dvh;
     width: 100vw;
@@ -92,6 +93,7 @@
 }
 
 @media (max-width: 500px) {
+
     .previewCanvas,
     .captureArea {
         top: 50%;
@@ -134,4 +136,15 @@
 
 .output img {
     width: 100%;
+}
+
+.button {
+    color: black;
+    background: white;
+    width: 100px;
+    height: 20px;
+    margin: 0 auto;
+    margin-top: 7px;
+    margin-bottom: 10px;
+    display: block;
 }

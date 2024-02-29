@@ -1,0 +1,7 @@
+.star {
+    filter: invert(100%);
+
+    &.active {
+        filter:invert(0%);
+    }
+}

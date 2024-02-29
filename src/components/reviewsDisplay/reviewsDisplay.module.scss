@@ -1,0 +1,26 @@
+@use "../../styles/mixins.scss";
+@use "../../styles/variable.scss" as *;
+
+.hidden {
+    display: none;
+}
+
+.displayContainer {
+    color: white;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.button {
+    @include mixins.submitButton;
+
+    &.add {
+        width: 100%;
+        background: $gold;
+        margin-top: 20px;
+    }
+}

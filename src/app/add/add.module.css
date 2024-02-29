@@ -34,16 +34,17 @@
 }
 .saveButton {
     position: absolute;
+    font-size: 20px;
     bottom: 10px;
     left: 50%;
-    height: 25px;
+    height: 35px;
     transform: translateX(-50%);
     z-index: 100;
-    border: 1px solid black;
-    width: 50px;
-    background: grey;
+    width: 70px;
+    background: white;
     display: flex;
     align-items: center;
     justify-content: center;
     pointer-events: all;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
 }

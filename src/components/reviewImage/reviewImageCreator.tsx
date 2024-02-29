@@ -1,5 +1,5 @@
 import { SetStateAction, useEffect, useRef, useState } from "react"
-import styles from "./reviewImageCreator.module.css"
+import styles from "./reviewImageCreator.module.scss"
 import { start } from "repl"
 import clsx from "clsx"
 import CameraPortal from "./CameraPortal"
@@ -7,12 +7,14 @@ import CameraPortal from "./CameraPortal"
 interface Props {
     setImageData: React.Dispatch<SetStateAction<any>>
 }
+
 export default function ReviewImageCreator({ setImageData }: Props) {
     const [streaming, setStreaming] = useState<boolean>(false)
     const [width, setWidth] = useState<number>(window.innerWidth)
     const [height, setHeight] = useState<number>(0)
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
+    const [pictureSaved, setPictureSaved] = useState<boolean>(false)
 
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const captureArea = useRef<HTMLDivElement>(null)
@@ -112,7 +114,10 @@ export default function ReviewImageCreator({ setImageData }: Props) {
         setConfirmingPicture(true)
     }
 
+
     useEffect(() => {
+        if (streaming) return
+
         // do this to prevent native IOS video overlay
         video.current!.setAttribute('autoplay', '');
         video.current!.setAttribute('muted', '');
@@ -166,6 +171,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
         console.log("iamge data", data)
         finalPhoto.current!.setAttribute("src", data)
         setImageData(data)
+        setPictureSaved(true)
         e.preventDefault()
     }
     function retakePicture(e: any) {
@@ -179,7 +185,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
         e.preventDefault()
     }
 
-    return <>
+    return <div>
         <CameraPortal>
             <div className={clsx(takingPicture && styles.openCamera, styles.camera)}>
                 <div className={styles.captureAreaContainer}>
@@ -203,11 +209,11 @@ export default function ReviewImageCreator({ setImageData }: Props) {
             </div>
         </CameraPortal>
 
-        <button id="startButton" ref={startButton} onClick={startUp}>Take photo</button>
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
 
         <div className={styles.output}>
             <img ref={finalPhoto} alt="the saved photo to be uploaded" />
         </div>
-    </>
+        <button id="startButton" ref={startButton} onClick={startUp} className={clsx(styles.button, styles.takePhoto)}>{pictureSaved ? "Retake" : "Take"} photo</button>
+    </div>
 }

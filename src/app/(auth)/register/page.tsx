@@ -26,11 +26,11 @@ export default function RegisterPage() {
                 {errorMessage?.email && <p>{errorMessage.email}</p>}
 
                 <label htmlFor="password">password</label>
-                <input type="text" name="password" />
+                <input type="password" name="password" />
                 {errorMessage?.password && <p>{errorMessage.password}</p>}
 
                 <label htmlFor="passwordRepeat">type password again</label>
-                <input type="text" name="passwordRepeat" />
+                <input type="password" name="passwordRepeat" />
 
                 <button type="submit">Register</button>
                 <Link href="/login">Already have an account? Log in.</Link>

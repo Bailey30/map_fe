@@ -1,0 +1,79 @@
+@use "../../styles/variable.scss" as *;
+
+.detailsContainer {
+    display: flex;
+    justify-content: space-between;
+    // color: $grey;
+}
+
+.arrow {
+    display: flex;
+    align-items: center;
+
+    &.left {
+        padding-right: 5px;
+    }
+
+    &.right {
+        padding-left: 5px;
+    }
+}
+
+.count {
+    display: none;
+}
+
+.reviewImage {
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    background: white;
+    margin-bottom: 10px;
+}
+
+.imageAndDetails {
+    display: flex;
+}
+
+.detailsInner {
+    display: none;
+    width: 100%;
+}
+
+.activeReview {
+    display: block;
+}
+
+.details {
+    width: 100%;
+    margin-left: 10px;
+}
+
+.reviewDetail {
+    display: flex;
+    // justify-content: space-between;
+    font-weight: 100;
+    // margin-bottom: 10px;
+    font-size: 12px;
+
+    &.name {
+        font-weight: 900;
+    }
+    .value {
+        font-weight: 600;
+margin-right: 5px;
+        &.createdAt {
+            font-weight: 100;
+        }
+    }
+
+    &.comments {
+        display: block;
+
+        .value {
+            padding-top: 5px;
+            font-weight: lighter;
+            display: block;
+        }
+    }
+}

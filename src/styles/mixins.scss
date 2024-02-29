@@ -1,0 +1,37 @@
+@use "./variable.scss" as *;
+@mixin input {
+    width: 100%;
+    background: black;
+    border-style: none;
+    border: 1px solid $grey;
+    // border-radius: 3px;
+    height: 20px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+    font-size: 12px;
+
+    &.comment {
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    ;
+}
+
+@mixin label {
+    display: block;
+    margin-bottom: 5px;
+    color: #F0D878;
+    font-size: 12px;
+}
+
+@mixin submitButton {
+    background: white;
+    // border-radius: 2px;
+    padding: 10px;
+    color: black;
+}

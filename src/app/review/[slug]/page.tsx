@@ -1,6 +1,7 @@
 import ReviewsDisplay from "@/components/reviewsDisplay/reviewsDisplay"
-import styles from "../review.module.css"
+import styles from "../review.module.scss"
 import { auth } from "@/lib/auth"
+import ScrollContainer from "@/components/scrollContainer/scrollContainer"
 
 
 async function getReviews(id: string) {
@@ -18,10 +19,11 @@ export default async function GetReviewPanel({ params }: { params: { slug: strin
     const locationId = params.slug
     const session = await auth()
     const location = await getReviews(locationId)
-    console.log({ location })
     return (
-        <div className={styles.infoPanel}>
+        <ScrollContainer>
+            <div className={styles.infoPanel}>
                 <ReviewsDisplay location={location} session={session} />
-        </div>
+            </div>
+        </ScrollContainer>
     )
 }

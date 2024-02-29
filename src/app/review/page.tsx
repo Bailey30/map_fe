@@ -1,58 +1,71 @@
 "use client"
-import { useFormState, useFormStatus } from "react-dom";
-import styles from "./review.module.css"
-import { createReviewSQL } from "@/lib/server_actions";
-import { useAppSelector } from "@/redux/hooks";
-import { useRouter } from "next/navigation";
+import styles from "./review.module.scss"
+import { usePathname, useRouter } from "next/navigation";
 import Pending from "@/components/pending/pending";
 import ReviewImageCreator from "@/components/reviewImage/reviewImageCreator";
 import UseCreateReview from "@/utils/useCreateReview";
+import clsx from "clsx";
+import ScrollContainer from "@/components/scrollContainer/scrollContainer";
+import { useAppSelector } from "@/redux/hooks";
+import GuinnessMarker from "@/components/guinnessMarker/guinessMarker";
+import StarRating from "@/components/starRating/starRating";
+import { useState } from "react";
 
 export default function CreateReviewPanel() {
     const router = useRouter()
+    const pathname = usePathname()
     const { setImageData, message, formAction } = UseCreateReview()
-    // const location = useAppSelector((state) => state.map)
-    // const reviewData = {
-    // mapState: location
-    // }
-    // const createReviewWithLocation = createReviewSQL.bind(null, reviewData)
-    // const [message, formAction] = useFormState(createReviewWithLocation, null)
+    // const { isAdding } = useAppSelector((state) => state.controls)
+    const isAdding = pathname === "/review"
+    const [ratingInput, setRatingInput] = useState<number>(0)
 
     function back() {
         router.push("/")
     }
 
     return (
-        <div className={styles.infoPanel}>
-            {message?.success !== true ?
-                <form action={formAction}>
-                    <ReviewImageCreator setImageData={setImageData} />
-                    <label htmlFor="location">Location</label>
-                    <input name="location"></input>
-                    {message?.errors?.location && <div>{message?.errors?.location}</div>}
-                    <label htmlFor="price">price</label>
-                    <input name="price" type="number"></input>
-                    {message?.errors?.price && <div>{message?.errors?.price}</div>}
-                    <label htmlFor="rating">rating</label>
-                    <input name="rating" type="number" />
-                    {message?.errors?.rating && <div>{message?.errors?.rating}</div>}
-                    <label htmlFor="comments">comments</label>
-                    <input type="text" name="comments" />
+        <>
+            {isAdding && <GuinnessMarker />}
+            <ScrollContainer>
+                <div className={styles.infoPanel}>
+                    {message?.success !== true ?
+                        <form action={formAction} className={styles.form}>
+                            <div className={styles.imageAndInputsContainer}>
+                                <ReviewImageCreator setImageData={setImageData} />
+                                <div className={styles.inputsContainer}>
+                                    <label htmlFor="location" className={styles.label}>Location</label>
+                                    <input name="location" className={styles.input} aria-required="true"></input>
+                                    {message?.errors?.location && <div>{message?.errors?.location}</div>}
+                                    <label htmlFor="price" className={styles.label}>Price</label>
+                                    <input name="price" type="number" className={styles.input} aria-required="true"></input>
+                                    {message?.errors?.price && <div>{message?.errors?.price}</div>}
+                                    <div className={styles.rating}>
+                                        <label htmlFor="rating" className={clsx(styles.label, styles.hidden)} aria-required="true">Rating</label>
+                                        <input name="rating" type="number" className={clsx(styles.input, styles.hidden)} value={ratingInput} />
+                                        <StarRating setRatingInput={setRatingInput} />
+                                    </div>
+                                    {message?.errors?.rating && <div>{message?.errors?.rating}</div>}
+                                </div>
+                            </div>
+                            <label htmlFor="comments" className={clsx(styles.label, styles.comment)}>Comments - optional</label>
+                            <input type="text" name="comments" className={clsx(styles.input, styles.comment)} />
 
-                    <div className={styles.buttonContainer}>
-                        <button className={styles.save} type="submit">Save</button>
-                        <button className={styles.cancel} onClick={back}>Cancel</button>
-                    </div>
-                    <Pending />
-                    {message?.success === false && <div>An error occured</div>}
-                </form>
-                :
-                <div>
+                            <div className={styles.buttonContainer}>
+                                <button className={styles.save} type="submit">Save</button>
+                                <button className={styles.cancel} onClick={back}>Cancel</button>
+                            </div>
 
-                    <div>Guinness successfully added</div>
-                    <button onClick={back}>Back</button>
+                            <Pending />
+                            {message?.success === false && <div>An error occured</div>}
+                        </form>
+                        :
+                        <div>
+                            <div>Guinness successfully added</div>
+                            <button onClick={back} className={styles.back}>Back</button>
+                        </div>
+                    }
                 </div>
-            }
-        </div>
+            </ScrollContainer>
+        </>
     )
 }
