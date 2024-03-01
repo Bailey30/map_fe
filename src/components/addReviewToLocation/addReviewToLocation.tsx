@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef } from "react"
+import { Dispatch, SetStateAction, useRef, useState } from "react"
 // import styles from "./addReviewToLocation.module.scss"
 import styles from "../../app/review/review.module.scss"
 import UseCreateReview from "@/utils/useCreateReview"
@@ -6,6 +6,7 @@ import clsx from "clsx"
 import { Location } from "@/utils/types"
 import ReviewImageCreator from "../reviewImage/reviewImageCreator"
 import Pending from "../pending/pending"
+import StarRating from "../starRating/starRating"
 
 interface AddNewReviewToLocationProps {
     location: Location
@@ -14,7 +15,7 @@ interface AddNewReviewToLocationProps {
 
 export default function AddNewReviewToLocation({ location, setShowOrAdd }: AddNewReviewToLocationProps) {
     const { setImageData, message, formAction } = UseCreateReview()
-
+const [ratingInput, setRatingInput] = useState<number>(1)
     return (
         < >
             {message?.success !== true &&
@@ -32,15 +33,17 @@ export default function AddNewReviewToLocation({ location, setShowOrAdd }: AddNe
                             <input name="price" type="number" className={styles.input}></input>
                             {message?.errors?.price && <p className={styles.errorMessage}>{message?.errors?.price}</p>}
 
-                            <label htmlFor="rating" className={styles.label}>Rating</label>
-                            <input name="rating" type="number" className={styles.input} />
-                            {message?.errors?.rating && <p className={styles.errorMessage}>{message?.errors?.rating}</p>}
+ <div className={styles.rating}>
+                                        <label htmlFor="rating" className={clsx(styles.label, styles.hidden)} aria-required="true">Rating</label>
+                                        <input name="rating" type="number" className={clsx(styles.input, styles.hidden)} value={ratingInput} />
+                                        <StarRating setRatingInput={setRatingInput} />
+                                    </div>
 
                         </div>
                     </div>
 
                     <label htmlFor="comments" className={clsx(styles.label, styles.comment)}>Comments - optional</label>
-                    <input type="text" name="comments" className={clsx(styles.input, styles.comment)} />
+                    <textarea name="comments" className={clsx(styles.input, styles.comment)} />
 
                     <div className={styles.buttonContainer}>
                         <button className={clsx(styles.button, styles.save)} type="submit">Save</button>

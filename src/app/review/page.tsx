@@ -9,7 +9,7 @@ import ScrollContainer from "@/components/scrollContainer/scrollContainer";
 import { useAppSelector } from "@/redux/hooks";
 import GuinnessMarker from "@/components/guinnessMarker/guinessMarker";
 import StarRating from "@/components/starRating/starRating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CreateReviewPanel() {
     const router = useRouter()
@@ -17,17 +17,34 @@ export default function CreateReviewPanel() {
     const { setImageData, message, formAction } = UseCreateReview()
     // const { isAdding } = useAppSelector((state) => state.controls)
     const isAdding = pathname === "/review"
-    const [ratingInput, setRatingInput] = useState<number>(0)
+    const [ratingInput, setRatingInput] = useState<number>(1)
 
     function back() {
         router.push("/")
     }
+    // function detectscroll() {
+    //     if (typeof document !== "undefined") {
+    //
+    //         const el = document.getElementById("scroll")
+    //         console.log({el})
+    //         el?.addEventListener("scroll", function() {
+    //             const top = el.scrollTop
+    //
+    //             console.log({ top })
+    //         })
+    //     }
+    // }
+    // useEffect(() => {
+    //     detectscroll()
+    // }, [])
+
 
     return (
         <>
             {isAdding && <GuinnessMarker />}
-            <ScrollContainer>
-                <div className={styles.infoPanel}>
+            <ScrollContainer id="scroll">
+                <div className={styles.infoPanel} >
+                    <div className={styles.dragHandle}></div>
                     {message?.success !== true ?
                         <form action={formAction} className={styles.form}>
                             <div className={styles.imageAndInputsContainer}>
@@ -48,7 +65,7 @@ export default function CreateReviewPanel() {
                                 </div>
                             </div>
                             <label htmlFor="comments" className={clsx(styles.label, styles.comment)}>Comments - optional</label>
-                            <input type="text" name="comments" className={clsx(styles.input, styles.comment)} />
+                            <textarea name="comments" className={clsx(styles.input, styles.comment)} />
 
                             <div className={styles.buttonContainer}>
                                 <button className={styles.save} type="submit">Save</button>

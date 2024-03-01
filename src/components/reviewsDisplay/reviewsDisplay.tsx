@@ -1,4 +1,6 @@
 "use client"
+import closeImg from "../../../public/images/Close.png"
+import Image from "next/image"
 import clsx from "clsx"
 import { Location } from "@/utils/types"
 import { useState } from "react"
@@ -35,7 +37,7 @@ export default function ReviewsDisplay({ location, session }: Props) {
         <div className={styles.displayContainer}>
             <div className={styles.topbar}>
                 <h2>{location.name}</h2>
-                <button onClick={close} className={clsx(styles.button, styles.close)}>close</button>
+                <button onClick={close} className={clsx(styles.button, styles.close)}><Image src={closeImg} alt="close icon"  height={20} /></button>
             </div>
             {showOrAdd === "show" ?
                 <>

@@ -21,7 +21,8 @@ export default async function GetReviewPanel({ params }: { params: { slug: strin
     const location = await getReviews(locationId)
     return (
         <ScrollContainer>
-            <div className={styles.infoPanel}>
+            <div className={styles.infoPanel} id="info">
+            <div className={styles.dragHandle}></div>
                 <ReviewsDisplay location={location} session={session} />
             </div>
         </ScrollContainer>

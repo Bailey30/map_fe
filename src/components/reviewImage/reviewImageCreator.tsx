@@ -3,6 +3,8 @@ import styles from "./reviewImageCreator.module.scss"
 import { start } from "repl"
 import clsx from "clsx"
 import CameraPortal from "./CameraPortal"
+import placeholder from "../../../public/images/guinness_placeholder.png"
+import Image from "next/image"
 
 interface Props {
     setImageData: React.Dispatch<SetStateAction<any>>
@@ -194,16 +196,16 @@ export default function ReviewImageCreator({ setImageData }: Props) {
                 <div className={styles.captureImage}>
                     <video id="video" ref={video}>Video stream not available</video>
                     <div className={styles.optionButtons}>
-                        <button onClick={takePicture}>Take picture</button>
-                        <button onClick={cancelTakingPicture}>Cancel</button>
+                        <button className={styles.button}onClick={takePicture}>Take picture</button>
+                        <button className={styles.button}onClick={cancelTakingPicture}>Cancel</button>
                     </div>
                 </div>
                 <div className={clsx(confirmingPicture && styles.show, styles.confirmingOutput)}>
                     <canvas ref={previewCanvas} className={styles.previewCanvas} />
                     <div className={styles.optionButtons}>
-                        <button onClick={savePicture}>Save</button>
-                        <button onClick={retakePicture}>Retake</button>
-                        <button onClick={cancelTakingPicture}>Cancel</button>
+                        <button className={styles.button} onClick={savePicture}>Save</button>
+                        <button className={styles.button} onClick={retakePicture}>Retake</button>
+                        <button className={styles.button} onClick={cancelTakingPicture}>Cancel</button>
                     </div>
                 </div>
             </div>
@@ -212,7 +214,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
 
         <div className={styles.output}>
-            <img ref={finalPhoto} alt="the saved photo to be uploaded" />
+            <Image ref={finalPhoto} src={placeholder} alt="the saved photo to be uploaded"  height={100} width={100}/>
         </div>
         <button id="startButton" ref={startButton} onClick={startUp} className={clsx(styles.button, styles.takePhoto)}>{pictureSaved ? "Retake" : "Take"} photo</button>
     </div>

@@ -1,7 +1,13 @@
+.ratingContainer {
+    display: flex;
+    align-items: center;
+}
 .star {
-    filter: invert(100%);
+    filter: greyscale(100%);
+    opacity: 0.5;
 
     &.active {
-        filter:invert(0%);
+        filter: greyscale(0%);
+        opacity: 1;
     }
 }
