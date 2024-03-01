@@ -22,7 +22,7 @@ export default async function GetReviewPanel({ params }: { params: { slug: strin
     return (
         <ScrollContainer>
             <div className={styles.infoPanel} id="info">
-            <div className={styles.dragHandle}></div>
+                <div className={styles.dragHandle}></div>
                 <ReviewsDisplay location={location} session={session} />
             </div>
         </ScrollContainer>
