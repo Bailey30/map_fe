@@ -84,10 +84,10 @@ body {
 }
 
 main {
-    height: 100vh;
+    height: 100dvh;
     position: absolute;
     top: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 body {
