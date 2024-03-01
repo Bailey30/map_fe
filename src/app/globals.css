@@ -81,7 +81,7 @@ body {
     max-width: 100vw;
     height: 100dvh;
     overflow-x: hidden;
-    border: 1px solid blue;
+    outline: 1px solid blue;
     overscroll-behavior: none;
 }
 
@@ -89,7 +89,7 @@ main {
     height: 100dvh;
     position: absolute;
     top: 0;
-    border: 1px solid purple;
+    outline: 1px solid purple;
     overscroll-behavior: none;
     /* overflow: hidden; */
 }
