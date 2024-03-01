@@ -1,5 +1,5 @@
 "use client"
-import closeImg from "../../../public/images/Close.png"
+import closeImg from "../../../public/images/close.png"
 import Image from "next/image"
 import clsx from "clsx"
 import { Location } from "@/utils/types"
