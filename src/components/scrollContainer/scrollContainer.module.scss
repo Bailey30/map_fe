@@ -9,4 +9,5 @@
     scroll-snap-type: y proximity;
     pointer-events: none;
     border: 5px solid green;
+    overscroll-behavior: none;
 }
