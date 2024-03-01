@@ -82,6 +82,7 @@ body {
     height: 100dvh;
     overflow-x: hidden;
     border: 1px solid blue;
+    overscroll-behavior: none;
 }
 
 main {
@@ -89,6 +90,7 @@ main {
     position: absolute;
     top: 0;
     border: 1px solid purple;
+    overscroll-behavior: none;
     /* overflow: hidden; */
 }
 
