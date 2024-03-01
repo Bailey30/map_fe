@@ -25,8 +25,8 @@
     min-height: 400px;
     pointer-events: all;
     color: $font;
-    // scroll-snap-align: end;
-    // scroll-margin-bottom: 75dvh;
+    scroll-snap-align: end;
+    scroll-margin-bottom: 75dvh;
 }
 
 .dragHandle {

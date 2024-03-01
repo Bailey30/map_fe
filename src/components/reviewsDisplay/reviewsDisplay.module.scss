@@ -8,6 +8,8 @@
 .displayContainer {
     // color: black;
     pointer-events: all;
+    position: relative;
+    width: auto;
 }
 
 .topbar {
@@ -20,10 +22,14 @@
     @include mixins.submitButton;
 
     &.add {
-        width: 100%;
+        width: 93%;
         background: $gold;
         margin-top: 20px;
         position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
         bottom: 10px;
+        // padding: 0;
+        display: inline;
     }
 }
