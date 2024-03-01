@@ -51,7 +51,7 @@ function Review({ review, active, i, totalReviews }: ReviewProps) {
     const ratingArr = [1, 2, 3, 4, 5]
 
     useEffect(() => {
-        if (active === i && review.imageId && imageData === "") {
+        if ( review.imageId && imageData === "") {
             console.log(review.id)
             fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${review.locationId}&review=${review.id}`, { method: "GET", cache: "force-cache" })
                 .then((res) => {
@@ -59,12 +59,18 @@ function Review({ review, active, i, totalReviews }: ReviewProps) {
                     return res.json()
                 })
                 .then((res) => {
+                        console.log(review.comments)
                     console.log({ res })
+                    if(res.image){
+
                     setImageData(res.image)
+                    }
                 })
         }
 
-    }, [active])
+    }, [])
+    
+    console.log({imageData})
 
     return (
         <div className={clsx(styles.detailsInner, active === i && styles.activeReview)}>
@@ -86,7 +92,7 @@ function Review({ review, active, i, totalReviews }: ReviewProps) {
 
                     </div>
                     <p className={clsx(styles.reviewDetail, styles.comments)}> <span className={styles.value}>{review.comments}</span></p>
-                    <Image src={imageData !== "" ? imageData : placeholder} alt="guinness for the associated review" height={100} width={100} className={styles.reviewImage} />
+                    <Image src={imageData !== ""? imageData : placeholder}  alt="guinness for the associated review" height={100} width={100} className={styles.reviewImage} />
                 </div>
             </div>
         </div>
