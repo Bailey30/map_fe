@@ -13,15 +13,16 @@ export default function ScrollContainer({ children }: any) {
 
             el?.addEventListener("scroll", function() {
                 if (!info) return
+                    console.log("info exists scroll event listernerc")
                 const top = info.getBoundingClientRect()
 
                 console.log({ top })
 
                 // this is to set the height of the review container (.detailsContainer) so it stays within the screen
-                root.style.setProperty("--scrollTop", top.y.toString() + "px")
+                root.style.setProperty("--scrollTop", (top.y + 80).toString() + "px")
 
                 const scrollTop = root.style.getPropertyValue("--scrollTop")
-                // console.log({ scrollTop })
+                console.log({ scrollTop })
                 //
                 if(top.y < window.innerHeight / 2){
                     // el.style.setProperty("bottom", "0%")

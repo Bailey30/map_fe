@@ -49,7 +49,6 @@ function Review({ review, active, i, totalReviews }: ReviewProps) {
     const [imageData, setImageData] = useState<string>("")
 
     const ratingArr = [1, 2, 3, 4, 5]
-    console.log({ review })
 
     useEffect(() => {
         if (active === i && review.imageId && imageData === "") {

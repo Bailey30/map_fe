@@ -2,12 +2,14 @@
 
 
 .detailsContainer {
+    $sHeight: calc(var(--scrollTop) - 40px);
+    @debug var(--scrollTop);
     // display: flex;
     outline: 1px solid red;
     overflow: scroll;
     // overscroll-behavior: contain;
     height: calc(100dvh - var(--scrollTop)) !important;
-    max-height: calc(100dvh - 150px);
+    max-height: calc(100dvh - var(--scrollTop));
     justify-content: space-between;
 }
 

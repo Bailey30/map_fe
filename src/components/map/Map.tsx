@@ -18,10 +18,9 @@ export default function MapComponent({ data }: Props) {
     const viewState = useAppSelector((state) => state.map)
     const router = useRouter()
 
-    console.log("build")
 
     useEffect(() => {
-        console.log({ viewState })
+        // console.log({ viewState })
     }, [viewState])
     //
     // could move into a hook called useMapControls
@@ -54,7 +53,7 @@ export default function MapComponent({ data }: Props) {
     function onMove(e: any) {
         const { longitude, latitude, zoom } = e.viewState
         dispatch(MOVE_TO({ longitude, latitude, zoom }))
-        console.log(e.viewState)
+        // console.log(e.viewState)
     }
 
     function onClick(e: any) {
