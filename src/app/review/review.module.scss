@@ -10,6 +10,7 @@
     outline: 1px solid red;
     // scroll-snap-align:end;
 }
+
 .infoPanel,
 .loading {
     position: absolute;
@@ -18,14 +19,14 @@
     left: 0;
     width: 100%;
     height: calc(100% - 30px);
-    background:$background;
+    background: $background;
     border-radius: 15px 15px 0 0;
     padding: 5px 15px 15px 15px;
     min-height: 400px;
     pointer-events: all;
     color: $font;
-    scroll-snap-align:end;
-    scroll-margin-bottom: 75dvh;
+    // scroll-snap-align: end;
+    // scroll-margin-bottom: 75dvh;
 }
 
 .dragHandle {

@@ -7,7 +7,7 @@
     width: 100%;
     overflow: scroll;
     scroll-snap-type: y proximity;
-    pointer-events: none;
+    // pointer-events: none;
     outline: 5px solid green;
     overscroll-behavior: none;
 }
