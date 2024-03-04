@@ -18,6 +18,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
     const [pictureSaved, setPictureSaved] = useState<boolean>(false)
     const [imageUrl, setImageUrl] = useState<string>(placeholder.src)
+    const [mounted, setMounted] = useState<boolean>(false)
 
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const captureArea = useRef<HTMLDivElement>(null)
@@ -69,7 +70,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
             canvas.current!.height = height
             // the original that works
             // const interval = setInterval(() => {
-                context && context?.drawImage(video.current!, 0, 0, width, height)
+            context && context?.drawImage(video.current!, 0, 0, width, height)
             // }, 16)
             // intervalRef.current = interval
         } else {
@@ -111,11 +112,15 @@ export default function ReviewImageCreator({ setImageData }: Props) {
             )
         }
 
+        // TODO
+        // save a larger version of the image on a larger hidden canvas then save that instead
+
         setConfirmingPicture(true)
     }
 
 
     useEffect(() => {
+        if (!mounted) return
         if (streaming) return
 
         // do this to prevent native IOS video overlay
@@ -156,30 +161,41 @@ export default function ReviewImageCreator({ setImageData }: Props) {
             },
             false
         )
+    }, [mounted])
+
+    useEffect(() => {
+        if (!mounted) setMounted(true)
     }, [])
 
 
     function savePicture(e: any) {
         setConfirmingPicture(false)
         setTakingPicture(false)
-
         const data = previewCanvas.current!.toDataURL("image/jpeg")
         finalPhoto.current!.setAttribute("src", data)
         setImageUrl(data)
         setImageData(data)
         setPictureSaved(true)
+        muteVideoTrack()
         e.preventDefault()
     }
+
     function retakePicture(e: any) {
         setConfirmingPicture(false)
         e.preventDefault()
     }
+
     function cancelTakingPicture(e: any) {
         setConfirmingPicture(false)
         setTakingPicture(false)
         clearPhoto()
+        muteVideoTrack()
         e.preventDefault()
     }
+
+    const muteVideoTrack = () => {
+        video!.current!.srcObject = null
+    };
 
     return <div>
         <CameraPortal>

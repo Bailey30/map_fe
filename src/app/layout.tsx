@@ -23,7 +23,7 @@ export default function RootLayout({
             <body >
                 <QueryProvider>
                     <StoreProvider>
-                        <main style={{ "position": "relative" }}>
+                        <main style={{ "position": "relative" }} id="main">
                         <Suspense fallback={<MapLoader/>}>
                             <MainContainer />
                             </Suspense>
