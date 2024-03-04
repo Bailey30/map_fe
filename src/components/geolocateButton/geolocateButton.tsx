@@ -2,5 +2,8 @@
 import { GeolocateControl } from "react-map-gl";
 
 export default function GeolocateButton(){
-    return <GeolocateControl/>
+    // function errorAlert(){
+        alert("geolocate errr")
+    // }
+    return <GeolocateControl />
 }

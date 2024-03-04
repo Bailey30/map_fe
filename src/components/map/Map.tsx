@@ -82,7 +82,7 @@ export default function MapComponent({ data }: Props) {
             >
                 {data && markers}
                 <UserMarker />
-                <GeolocateControl />
+                <GeolocateControl  onError={()=> {alert("error")}}/>
             </Map>
         </div>
     )
