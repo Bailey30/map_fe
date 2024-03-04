@@ -1,6 +1,7 @@
 import prisma from "@/lib/db"
-import { Location } from "@/utils/types";
 import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic"
 
 type reviewResponse = ({
     Review: {
@@ -21,6 +22,7 @@ type reviewResponse = ({
 })[]
 
 type reviewRouteResponse = { reviews: reviewResponse, status: number } | { error: string, status: number }
+
 export const GET = async (): Promise<NextResponse<reviewRouteResponse>> => {
     try {
         const reviews: reviewResponse = await prisma?.location.findMany({
