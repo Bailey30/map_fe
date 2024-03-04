@@ -17,6 +17,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
     const [pictureSaved, setPictureSaved] = useState<boolean>(false)
+    const [imageUrl, setImageUrl] = useState<string>(placeholder.src)
 
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const captureArea = useRef<HTMLDivElement>(null)
@@ -28,7 +29,6 @@ export default function ReviewImageCreator({ setImageData }: Props) {
     const isMobile = window.innerWidth < window.innerHeight
 
     function startUp(e: any) {
-        console.log("startUp")
         if (!video.current) return
         if (!canvas.current) return
         if (!startButton.current) return
@@ -68,10 +68,10 @@ export default function ReviewImageCreator({ setImageData }: Props) {
             canvas.current!.width = width
             canvas.current!.height = height
             // the original that works
-            return setInterval(() => {
+            // const interval = setInterval(() => {
                 context && context?.drawImage(video.current!, 0, 0, width, height)
-            }, 16)
-
+            // }, 16)
+            // intervalRef.current = interval
         } else {
             console.log("clearingPhoto")
             clearPhoto()
@@ -81,7 +81,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
     function takePicture() {
         const context = previewCanvas.current?.getContext("2d")
 
-        // handles setting the size of the preview image and capture area
+        // handles setting the size of the preview image 
         if (isMobile) {
             // MOBILE
             previewCanvas.current!.setAttribute("width", window.innerWidth.toString())
@@ -92,8 +92,6 @@ export default function ReviewImageCreator({ setImageData }: Props) {
             previewCanvas.current!.setAttribute("height", window.innerHeight.toString())
         }
 
-        const h = previewCanvas.current!.getAttribute("width")
-        console.log({ h })
         // handles drawing the preview image
         if (isMobile) {
             // MOBILE
@@ -120,12 +118,14 @@ export default function ReviewImageCreator({ setImageData }: Props) {
     useEffect(() => {
         if (streaming) return
 
+        finalPhoto.current!.setAttribute("src", placeholder)
+
         // do this to prevent native IOS video overlay
         video.current!.setAttribute('autoplay', '');
         video.current!.setAttribute('muted', '');
         video.current!.setAttribute('playsinline', '')
 
-
+        // handles setting size pf capture area
         if (isMobile) {
             captureArea.current!.style.width = window.innerWidth.toString() + "px"
             captureArea.current!.style.height = window.innerWidth.toString() + "px"
@@ -144,17 +144,13 @@ export default function ReviewImageCreator({ setImageData }: Props) {
 
                     // mobile
                     if (isMobile) {
-                        // video.current?.setAttribute("width", window.innerHeight.toString())
                         canvas.current!.width = video.current!.videoWidth
                         canvas.current!.height = video.current!.videoHeight
                     } else {
                         video.current?.setAttribute("height", window.innerHeight.toString())
-
                     }
-                    // canvas.current?.setAttribute("width", (width).toString())
-                    // canvas.current?.setAttribute("height", (localHeight).toString())
-                    setStreaming(true)
 
+                    setStreaming(true)
 
                     startCamera()
                 }
@@ -170,8 +166,8 @@ export default function ReviewImageCreator({ setImageData }: Props) {
         setTakingPicture(false)
 
         const data = previewCanvas.current!.toDataURL("image/jpeg")
-        console.log("iamge data", data)
         finalPhoto.current!.setAttribute("src", data)
+        setImageUrl(data)
         setImageData(data)
         setPictureSaved(true)
         e.preventDefault()
@@ -196,8 +192,8 @@ export default function ReviewImageCreator({ setImageData }: Props) {
                 <div className={styles.captureImage}>
                     <video id="video" ref={video}>Video stream not available</video>
                     <div className={styles.optionButtons}>
-                        <button className={styles.button}onClick={takePicture}>Take picture</button>
-                        <button className={styles.button}onClick={cancelTakingPicture}>Cancel</button>
+                        <button className={styles.button} onClick={takePicture}>Take picture</button>
+                        <button className={styles.button} onClick={cancelTakingPicture}>Cancel</button>
                     </div>
                 </div>
                 <div className={clsx(confirmingPicture && styles.show, styles.confirmingOutput)}>
@@ -214,7 +210,7 @@ export default function ReviewImageCreator({ setImageData }: Props) {
         <canvas id="canvas" ref={canvas} className={styles.canvas}></canvas>
 
         <div className={styles.output}>
-            <Image ref={finalPhoto} src={placeholder} alt="the saved photo to be uploaded"  height={100} width={100}/>
+            <Image ref={finalPhoto} src={imageUrl} alt="the saved photo to be uploaded" height={100} width={100} />
         </div>
         <button id="startButton" ref={startButton} onClick={startUp} className={clsx(styles.button, styles.takePhoto)}>{pictureSaved ? "Retake" : "Take"} photo</button>
     </div>
