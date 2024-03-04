@@ -118,8 +118,6 @@ export default function ReviewImageCreator({ setImageData }: Props) {
     useEffect(() => {
         if (streaming) return
 
-        finalPhoto.current!.setAttribute("src", placeholder)
-
         // do this to prevent native IOS video overlay
         video.current!.setAttribute('autoplay', '');
         video.current!.setAttribute('muted', '');
