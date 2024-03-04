@@ -1,3 +1,4 @@
+"use client"
 import { Review } from "@/utils/types"
 import Image from "next/image"
 import clsx from "clsx"
@@ -11,27 +12,14 @@ interface ReviewListProps {
     reviews: Review[]
 }
 
-export default function ReviewList({ reviews }: ReviewListProps) {
-    const [active, setActive] = useState<number>(0)
+export default async function ReviewList({ reviews }: ReviewListProps) {
     const totalReviews = reviews.length
-    const reviewNumber = active + 1
-
-    function next() {
-        if (active < totalReviews - 1) {
-            setActive(active + 1)
-        }
-    }
-    function previous() {
-        if (active > 0) {
-            setActive(active - 1)
-        }
-    }
 
     return (
         <>
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
-                    return <Review review={review} active={active} i={i} key={review.id} totalReviews={reviews.length} />
+                    return <Review review={review} i={i} key={review.id} totalReviews={reviews.length} />
 
                 })}
             </div>
@@ -39,43 +27,57 @@ export default function ReviewList({ reviews }: ReviewListProps) {
     )
 }
 
+async function getImage(review: Review){
+const imageData = 
+        await fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${review.locationId}&review=${review.id}`, { method: "GET", cache: "force-cache" })
+            .then((res) => {
+                console.log({ res })
+                return res.json()
+            })
+            .then((res) => {
+                console.log({ res })
+                if (res.image) {
+                    return res.image
+                    // setImageData(res.image)
+                }
+            }) 
+}
+
 interface ReviewProps {
     review: Review
-    active: number
     i: number
     totalReviews: number
 }
-function Review({ review, active, i, totalReviews }: ReviewProps) {
-    const [imageData, setImageData] = useState<string>("")
+async function Review({ review, i, totalReviews }: ReviewProps) {
 
     const ratingArr = [1, 2, 3, 4, 5]
+    // useEffect(() => {
+    // if (review.imageId && imageData === "") {
+    // const imageData = review.imageId ?
+    //     await fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${review.locationId}&review=${review.id}`, { method: "GET", cache: "force-cache" })
+    //         .then((res) => {
+    //             console.log({ res })
+    //             return res.json()
+    //         })
+    //         .then((res) => {
+    //             console.log(review.comments)
+    //             console.log({ res })
+    //             if (res.image) {
+    //                 return res.image
+    //                 // setImageData(res.image)
+    //             }
+    //         }) : ""
+    // // }
+    //
+    // // }, [])
 
-    useEffect(() => {
-        if ( review.imageId && imageData === "") {
-            console.log(review.id)
-            fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${review.locationId}&review=${review.id}`, { method: "GET", cache: "force-cache" })
-                .then((res) => {
-                    console.log({ res })
-                    return res.json()
-                })
-                .then((res) => {
-                        console.log(review.comments)
-                    console.log({ res })
-                    if(res.image){
+    // const imageData = review.imageId ? await getImage(review): ""
 
-                    setImageData(res.image)
-                    }
-                })
-        }
-
-    }, [])
-    
-    console.log({imageData})
+    // console.log({ imageData })
 
     return (
-        <div className={clsx(styles.detailsInner, active === i && styles.activeReview)}>
+        <div className={clsx(styles.detailsInner)}>
             <div className={styles.imageAndDetails}>
-                <p className={clsx(styles.count)}>{active + 1}/{totalReviews}</p>
 
                 <div className={styles.details}>
                     <p className={clsx(styles.reviewDetail, styles.name)}>{review.creator.username}</p>
@@ -92,7 +94,7 @@ function Review({ review, active, i, totalReviews }: ReviewProps) {
 
                     </div>
                     <p className={clsx(styles.reviewDetail, styles.comments)}> <span className={styles.value}>{review.comments}</span></p>
-                    <Image src={imageData !== ""? imageData : placeholder}  alt="guinness for the associated review" height={100} width={100} className={styles.reviewImage} />
+
                 </div>
             </div>
         </div>

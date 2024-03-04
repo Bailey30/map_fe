@@ -3,10 +3,13 @@ import { NextRequest, NextResponse } from "next/server"
 
 export const GET = async (request: NextRequest) => {
     console.log("GET IMAGE ROUTE HANDLER")
+
     const searchParams = request.nextUrl.searchParams
     console.log({searchParams})
+
     const locationId = searchParams.get("location")
     const reviewId = searchParams.get("review")
+
     console.log({reviewId})
     try {
         const key = reviewId + ".jpeg"

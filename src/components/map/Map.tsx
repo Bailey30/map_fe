@@ -82,7 +82,7 @@ export default function MapComponent({ data }: Props) {
             >
                 {data && markers}
                 <UserMarker />
-                <GeolocateControl  onError={()=> {alert("error")}}/>
+                <GeolocateControl  onError={()=> {alert("An error occured while attempting geolocation. Make sure location services are enabled.")}}/>
             </Map>
         </div>
     )
