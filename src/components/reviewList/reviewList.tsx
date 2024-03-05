@@ -2,11 +2,9 @@
 import { Review } from "@/utils/types"
 import Image from "next/image"
 import clsx from "clsx"
-import { Suspense, useEffect, useState } from "react"
 import styles from "./reviewList.module.scss"
 import { formatDate } from "@/utils/formatDate"
 import guinness from "../../../public/images/guinness.png"
-import placeholder from "../../../public/images/guinness_placeholder.png"
 
 interface ReviewListProps {
     reviews: Review[]

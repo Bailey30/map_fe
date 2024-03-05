@@ -1,7 +1,7 @@
 import closeImg from "../../../public/images/close.png"
 import Image from "next/image"
 import clsx from "clsx"
-import { Location, LocationData } from "@/utils/types"
+import {  LocationData } from "@/utils/types"
 import styles from "./reviewsDisplay.module.scss"
 import { Session } from "next-auth"
 import ReviewList from "../reviewList/reviewList"
