@@ -5,7 +5,7 @@ import next from "next"
 import { NextURL } from "next/dist/server/web/next-url"
 import { NextResponse } from "next/server"
 
-const requiresAuthRoutes = ["/review", "/test"]
+const requiresAuthRoutes = ["/locatioe", "/test"]
 const alreadySignedIn = ["/login", "/register"]
 export const authConfig: any = {
     pages: {

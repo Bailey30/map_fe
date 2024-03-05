@@ -8,7 +8,7 @@ export default function AddingOverlay() {
         <div className={styles.addingOverlayContainer}>
             <GuinnessMarker/>
             <p className={styles.instructions}>Move the map to the correct location</p>
-            <Link href="/review" className={styles.saveButton}>Add</Link>
+            <Link href="/location" className={styles.saveButton}>Add</Link>
         </div>
     )
 }

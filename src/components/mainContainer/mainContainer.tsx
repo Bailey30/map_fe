@@ -4,7 +4,6 @@ import MapComponent from "../map/Map";
 import styles from "./mainContainer.module.css"
 import { Location } from "@/utils/types";
 import {auth} from "@/lib/auth"
-import GeolocateButton from "../geolocateButton/geolocateButton";
 
 export default async function MainContainer({ children }: any) {
     const data: Location[]| undefined = await useNextCacheMarkers()

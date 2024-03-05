@@ -11,6 +11,6 @@
     outline: 5px solid green;
     overscroll-behavior: none;
 }
-.scrollContainer:not(:has(:hover)) {
+.scrollContainer:not(:has(:focus)) {
   pointer-events: none;
 }

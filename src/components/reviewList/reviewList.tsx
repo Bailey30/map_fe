@@ -14,19 +14,11 @@ interface ReviewListProps {
 }
 
 export default async function ReviewList({ reviews, images }: ReviewListProps) {
-    const totalReviews = reviews.length
-
-
-
-console.log({images})
     return (
         <>
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
-                    console.log({review})
-                    console.log(review.imageId)
-                    const img =review.imageId ? images[review.imageId.toString()]: null
-                    console.log({img})
+                    const img = review.imageId ? images[review.imageId.toString()] : null
                     return <Review review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} />
 
                 })}
@@ -65,7 +57,7 @@ async function Review({ review, i, totalReviews, image }: ReviewProps) {
 
                     </div>
                     <p className={clsx(styles.reviewDetail, styles.comments)}> <span className={styles.value}>{review.comments}</span></p>
-                    {image ? <Image unoptimized src={formatBase64String(image)} alt="Guinness for the current review" width={100} height={100} /> : <Image src={placeholder} alt="Placeholder image for the current review" />}
+                    {image && <Image unoptimized src={formatBase64String(image)} alt="Guinness for the current review" width={100} height={100} />}
                 </div>
             </div>
         </div>

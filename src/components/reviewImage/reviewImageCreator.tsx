@@ -1,6 +1,5 @@
 import { SetStateAction, useEffect, useRef, useState } from "react"
 import styles from "./reviewImageCreator.module.scss"
-import { start } from "repl"
 import clsx from "clsx"
 import CameraPortal from "./CameraPortal"
 import placeholder from "../../../public/images/guinness_placeholder.png"

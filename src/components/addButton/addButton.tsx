@@ -17,7 +17,7 @@ export default function AddButton({ session }: Props) {
 
     function onClick() {
         console.log(pathname)
-        if (pathname.includes("/review")) {
+        if (pathname.includes("/location")) {
         }
         if (pathname.includes("/add")) {
             router.push("/")

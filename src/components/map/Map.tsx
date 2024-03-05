@@ -61,7 +61,7 @@ export default function MapComponent({ data }: Props) {
     }
 
     function onMarkerClick(mark: Location) {
-        router.push(`/review/${mark.id}`)
+        router.push(`/location/${mark.id}`)
     }
 
     const markers = useMemo(() => data?.map((mark: Location) => {

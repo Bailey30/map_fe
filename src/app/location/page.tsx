@@ -6,45 +6,21 @@ import ReviewImageCreator from "@/components/reviewImage/reviewImageCreator";
 import UseCreateReview from "@/utils/useCreateReview";
 import clsx from "clsx";
 import ScrollContainer from "@/components/scrollContainer/scrollContainer";
-import { useAppSelector } from "@/redux/hooks";
 import GuinnessMarker from "@/components/guinnessMarker/guinessMarker";
 import StarRating from "@/components/starRating/starRating";
 import { useEffect, useState } from "react";
 
 export default function CreateReviewPanel() {
     const router = useRouter()
-    const pathname = usePathname()
     const { setImageData, message, formAction } = UseCreateReview()
-    // const { isAdding } = useAppSelector((state) => state.controls)
-    const isAdding = pathname === "/review"
     const [ratingInput, setRatingInput] = useState<number>(1)
 
     function back() {
         router.push("/")
     }
-    // function detectscroll() {
-    //     if (typeof document !== "undefined") {
-    //
-    //         const el = document.getElementById("scroll")
-    //         console.log({el})
-    //         el?.addEventListener("scroll", function() {
-    //             const top = el.scrollTop
-    //
-    //             console.log({ top })
-    //         })
-    //     }
-    // }
-    // useEffect(() => {
-    //     detectscroll()
-    // }, [])
-
 
     return (
         <>
-            {isAdding && <GuinnessMarker />}
-            <ScrollContainer id="scroll">
-                <div className={styles.infoPanel} >
-                    <div className={styles.dragHandle}></div>
                     {message?.success !== true ?
                         <form action={formAction} className={styles.form}>
                             <div className={styles.imageAndInputsContainer}>
@@ -81,8 +57,6 @@ export default function CreateReviewPanel() {
                             <button onClick={back} className={styles.back}>Back</button>
                         </div>
                     }
-                </div>
-            </ScrollContainer>
         </>
     )
 }

@@ -45,6 +45,7 @@ export async function useNextCacheMarkers(): Promise<Location[] | undefined> {
     console.log("calling useNextCacheMarkers")
     console.log(process.env.NEXT_PUBLIC_URL)
     try {
+        // TODO CHANGE TO LOCATION NOT REVIEWS
         // setting "no-store" so the data is fetched dynamically every request
         // setting the tag "reviews" to cause a data refetch when manually revalidating the tag in a server action
         return await fetch(process.env.NEXT_PUBLIC_URL as string +"/api/review", { cache: "no-store", next: { tags: ["reviews"] } })
