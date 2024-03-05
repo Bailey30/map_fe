@@ -10,16 +10,24 @@ import placeholder from "../../../public/images/guinness_placeholder.png"
 
 interface ReviewListProps {
     reviews: Review[]
+    images: { [key: string]: string }
 }
 
-export default async function ReviewList({ reviews }: ReviewListProps) {
+export default async function ReviewList({ reviews, images }: ReviewListProps) {
     const totalReviews = reviews.length
 
+
+
+console.log({images})
     return (
         <>
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
-                    return <Review review={review} i={i} key={review.id} totalReviews={reviews.length} />
+                    console.log({review})
+                    console.log(review.imageId)
+                    const img =review.imageId ? images[review.imageId.toString()]: null
+                    console.log({img})
+                    return <Review review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} />
 
                 })}
             </div>
@@ -27,53 +35,16 @@ export default async function ReviewList({ reviews }: ReviewListProps) {
     )
 }
 
-async function getImage(review: Review){
-const imageData = 
-        await fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${review.locationId}&review=${review.id}`, { method: "GET", cache: "force-cache" })
-            .then((res) => {
-                console.log({ res })
-                return res.json()
-            })
-            .then((res) => {
-                console.log({ res })
-                if (res.image) {
-                    return res.image
-                    // setImageData(res.image)
-                }
-            }) 
-}
 
 interface ReviewProps {
     review: Review
     i: number
     totalReviews: number
+    image: string | null
 }
-async function Review({ review, i, totalReviews }: ReviewProps) {
+async function Review({ review, i, totalReviews, image }: ReviewProps) {
 
     const ratingArr = [1, 2, 3, 4, 5]
-    // useEffect(() => {
-    // if (review.imageId && imageData === "") {
-    // const imageData = review.imageId ?
-    //     await fetch(process.env.NEXT_PUBLIC_URL as string + `/api/image?location=${review.locationId}&review=${review.id}`, { method: "GET", cache: "force-cache" })
-    //         .then((res) => {
-    //             console.log({ res })
-    //             return res.json()
-    //         })
-    //         .then((res) => {
-    //             console.log(review.comments)
-    //             console.log({ res })
-    //             if (res.image) {
-    //                 return res.image
-    //                 // setImageData(res.image)
-    //             }
-    //         }) : ""
-    // // }
-    //
-    // // }, [])
-
-    // const imageData = review.imageId ? await getImage(review): ""
-
-    // console.log({ imageData })
 
     return (
         <div className={clsx(styles.detailsInner)}>
@@ -94,9 +65,13 @@ async function Review({ review, i, totalReviews }: ReviewProps) {
 
                     </div>
                     <p className={clsx(styles.reviewDetail, styles.comments)}> <span className={styles.value}>{review.comments}</span></p>
-
+                    {image ? <Image unoptimized src={formatBase64String(image)} alt="Guinness for the current review" width={100} height={100} /> : <Image src={placeholder} alt="Placeholder image for the current review" />}
                 </div>
             </div>
         </div>
     )
+}
+
+function formatBase64String(string: string): string {
+    return decodeURIComponent("data:image/jpeg;base64, " + string)
 }

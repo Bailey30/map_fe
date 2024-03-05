@@ -24,6 +24,12 @@ export type Location = {
     Review: Review[]
 }
 
+export interface LocationData extends Location {
+    images: {
+        [key:string]:string
+    }
+}
+
 export type InputErrors = {
     username?: string | undefined
     password?: string | undefined

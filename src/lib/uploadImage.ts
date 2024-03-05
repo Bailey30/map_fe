@@ -1,4 +1,6 @@
+import formatLocationName from "@/utils/formatLocationName"
 import axios from "axios"
+import { revalidateTag } from "next/cache"
 
 async function blobify(data: string) {
     try {
@@ -9,9 +11,11 @@ async function blobify(data: string) {
         throw new Error("error turning image data into a blob", err)
     }
 }
+
 export default async function uploadImage(imageData: string, location: string, key: number) {
     try {
-        const filename = location + "/" + key + ".jpeg"
+        const filename = formatLocationName(location) + "/" + key + ".jpeg"
+        console.log({ filename })
         const blob = await blobify(imageData)
         const signedUrl = await axios.post(process.env.NEXT_PUBLIC_IMAGE_URL_ENDPOINT as string, JSON.stringify({ key: filename }))
         const result = await fetch(signedUrl.data.uploadURL, {
@@ -22,6 +26,7 @@ export default async function uploadImage(imageData: string, location: string, k
             }
         })
         console.log("upload image result", result.body)
+        revalidateTag("images")
     } catch (err: any) {
         console.log("error uploading image", err)
         throw new Error("error uploading image", err)

@@ -3,31 +3,31 @@ import { Dispatch, SetStateAction, useRef, useState } from "react"
 import styles from "../../app/review/review.module.scss"
 import UseCreateReview from "@/utils/useCreateReview"
 import clsx from "clsx"
-import { Location } from "@/utils/types"
+import { Location, LocationData } from "@/utils/types"
 import ReviewImageCreator from "../reviewImage/reviewImageCreator"
 import Pending from "../pending/pending"
 import StarRating from "../starRating/starRating"
 
 interface AddNewReviewToLocationProps {
-    location: Location
+    locationData: LocationData
     setShowOrAdd: Dispatch<SetStateAction<"show" | "add">>
 }
 
-export default function AddNewReviewToLocation({ location, setShowOrAdd }: AddNewReviewToLocationProps) {
+export default function AddNewReviewToLocation({ locationData, setShowOrAdd }: AddNewReviewToLocationProps) {
     const { setImageData, message, formAction } = UseCreateReview()
 const [ratingInput, setRatingInput] = useState<number>(1)
     return (
         < >
             {message?.success !== true &&
                 <form action={formAction} className={styles.form}>
-                    <input name="id" className={clsx(styles.hidden)} value={location.id} readOnly></input>
+                    <input name="id" className={clsx(styles.hidden)} value={locationData.id} readOnly></input>
 
                     <div className={styles.imageAndInputsContainer}>
 
                         <ReviewImageCreator setImageData={setImageData} />
                         <div className={styles.inputsContainer}>
-                        <label htmlFor="location" className={clsx(styles.label)}>Location</label>
-                        <input name="location" className={clsx(styles.input)} value={location.name} disabled={true}/>
+                        <label htmlFor="locationData" className={clsx(styles.label)}>Location</label>
+                        <input name="locationData" className={clsx(styles.input)} value={locationData.name} disabled={true}/>
 
                             <label htmlFor="price" className={styles.label}>Price</label>
                             <input name="price" type="number" className={styles.input}></input>

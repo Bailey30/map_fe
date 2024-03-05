@@ -2,7 +2,7 @@
 import closeImg from "../../../public/images/close.png"
 import Image from "next/image"
 import clsx from "clsx"
-import { Location } from "@/utils/types"
+import { Location, LocationData } from "@/utils/types"
 import { useState } from "react"
 import styles from "./reviewsDisplay.module.scss"
 import { useRouter } from "next/navigation"
@@ -11,12 +11,12 @@ import ReviewList from "../reviewList/reviewList"
 import AddNewReviewToLocation from "../addReviewToLocation/addReviewToLocation"
 
 interface Props {
-    location: Location
+    locationData: LocationData
     session: Session | null
 }
 
 
-export default function ReviewsDisplay({ location, session }: Props) {
+export default function ReviewsDisplay({ locationData, session }: Props) {
     const router = useRouter()
     const [showOrAdd, setShowOrAdd] = useState<"show" | "add">("show")
 
@@ -36,16 +36,16 @@ export default function ReviewsDisplay({ location, session }: Props) {
     return (
         <div className={styles.displayContainer}>
             <div className={styles.topbar}>
-                <h2>{location.name}</h2>
+                <h2>{locationData.name}</h2>
                 <button onClick={close} className={clsx(styles.button, styles.close)}><Image src={closeImg} alt="close icon"  height={20} /></button>
             </div>
             {showOrAdd === "show" ?
                 <>
-                    <ReviewList reviews={location.Review} />
+                    <ReviewList reviews={locationData.Review} images={locationData.images}/>
                     <button onClick={handleAddShowButton} className={clsx(styles.button, styles.add)}>Add Guinness for this location</button>
                 </>
                 :
-                <AddNewReviewToLocation location={location} setShowOrAdd={setShowOrAdd} />
+                <AddNewReviewToLocation locationData={locationData} setShowOrAdd={setShowOrAdd} />
             }
         </div>
     )
