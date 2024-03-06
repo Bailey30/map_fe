@@ -86,8 +86,10 @@ export default function ScrollContainer({ children }: any) {
                     // console.log({ endY })
                     if (endY < startY) {
                         direction = "up"
+                        toggleDetailsContainerTransition("off")
                     } else if (endY > startY) {
                         direction = "down"
+                        toggleDetailsContainerTransition("on")
                     }
 
 
