@@ -11,11 +11,23 @@
     // scroll-snap-align:end;
 }
 
+@keyframes scroll_snap_top{
+    0% {
+        transform: translateY(50%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+
 .infoPanel,
 .loading {
     position: absolute;
     z-index: 100;
-    top: 60%;
+    // top: 60%;
+    // top: var(--scroll);
+    transform: translateY(var(--scroll));
     left: 0;
     width: 100%;
     height: calc(100% - 30px);
@@ -25,8 +37,16 @@
     min-height: 400px;
     pointer-events: auto;
     color: $font;
-    scroll-snap-align: end;
-    scroll-margin-bottom: 75dvh;
+    // scroll-snap-align: end;
+    // scroll-margin-bottom: 75dvh;
+    // animation-name: none;
+    // animation-duration: 1s;
+    // animation-fill-mode: forwards;
+    // animation: 1s forwards scroll_snap_top;
+}
+
+.scroll_snap_top {
+    animation: 1s forwards scroll_snap_top;
 }
 
 .dragHandle {
