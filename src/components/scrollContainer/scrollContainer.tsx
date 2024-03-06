@@ -14,7 +14,7 @@ export default function ScrollContainer({ children }: any) {
             const root = document.documentElement
             const el = document.getElementById("scroll")
             const info = document.getElementById("info") // info comes from "GetReviewPanel" in location/[slug]/page.tsx
-            console.log({ info })
+            // console.log({ info })
 
             el?.addEventListener("scroll", function() {
                 if (!info) return
@@ -24,7 +24,7 @@ export default function ScrollContainer({ children }: any) {
                 root.style.setProperty("--scrollTop", (top.y + 80).toString() + "px")
 
                 const scrollTop = root.style.getPropertyValue("--scrollTop")
-                console.log({ scrollTop })
+                // console.log({ scrollTop })
 
             })
 
@@ -36,7 +36,7 @@ export default function ScrollContainer({ children }: any) {
                 top = info.getBoundingClientRect()
                 diff = e.touches[0].clientY - top.y
                 startY = e.touches[0].clientY
-                console.log({ startY })
+                // console.log({ startY })
 
             })
 
@@ -69,8 +69,10 @@ export default function ScrollContainer({ children }: any) {
                         direction = "down"
                     }
 
+                    const halfWay = window.innerHeight / 2
+                    const quarterWay = window.innerHeight / 4
 
-                    if (posY < window.innerHeight / 2 && direction === "up") {
+                    if ((posY < halfWay && direction === "up") || (endY > quarterWay && endY < halfWay && direction === "down")) {
                         // snap to top
                         console.log("up and past half way")
                         info.style.setProperty("transition", "transform  0.4s ease")
