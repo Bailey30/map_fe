@@ -1,10 +1,6 @@
 import ReviewsDisplay from "@/components/reviewsDisplay/reviewsDisplay"
-import styles from "../review.module.scss"
 import { auth } from "@/lib/auth"
-import ScrollContainer from "@/components/scrollContainer/scrollContainer"
 import { Location, LocationData } from "@/utils/types"
-import formatLocationName from "@/utils/formatLocationName"
-import { cache } from "react"
 import { getImages, getReviews } from "@/lib/data"
 
 

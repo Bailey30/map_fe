@@ -44,6 +44,10 @@ export default function ScrollContainer({ children }: any) {
             let endY: any
             let direction: any
             let snappedTo: "top" | "middle" | "bottom" | undefined
+            const halfWay = window.innerHeight / 2
+            const quarterWay = window.innerHeight / 4
+            const sixtyPercent = (window.innerHeight / 100) * 60
+            const fourFifths = (window.innerHeight / 5) * 4
             info?.addEventListener(
                 "touchmove",
                 (e) => {
@@ -69,33 +73,33 @@ export default function ScrollContainer({ children }: any) {
                         direction = "down"
                     }
 
-                    const halfWay = window.innerHeight / 2
-                    const quarterWay = window.innerHeight / 4
 
-                    if ((posY < halfWay && direction === "up") || (endY > quarterWay && endY < halfWay && direction === "down")) {
+                    if ((posY < halfWay && direction === "up")) {
                         // snap to top
                         console.log("up and past half way")
                         info.style.setProperty("transition", "transform  0.4s ease")
                         root.style.setProperty("--scroll", 20 + "px")
                         snappedTo = "top"
-                    } else if (posY > window.innerHeight / 4 && direction === "down" && snappedTo !== "middle") {
-                        // snap top middle
+                    }
+                    else if (posY > quarterWay && direction === "down" && snappedTo !== "middle") {
+                        // snap to middle
                         info.style.setProperty("transition", "transform  0.4s ease")
-                        root.style.setProperty("--scroll", (window.innerHeight / 100) * 60 + "px")
+                        root.style.setProperty("--scroll", sixtyPercent + "px")
                         setTimeout(() => {
                             snappedTo = "middle"
                         }, 400)
-                    } else if (posY > (window.innerHeight / 4) * 3 && direction === "down" && snappedTo !== "bottom") {
+                    } else if (posY > (quarterWay) * 3 && direction === "down" && snappedTo !== "bottom") {
                         // snap to bottom
                         info.style.setProperty("transition", "transform  0.4s ease")
-                        root.style.setProperty("--scroll", (window.innerHeight / 5) * 4 + "px")
+                        root.style.setProperty("--scroll", fourFifths + "px")
                         setTimeout(() => {
                             snappedTo = "bottom"
                         }, 400)
-                    } else if (posY < (window.innerHeight / 4) * 3 && direction === "up" && snappedTo === "bottom") {
+                    } else if (posY < quarterWay * 3 && direction === "up" && snappedTo === "bottom") {
                         // snap to middle from bottom
+                        console.log("snapping to middle from bottom")
                         info.style.setProperty("transition", "transform  0.4s ease")
-                        root.style.setProperty("--scroll", (window.innerHeight / 100) * 60 + "px")
+                        root.style.setProperty("--scroll", sixtyPercent + "px")
                         setTimeout(() => {
                             snappedTo = "middle"
                         }, 400)
@@ -105,6 +109,29 @@ export default function ScrollContainer({ children }: any) {
                 },
                 false,
             );
+
+            info?.addEventListener("touchend", (e) => {
+                const endPosY = e.changedTouches[0].clientY - diff
+
+                console.log({ endPosY })
+                console.log({ quarterWay })
+                console.log({ halfWay })
+                if (endPosY < quarterWay && direction === "down") {
+                    console.log("snapping back up")
+                    // snap back to top if not pulled far enough
+                    info.style.setProperty("transition", "transform  0.4s ease")
+                    root.style.setProperty("--scroll", 20 + "px")
+                    snappedTo = "top"
+                } else if (endPosY > halfWay && endPosY < quarterWay*3 && direction === "up") {
+                    // snap to middle
+                    console.log("snapping down from middle because not pulled far enough")
+                    info.style.setProperty("transition", "transform  0.4s ease")
+                    root.style.setProperty("--scroll", sixtyPercent + "px")
+                    setTimeout(() => {
+                        snappedTo = "middle"
+                    }, 500)
+                }
+            })
 
         }
     }

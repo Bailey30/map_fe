@@ -11,7 +11,12 @@ export default function RouteChangeListener() {
     useEffect(() => {
         if (pathname === "/") {
             dispatch(SET_IS_ADDING(false))
+
+            // reset the scroll of the containers
+            const root = document.documentElement
+            root.style.setProperty("--scroll", "60%")
         }
+        
     }, [pathname])
 
     return <></>
