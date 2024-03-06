@@ -23,6 +23,9 @@ export default function ScrollContainer({ children }: any) {
             details?.addEventListener("touchmove", function(e) {
                 e.stopPropagation()
             })
+            details?.addEventListener("touchend", function(e) {
+                e.stopPropagation()
+            })
 
             el?.addEventListener("scroll", function() {
                 if (!info) return
