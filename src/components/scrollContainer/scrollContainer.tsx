@@ -14,7 +14,15 @@ export default function ScrollContainer({ children }: any) {
             const root = document.documentElement
             const el = document.getElementById("scroll")
             const info = document.getElementById("info") // info comes from "GetReviewPanel" in location/[slug]/page.tsx
-            // console.log({ info })
+            const details = document.getElementById("details") // info comes from "ReviewList". It is the scroll container of reviews
+
+            // prevent any touch events on the scrolling container to maintain the ability to scroll
+            details?.addEventListener("touchstart", function(e) {
+                e.stopPropagation()
+            })
+            details?.addEventListener("touchmove", function(e) {
+                e.stopPropagation()
+            })
 
             el?.addEventListener("scroll", function() {
                 if (!info) return
@@ -53,6 +61,7 @@ export default function ScrollContainer({ children }: any) {
             info?.addEventListener(
                 "touchmove",
                 (e) => {
+                    e.stopPropagation()
                     // console.log(e)
                     // set position of top of container to be where the touch is minus the distance to the top of the container
                     const posY = e.touches[0].clientY - diff
@@ -174,7 +183,7 @@ export default function ScrollContainer({ children }: any) {
 
     function toggleDetailsContainerTransition(mode: "on" | "off") {
         const details = document.getElementById("details")
-        if(mode === "on"){
+        if (mode === "on") {
             details?.style.setProperty("transition", "all 0.4s")
         } else {
             details?.style.setProperty("transition", "unset")

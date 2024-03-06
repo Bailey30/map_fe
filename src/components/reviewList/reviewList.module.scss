@@ -7,11 +7,10 @@
     // display: flex;
     outline: 1px solid red;
     overflow: scroll;
-    // overscroll-behavior: contain;
+    overscroll-behavior: contain;
     height: calc(100dvh - var(--scrollTop)) ;
     max-height: calc(100dvh - var(--scrollTop));
     justify-content: space-between;
-    pointer-events: auto !important;
     // transition: all 0.4s;
 }
 
