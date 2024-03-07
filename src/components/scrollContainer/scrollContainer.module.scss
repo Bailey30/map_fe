@@ -5,13 +5,11 @@
     top: 0;
     left:0;
     width: 100%;
-    overflow: scroll;
-    // overflow: hidden;
+    // overflow: scroll;
+    overflow: hidden;
     // scroll-snap-type: y proximity;
     pointer-events: none;
     outline: 5px solid green;
     overscroll-behavior: none;
 }
-.scrollContainer:not(:has(:hover)) {
-  // pointer-events: none;
-}
+

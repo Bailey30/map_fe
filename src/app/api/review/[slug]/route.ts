@@ -44,7 +44,7 @@ export const GET = async (request: Request, { params }: { params: { slug: string
                 }
             }
         })
-        console.log("reviews", reviews)
+        // console.log("reviews", reviews)
         return NextResponse.json({ status: 200, location: reviews })
     } catch (error) {
         console.log("failed to fetch posts");

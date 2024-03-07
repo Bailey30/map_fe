@@ -1,4 +1,5 @@
 "use client"
+import ScrollHandler from "@/components/scrollContainer/scrollHandler";
 import { SET_IS_ADDING, TOGGLE_IS_ADDING } from "@/redux/controlsSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { usePathname } from "next/navigation";
@@ -16,6 +17,9 @@ export default function RouteChangeListener() {
             const root = document.documentElement
             root.style.setProperty("--scroll", "60%")
             root.style.setProperty("--scrollTop", "60dvh")
+
+        } else if (pathname !== "/"){
+            ScrollHandler.init()
         }
         
     }, [pathname])

@@ -3,9 +3,10 @@ import { useAppSelector } from "@/redux/hooks";
 import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import userMarker from "../../../public/images/user.svg"
+import location from "../../../public/images/location.webp"
+import person from "../../../public/images/person.png"
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./userMarker.module.css"
-import { number } from "zod";
 
 
 export const UserMarker = memo(function UserMarker() {
@@ -19,10 +20,11 @@ export const UserMarker = memo(function UserMarker() {
             });
         }
     }, [])
+
     return (
         <div className={styles.userMarker}>
             <Marker latitude={userLocation.latitude} longitude={userLocation.longitude} >
-                <Image src={userMarker} alt={"location of user"} height={30} width={30} />
+                <Image src={location} alt={"location of user"} height={40} width={40} />
             </Marker>
         </div>
     )

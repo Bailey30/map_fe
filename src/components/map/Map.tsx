@@ -1,4 +1,5 @@
 "use client"
+import guinnessArrow from "../../../public/images/guinness_arrow.png"
 import { useEffect, useMemo } from "react"
 import styles from "./map.module.css"
 import { GeolocateControl, Map, Marker } from "react-map-gl"
@@ -6,8 +7,9 @@ import { MOVE_TO } from "@/redux/slice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import "mapbox-gl/dist/mapbox-gl.css";
 import { UserMarker } from "../userMarker/userMarker"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Location } from "@/utils/types"
+import clsx from "clsx"
 
 interface Props {
     data: Location[] | undefined
@@ -22,7 +24,7 @@ export default function MapComponent({ data }: Props) {
     useEffect(() => {
         // console.log({ viewState })
     }, [viewState])
-    //
+
     // could move into a hook called useMapControls
     useEffect(() => {
         // if there is coords stored in session storage - use them 
@@ -66,7 +68,7 @@ export default function MapComponent({ data }: Props) {
 
     const markers = useMemo(() => data?.map((mark: Location) => {
         console.log("mapping over markers")
-        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => onMarkerClick(mark)}></Marker>
+        return <Marker key={mark.id} longitude={mark.longitude} latitude={mark.latitude} onClick={() => onMarkerClick(mark)}><img className={clsx(styles.guinnessMarker)} src={guinnessArrow.src} alt={"Position of Guinness"} /></Marker>
     }), [data])
 
     return (
@@ -82,7 +84,7 @@ export default function MapComponent({ data }: Props) {
             >
                 {data && markers}
                 <UserMarker />
-                <GeolocateControl  onError={()=> {alert("An error occured while attempting geolocation. Make sure location services are enabled.")}}/>
+                <GeolocateControl onError={() => { alert("An error occured while attempting geolocation. Make sure location services are enabled.") }} />
             </Map>
         </div>
     )

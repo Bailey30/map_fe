@@ -26,15 +26,16 @@
     position: absolute;
     z-index: 100;
     // top: 60%;
-    // top: var(--scroll);
-    transform: translateY(var(--scroll));
+    top: var(--scroll);
+    bottom: 0;
+    // transform: translateY(var(--scroll));
     left: 0;
     width: 100%;
-    height: calc(100% - 20px);
+    // height: calc(100% - 20px);
     background: $background;
     border-radius: 15px 15px 0 0;
-    padding: 5px 15px 15px 15px;
-    min-height: 400px;
+    // padding: 5px 15px 15px 15px;
+    // min-height: 400px;
     pointer-events: auto;
     color: $font;
     // overflow: scroll;
@@ -44,6 +45,18 @@
     // animation-duration: 1s;
     // animation-fill-mode: forwards;
     // animation: 1s forwards scroll_snap_top;
+}
+
+.infoPanelInner {
+    width: calc(100% - 30px);
+    margin: 0 auto;
+    margin-top: 5px;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .scroll_snap_top {
@@ -57,6 +70,7 @@
     background: grey;
     margin: 0 auto;
     margin-bottom: 10px;
+    margin-top: 5px;
 }
 
 .hidden {
@@ -64,8 +78,9 @@
 }
 
 .form {
-    height: 100%;
-    position: relative;
+    width: 100%;
+    position: absolute;
+    top: 15px;
 }
 
 .imageAndInputsContainer {
@@ -125,4 +140,20 @@
 
 .save {
     background: $gold;
+}
+
+.success {
+    width: 100%;
+    margin-top: 40px;
+    text-align: center;
+
+    .close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        border-radius: 20px;
+        background: $gold;
+        margin-top: 40px;
+    }
 }

@@ -16,14 +16,16 @@ interface Props {
 export default function ReviewsDisplay({ locationData, session }: Props) {
     const buttonLink = session ? `${locationData.id}/add?location=${locationData.name}` : "/login"
     return (
+    <>
         <div className={styles.displayContainer}>
             <div className={styles.topbar}>
                 <h2>{locationData.name}</h2>
                 <Link href={"/"} className={clsx(styles.button, styles.close)}><Image src={closeImg} alt="close icon" height={20} /></Link>
             </div>
             <ReviewList reviews={locationData.Review} images={locationData.images} />
-            <Link href={buttonLink} className={clsx(styles.button, styles.add)}>Add Guinness for this location</Link>
+            <Link href={buttonLink} className={clsx(styles.button, styles.add)}>Add</Link>
         </div>
+        </>
     )
 }
 

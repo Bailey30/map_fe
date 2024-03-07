@@ -8,10 +8,14 @@
     outline: 1px solid red;
     overflow: scroll;
     overscroll-behavior: contain;
-    height: calc(100dvh - var(--scrollTop)) ;
-    max-height: calc(100dvh - var(--scrollTop));
+    // height: calc(100dvh - var(--scrollTop)) ;
+    // max-height: calc(100dvh - var(--scrollTop));
     justify-content: space-between;
     // transition: all 0.4s;
+    position: absolute;
+    bottom: 0;
+    top:50px;
+    width: 100%;
 }
 
 .arrow {

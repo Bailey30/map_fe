@@ -19,9 +19,14 @@ export default function CreateReviewPanel() {
         router.push("/")
     }
 
+
+    useEffect(() => {
+        if (message?.success === true) {
+            router.push("/location/success")
+        }
+    }, [message])
     return (
         <>
-                    {message?.success !== true ?
                         <form action={formAction} className={styles.form}>
                             <div className={styles.imageAndInputsContainer}>
                                 <ReviewImageCreator setImageData={setImageData} />
@@ -51,12 +56,7 @@ export default function CreateReviewPanel() {
                             <Pending />
                             {message?.success === false && <div>An error occured</div>}
                         </form>
-                        :
-                        <div>
-                            <div>Guinness successfully added</div>
-                            <button onClick={back} className={styles.back}>Back</button>
-                        </div>
-                    }
+                       
         </>
     )
 }

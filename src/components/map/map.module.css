@@ -11,4 +11,7 @@
     
 }
 
-
+.guinnessMarker {
+    height: 50px;
+    transform: translateY(-22px);
+   }
