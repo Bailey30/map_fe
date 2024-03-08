@@ -3,7 +3,7 @@ import { Review } from "@/utils/types"
 import Image from "next/image"
 import clsx from "clsx"
 import styles from "./reviewList.module.scss"
-import { formatDate } from "@/utils/formatDate"
+import formatDate from "../../utils/formatDate"
 import guinness from "../../../public/images/guinness.png"
 
 interface ReviewListProps {

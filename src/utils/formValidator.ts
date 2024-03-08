@@ -1,7 +1,4 @@
 // import {validate(), allErrors}
-
-
-
 // const errors = {
 //     username: ["too long", "already exists"],
 //     password: ["required"],

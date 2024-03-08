@@ -186,6 +186,7 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
             success: true,
             review: { ...formData, latitude, longitude }
         }
+
     } catch (error: any) {
         console.log("error creating review", error)
         return {

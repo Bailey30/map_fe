@@ -1,0 +1,56 @@
+- npm install -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom
+- npm i --save-dev @types/jest ts-jest
+- npm init jest@latest
+
+- npm i undici - part of removing the Request/Response/TextEncoder is not defined error
+
+--jest.config.ts
+import type { Config } from 'jest'
+import nextJest from 'next/jest.js'
+ 
+const createJestConfig = nextJest({
+  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
+  dir: './',
+})
+ 
+// Add any custom config to be passed to Jest
+const config: Config = {
+  coverageProvider: 'v8',
+  testEnvironment: 'jsdom',
+  // Add more setup options before each test is run
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
+  setupFiles: ['<rootDir>/jest.polyfills.js'],
+  moduleNameMapper: { -------- to mcck next-auth
+      "^@/(.*)$": "<rootDir>/src/$1",
+      '@/auth': '<rootDir>/__tests__/mocks/auth.ts',
+      'next-auth/providers/credentials':
+			'<rootDir>/__tests__/mocks/next-auth-providers-credentials.ts',
+		'next-auth': '<rootDir>/__tests__/mocks/next-auth.ts',
+  },
+
+}
+ 
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+export default createJestConfig(config)
+
+
+
+-- jest.setup.ts
+import '@testing-library/jest-dom'
+
+-- package.json
+ "scripts" : {
+     "test": "jest", 
+    -- "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js", -- ???
+    "test:watch": "jest --watch"
+ }
+
+
+ jest.polyfills.js 
+
+ required config files:
+ - test.config.ts
+ - jest.polyfill.js
+ - jest.setup.ts
+ - ts-config.json
+ - __tests__ folder with next-auth mocks

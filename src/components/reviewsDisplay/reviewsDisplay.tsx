@@ -18,7 +18,7 @@ export default function ReviewsDisplay({ locationData, session }: Props) {
     return (
     <>
         <div className={styles.displayContainer}>
-            <div className={styles.topbar}>
+            <div className={styles.topbar} data-testid="location-name">
                 <h2>{locationData.name}</h2>
                 <Link href={"/"} className={clsx(styles.button, styles.close)}><Image src={closeImg} alt="close icon" height={20} /></Link>
             </div>

@@ -8,9 +8,18 @@ import { getImages, getReviews } from "@/lib/data"
 export default async function GetReviewPanel({ params }: { params: { slug: string } }) {
     const locationId = params.slug
     const session = await auth()
+    // const session = null
     const location: Location = await getReviews(locationId)
+    // const location = {
+    //     name: "",
+    //     id: 0,
+    //     latitude: 0,
+    //     longitude: 0,
+    //     Review: null
+    // }
     const images = await getImages(location)
-    console.log({ images })
+    // const images = {}
+    // console.log({ images })
 
     const locationData: LocationData = {
         ...location, images

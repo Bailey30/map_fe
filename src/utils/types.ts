@@ -21,7 +21,7 @@ export type Location = {
     name: string,
     latitude: number,
     longitude: number,
-    Review: Review[]
+    Review: Review[] | null
 }
 
 export interface LocationData extends Location {
