@@ -1,5 +1,4 @@
 import { MapState } from "@/redux/slice"
-import { number } from "zod"
 
 export type Review = {
     id: string,
@@ -26,11 +25,12 @@ export type Location = {
 
 export interface LocationData extends Location {
     images: {
-        [key:string]:string
+        [key: string]: string
     }
 }
 
 export type InputErrors = {
+    success: boolean
     username?: string | undefined
     password?: string | undefined
     email?: string | undefined
@@ -40,3 +40,13 @@ export type ReviewData = {
     mapState: MapState
     imageData?: string | undefined
 }
+
+export type User = {
+    id: number,
+    email: string,
+    username: string,
+    password: string
+}
+
+export type NewUser = Omit<User, "id">
+

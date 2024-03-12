@@ -3,7 +3,8 @@ import bcrypt from "bcrypt"
 import { InputErrors } from "./types";
 
 export async function validateRegisterInputs(formData: FormData, user: User | null) {
-    let errors: InputErrors = {}
+    // let errors: InputErrors = { success: false }
+    let errors: any = {}
     const { username, email, password, passwordRepeat } = Object.fromEntries(formData)
 
     if (password !== passwordRepeat) {
@@ -26,8 +27,17 @@ export async function validateRegisterInputs(formData: FormData, user: User | nu
         console.log("username already exists")
         errors["username"] = "username  already exists"
     }
-    return errors;
+
+    if (Object.keys(errors).length > 0) {
+        return {
+            ...errors,
+            success: false
+        }
+    } else {
+        return { success: true }
+    }
 }
+
 
 
 export async function generatePassword(password: string) {

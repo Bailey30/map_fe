@@ -1,6 +1,6 @@
 "use client"
 import styles from "./review.module.scss"
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Pending from "@/components/pending/pending";
 import ReviewImageCreator from "@/components/reviewImage/reviewImageCreator";
 import UseCreateReview from "@/utils/useCreateReview";

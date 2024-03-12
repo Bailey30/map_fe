@@ -8,7 +8,7 @@ import Pending from "@/components/pending/pending"
 
 export default function RegisterPage() {
     const router = useRouter()
-    const [errorMessage, serverAction] = useFormState(register, undefined)
+    const [messages, serverAction] = useFormState(register, undefined)
     function back() {
         router.push("/")
     }
@@ -19,22 +19,22 @@ export default function RegisterPage() {
 
                 <label htmlFor="username">username</label>
                 <input type="text" name="username" />
-                {errorMessage?.username && <p>{errorMessage.username}</p>}
+                {messages?.username && <p>{messages.username}</p>}
 
                 <label htmlFor="email">email</label>
                 <input type="text" name="email" />
-                {errorMessage?.email && <p>{errorMessage.email}</p>}
+                {messages?.email && <p>{messages.email}</p>}
 
                 <label htmlFor="password">password</label>
                 <input type="password" name="password" />
-                {errorMessage?.password && <p>{errorMessage.password}</p>}
+                {messages?.password && <p>{messages.password}</p>}
 
                 <label htmlFor="passwordRepeat">type password again</label>
                 <input type="password" name="passwordRepeat" />
 
                 <button type="submit">Register</button>
                 <Link href="/login">Already have an account? Log in.</Link>
-                <Pending/>
+                <Pending />
             </form>
 
 

@@ -10,6 +10,7 @@ export default async function GetReviewPanel({ params }: { params: { slug: strin
     const session = await auth()
     // const session = null
     const location: Location = await getReviews(locationId)
+    // const location = {}
     // const location = {
     //     name: "",
     //     id: 0,
@@ -17,8 +18,8 @@ export default async function GetReviewPanel({ params }: { params: { slug: strin
     //     longitude: 0,
     //     Review: null
     // }
-    const images = await getImages(location)
-    // const images = {}
+    // const images = await getImages(location)
+    const images = {}
     // console.log({ images })
 
     const locationData: LocationData = {

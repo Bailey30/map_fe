@@ -20,14 +20,14 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body >
+            <body>
                 <QueryProvider>
                     <StoreProvider>
                         <main style={{ "position": "relative" }} id="main">
-                        <Suspense fallback={<MapLoader/>}>
-                            <MainContainer />
+                            <Suspense fallback={<MapLoader />}>
+                                <MainContainer />
                             </Suspense>
-                            <RouteChangeListener/>
+                            <RouteChangeListener />
                             {children}
                         </main>
                     </StoreProvider>

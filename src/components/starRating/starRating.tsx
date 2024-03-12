@@ -19,7 +19,7 @@ export default function StarRating({ setRatingInput }: Props) {
 
     return <div className={styles.ratingContainer}>
         {rating.map((rat, i) => {
-            return <Image src={guinness} alt="rating star" height={25} width={25} onMouseEnter={() => handleRating(i)} onClick={() => handleRating(i)} className={clsx(styles.star, active >= i && styles.active)} key={rat}/>
+            return <Image src={guinness} alt="rating star" height={25} width={25} onMouseEnter={() => handleRating(i)} onClick={() => handleRating(i)} className={clsx(styles.star, active >= i && styles.active)} key={rat} data-testid={i === 4 && "star_five"}/>
         })}
     </div>
 }

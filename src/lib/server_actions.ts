@@ -9,6 +9,7 @@ import { auth } from "./auth"
 import { hasErrors, validate } from "@/utils/formValidator"
 import { ReviewData } from "@/utils/types"
 import uploadImage from "./uploadImage"
+import { getAuthenticatedUser } from "./user_service"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -50,7 +51,6 @@ export async function createReview(location: MapState, prevState: any, formData:
 
 
 export async function getUser() {
-
     const authData = await auth()
     if (!authData || !authData.user?.email) {
         throw new Error('Authentication data is missing or invalid.');
@@ -145,7 +145,10 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
             }
         }
 
-        const user = await getUser()
+        const user = await getAuthenticatedUser()
+
+        // maybe - prisma.$transaction?
+        // so that if one fails the other is rolled back
 
         const location = data.id ? await getLocation(data.id) : await createLocation(reviewData.mapState, data.location)
         if (!location) {
@@ -178,7 +181,6 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
         } else {
             console.log("no image id")
         }
-
 
         revalidateTag("reviews")
 

@@ -5,27 +5,18 @@ import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
 import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
 import { InputErrors } from "@/utils/types";
+import { createUser, findUser } from "./user_service";
 
 
 export async function register(prevData: any, formData: FormData) {
     console.log("calling register")
     const { username, email, password } = Object.fromEntries(formData)
 
-    let errors: InputErrors = {}
+    let errors: InputErrors = { success: true }
 
     try {
-        const user = await prisma.user.findFirst({
-            where: {
-                OR: [
-                    {
-                        email: String(email).toLowerCase(),
-                    },
-                    {
-                        username: String(username).toLowerCase()
-                    }
-                ]
-            }
-        })
+        const user = await findUser(String(email).toLowerCase(), String(username).toLowerCase())
+
 
         // const errors = validate([
         //     {
@@ -41,27 +32,30 @@ export async function register(prevData: any, formData: FormData) {
         // ]
 
         errors = await validateRegisterInputs(formData, user)
-        if (Object.keys(errors).length > 0) {
+        if (errors.success === false) {
+            console.log({ errors })
             return errors
         }
-       
+
         const hashedPassword = await generatePassword(password as string)
 
-        await prisma.user.create({
-            data: {
-                email: String(email).toLowerCase(),
-                password: hashedPassword,
-                username: String(username).toLowerCase()
-            }
+        await createUser({
+            email: String(email).toLowerCase(),
+            password: hashedPassword,
+            username: String(username).toLowerCase()
         })
 
         //immediately login
         await login(prevData, formData)
 
+        return {
+            success: true
+        }
+
     } catch (error: any) {
         console.log("error creating user", error)
     } finally {
-        if (Object.keys(errors).length === 0) {
+        if (errors.success === true) {
             redirect("/")
         }
     }
