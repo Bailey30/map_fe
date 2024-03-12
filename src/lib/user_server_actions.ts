@@ -5,7 +5,7 @@ import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
 import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
 import { InputErrors } from "@/utils/types";
-import { createUser, findUser } from "./user_service";
+import { createUser, findUser } from "./user_repository";
 
 
 export async function register(prevData: any, formData: FormData) {

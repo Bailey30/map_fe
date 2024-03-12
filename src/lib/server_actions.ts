@@ -9,7 +9,7 @@ import { auth } from "./auth"
 import { hasErrors, validate } from "@/utils/formValidator"
 import { ReviewData } from "@/utils/types"
 import uploadImage from "./uploadImage"
-import { getAuthenticatedUser } from "./user_service"
+import { getAuthenticatedUser } from "./user_repository"
 
 const FromSchema = z.object({
     id: z.string(),
