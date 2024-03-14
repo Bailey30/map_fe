@@ -1,0 +1,19 @@
+version: "3.8"
+  
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always #restart the service any time as failure happens or of Docker is restarted
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=guinnessmap
+    ports:
+      - "8080:8080"
+    volumes: #Specifies a name for a volume along with location on your local machine where your container will persist its data
+      - db:/var/lib/postgresql/data
+    env_file: 
+      - path=.env.test
+volumes:
+  db:
+    driver: local

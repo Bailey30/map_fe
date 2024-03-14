@@ -1,8 +1,8 @@
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt"
-import { InputErrors } from "./types";
+import { ServerActionResponse } from "./types";
 
-export async function validateRegisterInputs(formData: FormData, user: User | null) {
+export async function validateRegisterInputs(formData: FormData, user: User | null): Promise<ServerActionResponse> {
     // let errors: InputErrors = { success: false }
     let errors: any = {}
     const { username, email, password, passwordRepeat } = Object.fromEntries(formData)
@@ -30,11 +30,11 @@ export async function validateRegisterInputs(formData: FormData, user: User | nu
 
     if (Object.keys(errors).length > 0) {
         return {
-            ...errors,
+            errors: errors,
             success: false
         }
     } else {
-        return { success: true }
+        return { success: true, errors: null }
     }
 }
 

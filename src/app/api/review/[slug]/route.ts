@@ -17,13 +17,13 @@ type reviewsResponse = ({
         creatorId: number;
     })[];
 } & {
-  id: number,
-  name: string,
-  latitude: number,
-  longitude: number
+    id: number,
+    name: string,
+    latitude: number,
+    longitude: number
 }) | null
 
-type reviewRouteResponse = {status: number, location: reviewsResponse} | {status:number, error: string}
+type reviewRouteResponse = { status: number, location: reviewsResponse } | { status: number, error: string }
 
 export const GET = async (request: Request, { params }: { params: { slug: string } }): Promise<NextResponse<reviewRouteResponse>> => {
     try {
@@ -35,7 +35,7 @@ export const GET = async (request: Request, { params }: { params: { slug: string
             include: {
                 Review: {
                     include: {
-                        creator: {
+                        creator: { // nested query getting the username using the creastor id. Username is not stored with review or location
                             select: {
                                 username: true
                             }
@@ -49,8 +49,10 @@ export const GET = async (request: Request, { params }: { params: { slug: string
     } catch (error) {
         console.log("failed to fetch posts");
         return NextResponse.json(
-            { error: "failed to fetch posts" ,
-             status: 500 }
+            {
+                error: "failed to fetch posts",
+                status: 500
+            }
         );
     }
 };

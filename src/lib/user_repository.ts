@@ -41,6 +41,7 @@ export async function findUser(email: string, username: string): Promise<User | 
 // maybe prisma.user.findUniqueOrThrow()?
 export async function getAuthenticatedUser(): Promise<User> {
     const authData = await auth()
+    console.log({ authData })
     if (!authData || !authData.user?.email) {
         throw new Error('Authentication data is missing or invalid.');
     }

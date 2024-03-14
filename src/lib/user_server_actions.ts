@@ -4,15 +4,15 @@ import prisma from "../lib/db"
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
 import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
-import { InputErrors } from "@/utils/types";
+import { ServerActionResponse } from "@/utils/types";
 import { createUser, findUser } from "./user_repository";
 
 
-export async function register(prevData: any, formData: FormData) {
+export async function register(prevData: any, formData: FormData): Promise<ServerActionResponse> {
     console.log("calling register")
     const { username, email, password } = Object.fromEntries(formData)
 
-    let errors: InputErrors = { success: true }
+    let response: ServerActionResponse = { success: true, errors: null }
 
     try {
         const user = await findUser(String(email).toLowerCase(), String(username).toLowerCase())
@@ -31,10 +31,13 @@ export async function register(prevData: any, formData: FormData) {
         //     }
         // ]
 
-        errors = await validateRegisterInputs(formData, user)
+        const errors = await validateRegisterInputs(formData, user)
         if (errors.success === false) {
-            console.log({ errors })
-            return errors
+            console.log({ response })
+            return {
+                success: false,
+                errors: errors.errors
+            }
         }
 
         const hashedPassword = await generatePassword(password as string)
@@ -48,16 +51,14 @@ export async function register(prevData: any, formData: FormData) {
         //immediately login
         await login(prevData, formData)
 
-        return {
-            success: true
-        }
-
+        return response
     } catch (error: any) {
         console.log("error creating user", error)
     } finally {
-        if (errors.success === true) {
+        if (response.success === true) {
             redirect("/")
         }
+        return response
     }
 }
 

@@ -7,7 +7,7 @@ import { z } from "zod"
 import prisma from "../lib/db"
 import { auth } from "./auth"
 import { hasErrors, validate } from "@/utils/formValidator"
-import { ReviewData } from "@/utils/types"
+import { ReviewData, ServerActionResponse, Location } from "@/utils/types"
 import uploadImage from "./uploadImage"
 import { getAuthenticatedUser } from "./user_repository"
 
@@ -68,9 +68,9 @@ export async function getUser() {
     return user
 }
 
-async function createLocation(coordinates: MapState, name: string) {
+async function createLocation(coordinates: MapState, name: string, tx: any): Promise<Location> {
     try {
-        const location = await prisma?.location.create({
+        const location = await tx?.location.create({
             data: {
                 name: name,
                 latitude: coordinates.latitude,
@@ -84,9 +84,9 @@ async function createLocation(coordinates: MapState, name: string) {
     }
 }
 
-async function getLocation(id: string) {
+async function getLocation(id: string, tx: any): Promise<Location> {
     try {
-        const location = await prisma?.location.findUnique({
+        const location = await tx?.location.findUnique({
             where: {
                 id: parseInt(id)
             }
@@ -99,12 +99,11 @@ async function getLocation(id: string) {
 }
 
 // Creates reviews on locations that already exist and create locations when they dont
-export async function createReviewSQL(reviewData: ReviewData, prevState: any, formData: FormData) {
+export async function createReviewSQL(reviewData: ReviewData, prevState: any, formData: FormData): Promise<ServerActionResponse> {
     console.log("creating review with SQL")
     console.log(formData)
 
     try {
-        const { latitude, longitude } = reviewData.mapState
         const form = Object.fromEntries(formData)
         const data = Object.fromEntries(
             Object.entries(form).map(([key, value]) => [key, value as string])
@@ -140,59 +139,64 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
         if (hasErrors(errors)) {
             console.log("form errors", errors)
             return {
-                success: "field errors",
+                success: false,
                 errors: errors
             }
         }
 
         const user = await getAuthenticatedUser()
 
-        // maybe - prisma.$transaction?
-        // so that if one fails the other is rolled back
-
-        const location = data.id ? await getLocation(data.id) : await createLocation(reviewData.mapState, data.location)
-        if (!location) {
-            throw new Error("error creating location")
-        }
-
-        const newReview = await prisma?.review.create({
-            data: {
-                locationId: location.id,
-                creatorId: user.id,
-                rating: parseInt(data.rating),
-                price: parseFloat(data.price),
-                comments: data.comments,
+        const location = await prisma.$transaction(async (tx) => {
+            const location = data.id ? await getLocation(data.id, tx) : await createLocation(reviewData.mapState, data.location, tx)
+            if (!location) {
+                throw new Error("error creating location")
             }
-        })
 
-        if (reviewData.imageData) {
-            console.log("updating with image id")
-            const key = newReview.id
-            await uploadImage(reviewData.imageData, location.name, key)
-
-            await prisma?.review.update({
-                where: {
-                    id: newReview.id
-                },
+            // extract function
+            const newReview = await tx?.review.create({
                 data: {
-                    imageId: newReview.id
+                    locationId: location.id,
+                    creatorId: user.id,
+                    rating: parseInt(data.rating),
+                    price: parseFloat(data.price),
+                    comments: data.comments,
                 }
             })
-        } else {
-            console.log("no image id")
-        }
+
+            // extract function
+            if (reviewData.imageData) {
+                console.log("updating with image id")
+                const key = newReview.id
+                await uploadImage(reviewData.imageData, location.name, key)
+
+                await tx?.review.update({
+                    where: {
+                        id: newReview.id
+                    },
+                    data: {
+                        imageId: newReview.id
+                    }
+                })
+            } else {
+                console.log("no image id")
+            }
+
+            return location
+        })
 
         revalidateTag("reviews")
 
         return {
             success: true,
-            review: { ...formData, latitude, longitude }
+            errors: null,
+            action: data.id ? `Review added to location: ${location.name}.` : `New location ${location.name} added with review.`
         }
 
     } catch (error: any) {
         console.log("error creating review", error)
         return {
-            success: false
+            success: false,
+            errors: error
         }
     } finally {
         // redirect("/")

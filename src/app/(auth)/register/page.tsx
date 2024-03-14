@@ -5,10 +5,12 @@ import styles from "../auth.module.css"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Pending from "@/components/pending/pending"
+import { ServerActionResponse } from "@/utils/types"
+import { Dispatch } from "redux"
 
 export default function RegisterPage() {
     const router = useRouter()
-    const [messages, serverAction] = useFormState(register, undefined)
+    const [messages, serverAction]: [state: ServerActionResponse | undefined, dispatch: (payload: FormData) => void] = useFormState(register, undefined)
     function back() {
         router.push("/")
     }
@@ -19,15 +21,15 @@ export default function RegisterPage() {
 
                 <label htmlFor="username">username</label>
                 <input type="text" name="username" />
-                {messages?.username && <p>{messages.username}</p>}
+                {messages?.errors?.username && <p>{messages?.errors.username}</p>}
 
                 <label htmlFor="email">email</label>
                 <input type="text" name="email" />
-                {messages?.email && <p>{messages.email}</p>}
+                {messages?.errors?.email && <p>{messages?.errors?.email}</p>}
 
                 <label htmlFor="password">password</label>
                 <input type="password" name="password" />
-                {messages?.password && <p>{messages.password}</p>}
+                {messages?.errors?.password && <p>{messages?.errors?.password}</p>}
 
                 <label htmlFor="passwordRepeat">type password again</label>
                 <input type="password" name="passwordRepeat" />

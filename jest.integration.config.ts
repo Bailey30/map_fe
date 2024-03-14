@@ -1,3 +1,6 @@
+module.exports = {
+    testRegex: "/integration/"
+}
 import nextJest from "next/jest.js"
 import next from "next"
 next({})
@@ -149,7 +152,7 @@ const config: Config = {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: ['<rootDir>/jest.polyfills.js'],
+    setupFiles: ['<rootDir>/jest.polyfills.js', "<rootDir>/__tests__/helpers/setup.ts"],
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: ["<rootDir>/jest.setup.ts", '<rootDir>/src/lib/__mocks__/db.ts'],
 
@@ -175,13 +178,10 @@ const config: Config = {
     ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    testPathIgnorePatterns: [
-        // "\\\\node_modules\\\\"
-        "__tests__/integration"
-    ],
+
 
     // The regexp pattern or array of patterns that Jest uses to detect test files
-    // testRegex: [],
+    testRegex: ["/integration/"],
 
     // This option allows the use of a custom results processor
     // testResultsProcessor: undefined,

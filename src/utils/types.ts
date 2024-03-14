@@ -29,11 +29,14 @@ export interface LocationData extends Location {
     }
 }
 
-export type InputErrors = {
+export type ServerActionResponse = {
     success: boolean
-    username?: string | undefined
-    password?: string | undefined
-    email?: string | undefined
+    errors: {
+        username?: string | undefined
+        password?: string | undefined
+        email?: string | undefined
+    } | null | any
+    action?: string
 }
 
 export type ReviewData = {
