@@ -7,7 +7,7 @@ import formatDate from "../../utils/formatDate"
 import guinness from "../../../public/images/guinness.png"
 
 interface ReviewListProps {
-    reviews: Review[]
+    reviews: Review[] | null
     images: { [key: string]: string }
 }
 

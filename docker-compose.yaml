@@ -7,13 +7,12 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=guinnessmap
     ports:
-      - "8080:8080"
+      - "5432:5432"
     volumes: #Specifies a name for a volume along with location on your local machine where your container will persist its data
       - db:/var/lib/postgresql/data
-    env_file: 
-      - path=.env.test
+    # env_file: 
+      # - path: ".env.test"
 volumes:
   db:
     driver: local
