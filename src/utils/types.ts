@@ -37,6 +37,9 @@ export type ServerActionResponse = {
         email?: string | undefined
     } | null | any
     action?: string
+    body?: {
+        [key: string]: any
+    }
 }
 
 export type ReviewData = {

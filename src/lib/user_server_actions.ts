@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import prisma from "../lib/db"
 import { signIn, signOut } from "./auth";
 import { AuthError } from "next-auth"
-import { generatePassword, validateRegisterInputs } from "@/utils/userUtils";
+import { generatePassword, validateRegisterInputs } from "../utils/userUtils";
 import { ServerActionResponse } from "@/utils/types";
 import { createUser, findUser } from "./user_repository";
 
@@ -42,7 +42,7 @@ export async function register(prevData: any, formData: FormData): Promise<Serve
 
         const hashedPassword = await generatePassword(password as string)
 
-        await createUser({
+        const newUser = await createUser({
             email: String(email).toLowerCase(),
             password: hashedPassword,
             username: String(username).toLowerCase()
@@ -50,7 +50,7 @@ export async function register(prevData: any, formData: FormData): Promise<Serve
 
         //immediately login
         await login(prevData, formData)
-
+        response["body"] = { user: newUser }
         return response
     } catch (error: any) {
         console.log("error creating user", error)

@@ -85,9 +85,10 @@ const config: Config = {
     // maxWorkers: "50%",
 
     // An array of directory names to be searched recursively up from the requiring module's location
-    // moduleDirectories: [
-    //   "node_modules"
-    // ],
+    moduleDirectories: [
+        "node_modules",
+        "src"
+    ],
 
     // An array of file extensions your modules use
     // moduleFileExtensions: [
@@ -107,11 +108,14 @@ const config: Config = {
         '@/auth': '<rootDir>/__tests__/mocks/auth.ts',
         'next-auth/providers/credentials':
             '<rootDir>/__tests__/mocks/next-auth-providers-credentials.ts',
-        'next-auth': '<rootDir>/__tests__/mocks/next-auth.ts',
+        '^next-auth$': '<rootDir>/__tests__/mocks/next-auth.ts',
+        "@/utils/userUtils": "<rootDir>/src/utils/userUtils.ts"
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
+
+    modulePaths: ["<rootDir>/node_modules"],
 
     // Activates notifications for test results
     // notify: false,
@@ -144,15 +148,15 @@ const config: Config = {
     // rootDir: undefined,
 
     // A list of paths to directories that Jest should use to search for files in
-    // roots: [
-    //   "<rootDir>"
-    // ],
+    roots: [
+        "<rootDir>"
+    ],
 
     // Allows you to use a custom runner instead of Jest's default test runner
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: ['<rootDir>/jest.polyfills.js', "<rootDir>/__tests__/helpers/setup.ts"],
+    setupFiles: ['<rootDir>/jest.polyfills.js', "<rootDir>/__tests__/helpers/setup.ts", "<rootDir>/__tests__/mocks/next-auth.ts"],
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: ["<rootDir>/jest.setup.ts", '<rootDir>/src/lib/__mocks__/db.ts'],
 
@@ -173,7 +177,7 @@ const config: Config = {
 
     // The glob patterns Jest uses to detect test files
     testMatch: [
-        //   "**/__tests__/**/*.[jt]s?(x)",
+        "**/__tests__/**/*.[jt]s?(x)",
         "**/?(*.)+(spec|test).[tj]s?(x)"
     ],
 
@@ -191,10 +195,18 @@ const config: Config = {
 
     // A map from regular expressions to paths to transformers
     // testMatch: ["**/test/**/*.+(ts|tsx|js)"],
+    transform: {
+        "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
+        '^.+\\.(js|jsx)$': 'babel-jest',
+    },
+
     // transform: {
-    //   "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
+    //     "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
     // },
-    // extensionsToTreatAsEsm: [".ts"],
+    // transformIgnorePatterns: [
+    //     "<rootDir>/src/lib/"
+    // ],
+    extensionsToTreatAsEsm: [".ts"],
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
     // transformIgnorePatterns: [

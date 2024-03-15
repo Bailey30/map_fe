@@ -32,6 +32,7 @@ interface ReviewProps {
     totalReviews: number
     image: string | null
 }
+
 async function Review({ review, i, totalReviews, image }: ReviewProps) {
 
     const ratingArr = [1, 2, 3, 4, 5]

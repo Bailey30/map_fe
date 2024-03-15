@@ -20,7 +20,6 @@ export default function MapComponent({ data }: Props) {
     const viewState = useAppSelector((state) => state.map)
     const router = useRouter()
 
-
     useEffect(() => {
         // console.log({ viewState })
     }, [viewState])

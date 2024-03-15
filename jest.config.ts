@@ -192,7 +192,7 @@ const config: Config = {
     // A map from regular expressions to paths to transformers
     // testMatch: ["**/test/**/*.+(ts|tsx|js)"],
     // transform: {
-    //   "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
+    //     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
     // },
     // extensionsToTreatAsEsm: [".ts"],
 
