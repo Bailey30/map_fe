@@ -17,7 +17,7 @@ export default async function ReviewList({ reviews, images }: ReviewListProps) {
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
                     const img = review.imageId ? images[review.imageId.toString()] : null
-                    return <Review review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} />
+                    return <ReviewComponent review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} />
 
                 })}
             </div>
@@ -33,7 +33,7 @@ interface ReviewProps {
     image: string | null
 }
 
-async function Review({ review, i, totalReviews, image }: ReviewProps) {
+async function ReviewComponent({ review, i, totalReviews, image }: ReviewProps) {
 
     const ratingArr = [1, 2, 3, 4, 5]
 

@@ -25,7 +25,8 @@ npx prisma migrate dev --name init
 
 # Run Jest tests with the configuration provided in jest.integration.config.ts file.
 # '--runInBand' flag runs all tests serially in the current process.
-node --experimental-vm-modules node_modules/jest/bin/jest.js -c ./jest.integration.config.ts --runInBand
+node --experimental-vm-modules node_modules/jest/bin/jest.js -c ./jest.integration.config.ts  --forceExit --logHeapUsage --runInBand 
+# jest -c ./jest.integration.config.ts --runInBand
 
 # Prompt the user to press Enter to exit the script.
 read -p "Press Enter to exit"

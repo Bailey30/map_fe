@@ -10,7 +10,8 @@
         "postinstall": "prisma generate",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "test:watch": "jest --watch",
-        "test:int": ".\\scripts\\run-integration.sh"
+        "test:int": ".\\scripts\\run-integration.sh",
+        "clear_jest": "jest --clear-cache"
     },
     "dependencies": {
         "@babel/core": "^7.24.0",

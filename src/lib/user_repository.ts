@@ -3,6 +3,8 @@ import prisma from "../lib/db"
 import { auth } from "./auth";
 
 export async function createUser(newUser: NewUser): Promise<User> {
+    console.log({ newUser })
+    // console.log({ prisma })
     try {
         const user = await prisma.user.create({
             data: {
@@ -11,6 +13,8 @@ export async function createUser(newUser: NewUser): Promise<User> {
                 username: newUser.username
             }
         })
+        // const user = { id: 1, username: "ef", email: "dfds", password: "esfds" }
+        console.log("created user", user)
         return user
     } catch (err: any) {
         throw new Error("error creating new user", err)

@@ -31,9 +31,10 @@ export async function register(prevData: any, formData: FormData): Promise<Serve
         //     }
         // ]
 
-        const errors = await validateRegisterInputs(formData, user)
+        const errors = validateRegisterInputs(formData, user)
         if (errors.success === false) {
-            console.log({ response })
+            // console.log({ response })
+            console.log("there was errors", errors.errors)
             return {
                 success: false,
                 errors: errors.errors
@@ -47,6 +48,7 @@ export async function register(prevData: any, formData: FormData): Promise<Serve
             password: hashedPassword,
             username: String(username).toLowerCase()
         })
+
 
         //immediately login
         await login(prevData, formData)

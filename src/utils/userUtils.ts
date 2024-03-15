@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import bcrypt from "bcrypt"
 import { ServerActionResponse } from "./types";
 
-export async function validateRegisterInputs(formData: FormData, user: User | null): Promise<ServerActionResponse> {
+export function validateRegisterInputs(formData: FormData, user: User | null) {
     // let errors: InputErrors = { success: false }
     let errors: any = {}
     const { username, email, password, passwordRepeat } = Object.fromEntries(formData)
@@ -27,6 +27,7 @@ export async function validateRegisterInputs(formData: FormData, user: User | nu
         console.log("username already exists")
         errors["username"] = "username  already exists"
     }
+    console.log({ errors })
 
     if (Object.keys(errors).length > 0) {
         return {
