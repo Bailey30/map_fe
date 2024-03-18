@@ -7,6 +7,23 @@ import UseCreateReview from "@/utils/useCreateReview";
 import clsx from "clsx";
 import StarRating from "@/components/starRating/starRating";
 import { useEffect, useState } from "react";
+import { Metadata, ResolvingMetadata } from "next";
+//
+// type Props = {
+//     params: { id: string }
+//     searchParams: { [key: string]: string | string[] | undefined }
+// }
+//
+// export async function generateMetadata(
+//     { params, searchParams }: Props,
+//     parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//     console.log({ params })
+//     console.log({ searchParams })
+//     return {
+//         title: ""
+//     }
+// }
 
 export default function CreateReviewPanel() {
     const router = useRouter()
@@ -33,7 +50,10 @@ export default function CreateReviewPanel() {
                         <input name="location" className={styles.input} aria-required="true"></input>
                         {message?.errors?.location && <div>{message?.errors?.location}</div>}
                         <label htmlFor="price" className={styles.label}>Price</label>
-                        <input name="price" type="text" className={styles.input} aria-required="true"></input>
+                        <div className={clsx(styles.input, styles.priceContainer)}>
+                            <span className={clsx(styles.poundSign)}>£</span>
+                            <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true"></input>
+                        </div>
                         {message?.errors?.price && <div>{message?.errors?.price}</div>}
                         <div className={styles.rating}>
                             <label htmlFor="rating" className={clsx(styles.label, styles.hidden)} aria-required="true">Rating</label>

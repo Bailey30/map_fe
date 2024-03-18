@@ -5,7 +5,7 @@
     $sHeight: calc(var(--scrollTop) - 40px);
     @debug var(--scrollTop);
     // display: flex;
-    outline: 1px solid red;
+    // outline: 1px solid red;
     overflow: scroll;
     overscroll-behavior: contain;
     // height: calc(100dvh - var(--scrollTop)) ;
@@ -14,7 +14,7 @@
     // transition: all 0.4s;
     position: absolute;
     bottom: 0;
-    top:50px;
+    top: 50px;
     width: 100%;
 }
 

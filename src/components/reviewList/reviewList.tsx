@@ -5,6 +5,9 @@ import clsx from "clsx"
 import styles from "./reviewList.module.scss"
 import formatDate from "../../utils/formatDate"
 import guinness from "../../../public/images/guinness.png"
+import { useAppDispatch } from "@/redux/hooks"
+import { useEffect } from "react"
+import { SET_LOADING, TOGGLE_LOADING } from "@/redux/controlsSlice"
 
 interface ReviewListProps {
     reviews: Review[] | null
@@ -12,6 +15,13 @@ interface ReviewListProps {
 }
 
 export default function ReviewList({ reviews, images }: ReviewListProps) {
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        console.log("review list useffect")
+        dispatch(SET_LOADING(false))
+    }, [])
+
     return (
         <>
             <div className={styles.detailsContainer} id="details">
@@ -44,7 +54,7 @@ function ReviewComponent({ review, i, totalReviews, image }: ReviewProps) {
                 <div className={styles.details}>
                     <p className={clsx(styles.reviewDetail, styles.name)}>{review.creator.username}</p>
                     <div className={clsx(styles.reviewDetail, styles.group)}>
-                        <span className={clsx(styles.reviewDetail, styles.price)}>£{review.price}</span>
+                        <span className={clsx(styles.reviewDetail, styles.price)}>£{formatMoney(review.price)}</span>
                         <div className={styles.ratingContainer}>
                             {
                                 ratingArr.map((g, i) => {
@@ -65,4 +75,15 @@ function ReviewComponent({ review, i, totalReviews, image }: ReviewProps) {
 
 function formatBase64String(string: string): string {
     return decodeURIComponent("data:image/jpeg;base64, " + string)
+}
+
+function formatMoney(amount: number) {
+    // Check if the amount has a decimal point
+    if (amount % 1 === 0) {
+        // If there is no decimal point, return the amount without decimals
+        return amount.toFixed(0);
+    } else {
+        // If there is a decimal point, return the amount with 2 decimal places
+        return amount.toFixed(2);
+    }
 }

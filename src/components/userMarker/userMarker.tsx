@@ -13,13 +13,25 @@ export const UserMarker = memo(function UserMarker() {
 
     const viewState = useAppSelector((state) => state.map)
     const [userLocation, setUserLocation] = useState<{ latitude: number, longitude: number }>({ latitude: 0, longitude: 0 })
+
     useEffect(() => {
+        setLocation()
+    }, [])
+
+    if (typeof window !== "undefined") {
+        window.onload = function() {
+            setLocation()
+        }
+    }
+
+    function setLocation() {
+        console.log("setting user location")
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(position => {
                 setUserLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
             });
         }
-    }, [])
+    }
 
     return (
         <div className={styles.userMarker}>

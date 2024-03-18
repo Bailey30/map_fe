@@ -2,19 +2,12 @@
 @use "../../styles/variable.scss" as *;
 
 
-.scrollBuffer {
-    height: 100vh;
-    width: 100vw;
-    position: absolute;
-    bottom: 40%;
-    outline: 1px solid red;
-    // scroll-snap-align:end;
-}
 
-@keyframes scroll_snap_top{
+@keyframes scroll_snap_top {
     0% {
         transform: translateY(50%);
     }
+
     100% {
         transform: translateY(0%);
     }
@@ -109,7 +102,26 @@
     &.comment {
         @include mixins.textArea;
     }
+
+    &.priceContainer {
+        border: none;
+        padding-left: 0;
+        position: relative;
+    }
+
+    &.price {
+        padding-left: 18px;
+    }
 }
+
+.poundSign {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 7px;
+    font-weight: bold;
+}
+
 
 .label {
     @include mixins.label;
@@ -117,6 +129,7 @@
     &.comment {
         margin-top: 10px;
     }
+
 }
 
 

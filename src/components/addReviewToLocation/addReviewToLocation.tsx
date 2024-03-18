@@ -39,7 +39,10 @@ export default function AddNewReviewToLocation({ locationId, locationName }: Add
                             <input name="locationData" className={clsx(styles.input)} value={locationName} disabled={true} />
 
                             <label htmlFor="price" className={styles.label}>Price</label>
-                            <input name="price" type="text" className={styles.input}></input>
+                            <div className={clsx(styles.input, styles.priceContainer)}>
+                                <span className={clsx(styles.poundSign)}>£</span>
+                                <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true"></input>
+                            </div>
                             {message?.errors?.price && <p className={styles.errorMessage}>{message?.errors?.price}</p>}
 
                             <div className={styles.rating}>

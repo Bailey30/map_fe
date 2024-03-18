@@ -7,9 +7,9 @@ export type MapState = {
 }
 
 const initialState: MapState = {
-    longitude: 0,
-    latitude: 0,
-    zoom:15 
+    longitude: -2.244644,
+    latitude: 53.483959,
+    zoom: 15
 }
 
 export const mapSlice = createSlice({
