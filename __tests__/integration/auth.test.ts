@@ -40,4 +40,7 @@ describe("auth tests", () => {
         // expect(newUser).toEqual("gfjdk")
 
     })
+
+    // NEED TO TEST WHY IT DOESNT RETURN ERRORS WHEN THEY EXIST
+    // try removing the __mocks__ folder you created with duplicated the auth stuff
 })

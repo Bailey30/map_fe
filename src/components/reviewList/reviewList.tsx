@@ -11,7 +11,7 @@ interface ReviewListProps {
     images: { [key: string]: string }
 }
 
-export default async function ReviewList({ reviews, images }: ReviewListProps) {
+export default function ReviewList({ reviews, images }: ReviewListProps) {
     return (
         <>
             <div className={styles.detailsContainer} id="details">
@@ -33,7 +33,7 @@ interface ReviewProps {
     image: string | null
 }
 
-async function ReviewComponent({ review, i, totalReviews, image }: ReviewProps) {
+function ReviewComponent({ review, i, totalReviews, image }: ReviewProps) {
 
     const ratingArr = [1, 2, 3, 4, 5]
 

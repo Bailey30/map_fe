@@ -24,7 +24,6 @@ export default function CreateReviewPanel() {
     }, [message])
 
     return (
-
         <>
             <form action={formAction} className={styles.form}>
                 <div className={styles.imageAndInputsContainer}>
@@ -34,7 +33,7 @@ export default function CreateReviewPanel() {
                         <input name="location" className={styles.input} aria-required="true"></input>
                         {message?.errors?.location && <div>{message?.errors?.location}</div>}
                         <label htmlFor="price" className={styles.label}>Price</label>
-                        <input name="price" type="number" className={styles.input} aria-required="true"></input>
+                        <input name="price" type="text" className={styles.input} aria-required="true"></input>
                         {message?.errors?.price && <div>{message?.errors?.price}</div>}
                         <div className={styles.rating}>
                             <label htmlFor="rating" className={clsx(styles.label, styles.hidden)} aria-required="true">Rating</label>
