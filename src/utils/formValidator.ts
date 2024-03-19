@@ -13,14 +13,14 @@
 // and errors is an object returned from the hook that takes a config
 //
 //
-type errorsObj = {
+export type errorsObj = {
     [key: string]: string
 }
 type Options = {
     is: any,
     customResponse?: string
 }
-type Config = {
+export type Config = {
     field: string,
     value: string | undefined,
     required?: boolean | Options,
@@ -28,7 +28,7 @@ type Config = {
     maxLen?: number | Options
     isEqual?: any | Options,
 }
-type ConfigArray = Config[]
+export type ConfigArray = Config[]
 type ValidationResponse = {
     valid: boolean,
     message?: string
@@ -41,7 +41,7 @@ enum ValidationFunctionNames {
     maxLen = "maxLen",
     isEqual = "isEqual",
 }
-    type ValidationFunctions = {
+type ValidationFunctions = {
     [Key in ValidationFunctionNames]: ValidationFunction
 }
 
@@ -64,7 +64,7 @@ function required(input: Config, options: Options) {
 }
 
 function minLen(input: Config, options: Options) {
-    if (input.value && input.value.length < options.is) {
+    if ((input.value && input.value.length < options.is) || !input.value) {
         return { valid: false, message: options.customResponse ?? `${input.field} needs to be atleast ${options.is} characters long` }
     } else {
         return { valid: true }
@@ -80,7 +80,7 @@ function maxLen(input: Config, options: Options) {
 }
 
 function isEqual(input: Config, options: Options) {
-    if (input.value && input.value === options.is) {
+    if (input.value === options.is) {
         return { valid: false, message: options.customResponse ?? `${input.field} already exists` }
     } else {
         return { valid: true }
@@ -88,7 +88,7 @@ function isEqual(input: Config, options: Options) {
 }
 
 // Main export
-export function validate(config: ConfigArray) {
+export function validate(config: ConfigArray): errorsObj {
     const errors: errorsObj = {}
 
     config.forEach((input: Config) => {
@@ -97,7 +97,7 @@ export function validate(config: ConfigArray) {
             const [key, configValue]: [string, any] = entry
             const functionKey = key as ValidationFunctionNames
 
-            if (notFunctions.includes(functionKey)) return
+            if (isNotAValidator(functionKey)) return
 
             const func: ValidationFunction = validationFunction[functionKey]
 
@@ -117,9 +117,13 @@ export function validate(config: ConfigArray) {
 
 const notFunctions = ["field", "value"]
 
+function isNotAValidator(key: string): boolean {
+    return notFunctions.includes(key)
+}
+
 function isOptions(value: any | Options): Options {
-    console.log({ value })
-    if ((value as Options)) {
+    if (typeof value === "object") {
+        console.log("was options")
         return value
     } else {
         return createOptions(value)
@@ -143,6 +147,12 @@ export function hasErrors(errors: errorsObj) {
     }
 }
 
+export function isPriceRegex(input: string | number): string | number | undefined {
+    const regex = /^\d*\.?\d*$/;
+    if (regex.test(input as string)) {
+        return input
+    }
+}
 
 
 

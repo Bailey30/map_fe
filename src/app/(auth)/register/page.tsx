@@ -7,13 +7,21 @@ import { useRouter } from "next/navigation"
 import Pending from "@/components/pending/pending"
 import { ServerActionResponse } from "@/utils/types"
 import { Dispatch } from "redux"
+import { useEffect } from "react"
 
 export default function RegisterPage() {
     const router = useRouter()
     const [messages, serverAction]: [state: ServerActionResponse | undefined, dispatch: (payload: FormData) => void] = useFormState(register, undefined)
+
+    console.log("register messages", messages)
     function back() {
         router.push("/")
     }
+    useEffect(() => {
+        if (messages?.success === true) {
+            router.push("/")
+        }
+    }, [messages])
     return (
         <div className={styles.pageContainer} >
             <button onClick={back}>Close</button>

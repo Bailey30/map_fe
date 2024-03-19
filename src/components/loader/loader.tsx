@@ -14,9 +14,7 @@ export default function Loader() {
     const loading = useAppSelector((state) => state.controls.loading)
 
     useEffect(() => {
-        console.log(pathname.split("/").length)
         if (pathname.includes("location") && pathname.split("/").length === 3) {
-            console.log("toggling loading on")
             dispatch(SET_LOADING(true))
         } else {
         }

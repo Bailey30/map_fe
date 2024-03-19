@@ -19,28 +19,64 @@ describe("auth tests", () => {
     afterAll(async () => {
         await prisma.$disconnect()
     })
-    // afterEach(async () => {
-    //     await printDb()
-    // })
-    const mockFormData = new FormData()
-    mockFormData.append("username", "John4")
-    mockFormData.append("email", "john4@email.com")
-    mockFormData.append("password", "password")
-    mockFormData.append("passwordRepeat", "password")
 
-    it("Should register a new user", async () => {
-        const response = await register("", mockFormData)
+    describe("register tests", () => {
 
-        console.log({ response })
+        const mockFormData = new FormData()
+        mockFormData.append("username", "John4")
+        mockFormData.append("email", "john4@email.com")
+        mockFormData.append("password", "password")
+        mockFormData.append("passwordRepeat", "password")
 
-        const newUser = await prisma.user.findFirst()
+        it("Should register a new user", async () => {
+            const response = await register("", mockFormData)
 
-        expect(response!.body!.user).toStrictEqual(newUser)
+            console.log({ response })
 
-        // expect(newUser).toEqual("gfjdk")
+            const newUser = await prisma.user.findFirst()
 
+            expect(response!.body!.user).toStrictEqual(newUser)
+        })
+
+        test("Should return success: false with errors object when missing fields", async () => {
+            const partialFormData = new FormData()
+            const response = await register("", partialFormData)
+
+            const newUser = await prisma.user.findFirst()
+
+            expect(response.errors.username).toEqual("username is required")
+            expect(response.errors.password).toEqual("password is required")
+            expect(response.errors.email).toEqual("email is required")
+            expect(newUser).toEqual(null)
+        })
+
+        test("Should find user in database if given existing email", async () => {
+
+            const user = await prisma.user.create({
+                data: {
+                    email: "john4@email.com",
+                    password: "p",
+                    username: "john"
+                }
+            })
+            const response = await register("", mockFormData)
+
+            expect(response.errors.email).toEqual("email already exists")
+
+        })
+        test("Should find user in database if given existing username", async () => {
+
+            const user = await prisma.user.create({
+                data: {
+                    email: "john4@email.com",
+                    password: "p",
+                    username: "John4"
+                }
+            })
+            const response = await register("", mockFormData)
+
+            expect(response.errors.username).toEqual("username already exists")
+
+        })
     })
-
-    // NEED TO TEST WHY IT DOESNT RETURN ERRORS WHEN THEY EXIST
-    // try removing the __mocks__ folder you created with duplicated the auth stuff
 })

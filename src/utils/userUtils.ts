@@ -19,13 +19,13 @@ export function validateRegisterInputs(formData: FormData, user: User | null) {
     if (!password) {
         errors["password"] = "password is required";
     }
-    if (user?.email === email) {
+    if (user && user?.email === email) {
         console.log("email already exists")
         errors["email"] = "email already exists"
     }
-    if (user?.username === username) {
+    if (user && user?.username === username) {
         console.log("username already exists")
-        errors["username"] = "username  already exists"
+        errors["username"] = "username already exists"
     }
     console.log({ errors })
 

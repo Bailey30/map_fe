@@ -18,6 +18,7 @@ export async function register(prevData: any, formData: FormData): Promise<Serve
         const user = await findUser(String(email).toLowerCase(), String(username).toLowerCase())
 
 
+        console.log({ user })
         // const errors = validate([
         //     {
         //         field: "username",
@@ -54,13 +55,13 @@ export async function register(prevData: any, formData: FormData): Promise<Serve
         await login(prevData, formData)
         response["body"] = { user: newUser }
         return response
+
     } catch (error: any) {
         console.log("error creating user", error)
-    } finally {
-        if (response.success === true) {
-            redirect("/")
+        return {
+            success: false,
+            errors: error
         }
-        return response
     }
 }
 

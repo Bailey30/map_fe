@@ -7,31 +7,20 @@ import UseCreateReview from "@/utils/useCreateReview";
 import clsx from "clsx";
 import StarRating from "@/components/starRating/starRating";
 import { useEffect, useState } from "react";
-import { Metadata, ResolvingMetadata } from "next";
-//
-// type Props = {
-//     params: { id: string }
-//     searchParams: { [key: string]: string | string[] | undefined }
-// }
-//
-// export async function generateMetadata(
-//     { params, searchParams }: Props,
-//     parent: ResolvingMetadata
-// ): Promise<Metadata> {
-//     console.log({ params })
-//     console.log({ searchParams })
-//     return {
-//         title: ""
-//     }
-// }
+import { isPriceRegex } from "@/utils/formValidator";
 
 export default function CreateReviewPanel() {
     const router = useRouter()
     const { setImageData, message, formAction } = UseCreateReview()
     const [ratingInput, setRatingInput] = useState<number>(1)
+    const [price, setPrice] = useState<string>("")
 
     function back() {
         router.push("/")
+    }
+
+    function validateNumber(e: any) {
+        isPriceRegex(e.target.value) && setPrice(e.target.value)
     }
 
     useEffect(() => {
@@ -52,7 +41,7 @@ export default function CreateReviewPanel() {
                         <label htmlFor="price" className={styles.label}>Price</label>
                         <div className={clsx(styles.input, styles.priceContainer)}>
                             <span className={clsx(styles.poundSign)}>£</span>
-                            <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true"></input>
+                            <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true" onInput={validateNumber} value={price}></input>
                         </div>
                         {message?.errors?.price && <div>{message?.errors?.price}</div>}
                         <div className={styles.rating}>
@@ -78,3 +67,4 @@ export default function CreateReviewPanel() {
         </>
     )
 }
+

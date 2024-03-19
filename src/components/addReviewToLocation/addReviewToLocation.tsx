@@ -8,6 +8,8 @@ import Pending from "../pending/pending"
 import StarRating from "../starRating/starRating"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { isPriceRegex } from "@/utils/formValidator"
+import UseFormyBoi from "@/utils/useFormyBoi"
 
 interface AddNewReviewToLocationProps {
     locationId: string,
@@ -17,13 +19,21 @@ interface AddNewReviewToLocationProps {
 export default function AddNewReviewToLocation({ locationId, locationName }: AddNewReviewToLocationProps) {
     const { setImageData, message, formAction } = UseCreateReview()
     const [ratingInput, setRatingInput] = useState<number>(1)
+    const [price, setPrice] = useState<string>("")
     const router = useRouter()
+    const [values, setState, validators] = UseFormyBoi([{ field: "location", value: "sd", minLen: { is: 3 } }, { field: "price", value: "3", required: true }, { field: "comments", minLen: 3, value: "" }])
+
+    console.log({ validators })
 
     useEffect(() => {
         if (message?.success === true) {
             router.push("/location/success")
         }
     }, [message])
+
+    function validateNumber(e: any) {
+        isPriceRegex(e.target.value) && setPrice(e.target.value)
+    }
 
     return (
         < >
@@ -41,7 +51,7 @@ export default function AddNewReviewToLocation({ locationId, locationName }: Add
                             <label htmlFor="price" className={styles.label}>Price</label>
                             <div className={clsx(styles.input, styles.priceContainer)}>
                                 <span className={clsx(styles.poundSign)}>£</span>
-                                <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true"></input>
+                                <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true" onInput={validateNumber} value={price}></input>
                             </div>
                             {message?.errors?.price && <p className={styles.errorMessage}>{message?.errors?.price}</p>}
 
