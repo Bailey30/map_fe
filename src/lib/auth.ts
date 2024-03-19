@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt"
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
+import { JWT } from "@auth/core/src/jwt"
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../lib/db"
 import { authConfig } from "./auth.config";
@@ -21,12 +22,14 @@ export const {
             // this is to login in a previously created user
             async authorize(credentials: any, _: any): Promise<any> {
                 console.log("calling authorize")
-                const { email, password } = credentials;
+                const { email, password, id } = credentials;
+                console.log({ id })
                 const user = await prisma.user.findFirst({
                     where: {
                         email: email
                     }
                 })
+                console.log({ user })
                 if (!user) {
                     return null
                 }
@@ -36,7 +39,11 @@ export const {
                 if (!isValid) {
                     return null
                 }
-                return user
+                return {
+                    email: user.email,
+                    id: user.id,
+                    test: "ddf"
+                }
             }
         })
     ],
@@ -53,6 +60,18 @@ export const {
                 return baseUrl
             }
             return url
+        },
+        async jwt({ token, account }) {
+            if (account) {
+                token.accessToken = account.access_token
+            }
+            return token
+        },
+        async session({ token, session }: { token: JWT, session: Session }): Promise<Session> {
+            if (token.sub && session.user) {
+                session.user.id = parseInt(token.sub);
+            }
+            return session
         }
     },
     events: {

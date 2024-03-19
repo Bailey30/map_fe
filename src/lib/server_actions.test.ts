@@ -1,7 +1,7 @@
 import { Location, ReviewData } from "@/utils/types";
 import { prismaMock } from "./__mocks__/db";
 import { auth } from "./auth"
-import { createReviewSQL } from "./server_actions";
+import { createReviewSQL, deleteReviewAction } from "./server_actions";
 import { revalidateTag } from "next/cache";
 
 
@@ -94,4 +94,22 @@ describe("server_actions tests", () => {
     })
 
     // test for input errors
+    //
+
+    test("DeleteReview() should delete review", async () => {
+
+        prismaMock.review.delete.mockResolvedValue(mockCreatedReview)
+
+        const reviewId = 1
+        const locationId = 1
+        const reviewData = {
+            reviewId,
+            locationId
+        }
+
+        const response = await deleteReviewAction(reviewId, "", mockFormData)
+
+        expect(response).toEqual({ success: true, action: "Successfully deleted review" })
+
+    })
 })

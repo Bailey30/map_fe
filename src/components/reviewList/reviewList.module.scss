@@ -45,6 +45,10 @@
 
 .imageAndDetails {
     display: flex;
+
+    &.fade {
+        opacity: 0.3;
+    }
 }
 
 .detailsInner {
@@ -52,6 +56,8 @@
     width: 100%;
     border-bottom: 1px solid grey;
     margin-bottom: 10px;
+    position: relative;
+
 }
 
 .activeReview {
@@ -126,4 +132,34 @@
         filter: greyscale(0%);
         opacity: 1;
     }
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.deletePopup {
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background: $background;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 1px 1px 5px black;
+
+    .buttonContainer {
+        width: 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+
 }

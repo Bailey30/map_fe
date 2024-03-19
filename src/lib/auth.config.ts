@@ -5,7 +5,7 @@ import next from "next"
 import { NextURL } from "next/dist/server/web/next-url"
 import { NextResponse } from "next/server"
 
-const requiresAuthRoutes = ["/locatioe", "/test"]
+const requiresAuthRoutes = ["/location", "/test"]
 const alreadySignedIn = ["/login", "/register"]
 export const authConfig: any = {
     pages: {
@@ -17,7 +17,7 @@ export const authConfig: any = {
         async authorized({ auth, request: { nextUrl } }: any) {
             console.log("authorized callback")
             const isLoggedIn = !!auth?.user
-            // console.log(auth)
+            console.log(auth)
             if (!isLoggedIn) {
                 // return false if they are on any of the routes that require auth
                 return !requiresAuthRoutes.some((route) => nextUrl.pathname === route)

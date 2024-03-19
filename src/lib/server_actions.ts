@@ -10,6 +10,8 @@ import { hasErrors, validate } from "@/utils/formValidator"
 import { ReviewData, ServerActionResponse, Location } from "@/utils/types"
 import uploadImage from "./uploadImage"
 import { getAuthenticatedUser } from "./user_repository"
+import { createLocation, deleteLocation, getLocation } from "./location_repository"
+import { createReview, deleteReview, getReviews } from "./review_repository"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -24,79 +26,30 @@ const CreateReview = FromSchema.omit({ id: true })
 
 
 
-export async function createReview(location: MapState, prevState: any, formData: FormData) {
-    const { latitude, longitude } = location
+// export async function createReview(location: MapState, prevState: any, formData: FormData) {
+//     const { latitude, longitude } = location
+//
+//     try {
+//         const data = CreateReview.parse({
+//             ...Object.fromEntries(formData), latitude, longitude
+//         })
+//
+//         await axios.post(process.env.NEXT_PUBLIC_REVIEW_ENDPOINT as string, JSON.stringify(data))
+//         revalidateTag("reviews")
+//         return {
+//             success: true,
+//             review: { ...formData, latitude, longitude }
+//         }
+//     } catch (error: any) {
+//         console.log("error creating review", error)
+//         return {
+//             success: false
+//         }
+//     } finally {
+//         redirect("/")
+//     }
+// }
 
-    try {
-        const data = CreateReview.parse({
-            ...Object.fromEntries(formData), latitude, longitude
-        })
-
-        await axios.post(process.env.NEXT_PUBLIC_REVIEW_ENDPOINT as string, JSON.stringify(data))
-        revalidateTag("reviews")
-        return {
-            success: true,
-            review: { ...formData, latitude, longitude }
-        }
-    } catch (error: any) {
-        console.log("error creating review", error)
-        return {
-            success: false
-        }
-    } finally {
-        redirect("/")
-    }
-}
-
-
-
-export async function getUser() {
-    const authData = await auth()
-    if (!authData || !authData.user?.email) {
-        throw new Error('Authentication data is missing or invalid.');
-    }
-
-    const user = await prisma.user.findFirst({
-        where: {
-            email: authData.user.email
-        }
-    })
-    if (!user) {
-        throw new Error('User not found.');
-    }
-
-    return user
-}
-
-async function createLocation(coordinates: MapState, name: string, tx: any): Promise<Location> {
-    try {
-        const location = await tx?.location.create({
-            data: {
-                name: name,
-                latitude: coordinates.latitude,
-                longitude: coordinates.longitude
-            }
-        })
-        return location
-    } catch (error: any) {
-        console.log("error creating location", error)
-        throw new Error("error creating location", error)
-    }
-}
-
-async function getLocation(id: string, tx: any): Promise<Location> {
-    try {
-        const location = await tx?.location.findUnique({
-            where: {
-                id: parseInt(id)
-            }
-        })
-        return location
-    } catch (error: any) {
-        console.log("error getting location", error)
-        throw new Error("error creating location", error)
-    }
-}
 
 // Creates reviews on locations that already exist and create locations when they dont
 export async function createReviewSQL(reviewData: ReviewData, prevState: any, formData: FormData): Promise<ServerActionResponse> {
@@ -152,16 +105,7 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
                 throw new Error("error creating location")
             }
 
-            // extract function
-            const newReview = await tx?.review.create({
-                data: {
-                    locationId: location.id,
-                    creatorId: user.id,
-                    rating: parseInt(data.rating),
-                    price: parseFloat(data.price),
-                    comments: data.comments,
-                }
-            })
+            const newReview = await createReview(location, user, data, tx)
 
             // extract function
             if (reviewData.imageData) {
@@ -203,7 +147,36 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
     }
 }
 
+export async function deleteReviewAction(reviewData: any, prevState: any, formState: FormData) {
 
+    try {
+        await deleteReview(reviewData.reviewId)
+
+        const reviews = await getReviews(reviewData.locationId)
+        console.log({ reviews })
+
+        if (reviews?.length === 0) {
+            await deleteLocation(reviewData.locationId)
+            return {
+                success: true,
+                action: "Successfully deleted last review and location",
+                redirect: true
+            }
+        }
+
+        revalidateTag("reviews")
+        return {
+            success: true,
+            action: "Successfully deleted review"
+        }
+    } catch (err: any) {
+        console.log("error deleting review", err)
+        return {
+            success: false,
+            error: err
+        }
+    }
+}
 
 
 

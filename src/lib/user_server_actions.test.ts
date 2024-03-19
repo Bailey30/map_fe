@@ -39,10 +39,12 @@ describe("user_server_actions tests", () => {
         prismaMock.user.create.mockResolvedValue({ ...user })
 
         //call the function being tested
-        await register("", mockFormData)
+        const response = await register("", mockFormData)
 
         // test that it directs successfully
-        expect((redirect)).toHaveBeenCalledWith("/")
+        // expect((redirect)).toHaveBeenCalledWith("/")
+
+        expect(response.body).toEqual({ user: user })
     })
 
 })

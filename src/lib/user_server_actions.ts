@@ -72,6 +72,7 @@ export async function login(prevState: any, formData: any) {
         const user = await signIn("credentials", {
             email: email.toLowerCase(),
             password,
+            id: 2,
             // redirect: false
         })
     } catch (error: any) {

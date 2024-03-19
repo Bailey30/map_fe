@@ -1,21 +1,30 @@
 "use client"
+import { useSession } from "next-auth/react"
 import { Review } from "@/utils/types"
 import Image from "next/image"
 import clsx from "clsx"
 import styles from "./reviewList.module.scss"
 import formatDate from "../../utils/formatDate"
 import guinness from "../../../public/images/guinness.png"
+import deleteIcon from "../../../public/images/delete.png"
 import { useAppDispatch } from "@/redux/hooks"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { SET_LOADING, TOGGLE_LOADING } from "@/redux/controlsSlice"
+import { EXPORT_MARKER } from "next/dist/shared/lib/constants"
+import DeletePopup from "../deletePopup/deletePopup"
+import { auth } from "@/lib/auth"
+import { Session } from "next-auth"
 
 interface ReviewListProps {
     reviews: Review[] | null
     images: { [key: string]: string }
+    session: Session | null
 }
 
-export default function ReviewList({ reviews, images }: ReviewListProps) {
+export default function ReviewList({ reviews, images, session }: ReviewListProps) {
     const dispatch = useAppDispatch()
+    console.log({ session })
+    console.log(session?.user?.id)
 
     useEffect(() => {
         console.log("review list useffect")
@@ -27,7 +36,7 @@ export default function ReviewList({ reviews, images }: ReviewListProps) {
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
                     const img = review.imageId ? images[review.imageId.toString()] : null
-                    return <ReviewComponent review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} />
+                    return <ReviewComponent review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} userId={session?.user.id} />
 
                 })}
             </div>
@@ -41,18 +50,31 @@ interface ReviewProps {
     i: number
     totalReviews: number
     image: string | null
+    userId: number | undefined
 }
 
-function ReviewComponent({ review, i, totalReviews, image }: ReviewProps) {
-
+function ReviewComponent({ review, i, totalReviews, image, userId }: ReviewProps) {
+    const [deletePopup, setDeletePopup] = useState<boolean>(false)
     const ratingArr = [1, 2, 3, 4, 5]
+
 
     return (
         <div className={clsx(styles.detailsInner)}>
-            <div className={styles.imageAndDetails}>
+            {deletePopup &&
+                <DeletePopup setDeletePopup={setDeletePopup} review={review} />
+            }
+
+            <div className={clsx(styles.imageAndDetails, deletePopup && styles.fade)}>
 
                 <div className={styles.details}>
-                    <p className={clsx(styles.reviewDetail, styles.name)}>{review.creator.username}</p>
+                    <div className={clsx(styles.topRow)}>
+
+                        <p className={clsx(styles.reviewDetail, styles.name)}>{review.creator.username}</p>
+                        {userId === review.creatorId &&
+                            <span><Image onClick={() => setDeletePopup(true)} src={deleteIcon.src} alt="delete icon" width={20} height={20} /></span>
+                        }
+
+                    </div>
                     <div className={clsx(styles.reviewDetail, styles.group)}>
                         <span className={clsx(styles.reviewDetail, styles.price)}>£{formatMoney(review.price)}</span>
                         <div className={styles.ratingContainer}>
