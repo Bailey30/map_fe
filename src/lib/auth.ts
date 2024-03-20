@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt"
 import NextAuth, { Session } from "next-auth";
-import { JWT } from "@auth/core/src/jwt"
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../lib/db"
 import { authConfig } from "./auth.config";
@@ -67,7 +66,7 @@ export const {
             }
             return token
         },
-        async session({ token, session }: { token: JWT, session: Session }): Promise<Session> {
+        async session({ token, session }: { token: any, session: Session }): Promise<Session> {
             if (token.sub && session.user) {
                 session.user.id = parseInt(token.sub);
             }
