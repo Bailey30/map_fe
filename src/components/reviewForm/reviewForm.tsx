@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import styles from "../../app/location/review.module.scss"
 import UseCreateReview from "@/utils/useCreateReview"
 import clsx from "clsx"
@@ -10,20 +11,26 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { isPriceRegex } from "@/utils/formValidator"
 import UseFormyBoi from "@/utils/useFormyBoi"
+import { Review, ServerActionResponse } from "@/utils/types"
+import { formatBase64String } from "@/utils/reviewUtils"
+import { useAppSelector } from "@/redux/hooks"
 
-interface AddNewReviewToLocationProps {
+interface ReviewFormProps {
     locationId: string,
     locationName: string
+    action: "edit" | "add"
+    actionFunction: (...args: any) => Promise<ServerActionResponse>
+    review?: Review
 }
 
-export default function AddNewReviewToLocation({ locationId, locationName }: AddNewReviewToLocationProps) {
-    const { setImageData, message, formAction } = UseCreateReview()
-    const [ratingInput, setRatingInput] = useState<number>(1)
-    const [price, setPrice] = useState<string>("")
+export default function ReviewForm({ locationId, locationName, review, action }: ReviewFormProps) {
     const router = useRouter()
-    const [values, setState, validators] = UseFormyBoi([{ field: "location", value: "sd", minLen: { is: 3 } }, { field: "price", value: "3", required: true }, { field: "comments", minLen: 3, value: "" }])
+    const { setImageData, message, formAction } = UseCreateReview(action)
+    const [ratingInput, setRatingInput] = useState<number>(review?.rating ?? 1)
+    const [price, setPrice] = useState<string>(review?.price.toString() ?? "")
+    const imgString = useAppSelector((state) => state.review.imgString)
 
-    console.log({ validators })
+    const [values, setState, validators] = UseFormyBoi([{ field: "location", value: "sd", minLen: { is: 3 } }, { field: "price", value: "3", required: true }, { field: "comments", minLen: 3, value: "" }])
 
     useEffect(() => {
         if (message?.success === true) {
@@ -42,8 +49,8 @@ export default function AddNewReviewToLocation({ locationId, locationName }: Add
                     <input name="id" className={clsx(styles.hidden)} value={locationId} readOnly></input>
 
                     <div className={styles.imageAndInputsContainer}>
+                        <ReviewImageCreator setImageData={setImageData} imgString={imgString} />
 
-                        <ReviewImageCreator setImageData={setImageData} />
                         <div className={styles.inputsContainer}>
                             <label htmlFor="locationData" className={clsx(styles.label)}>Location</label>
                             <input name="locationData" className={clsx(styles.input)} value={locationName} disabled={true} />
@@ -65,7 +72,7 @@ export default function AddNewReviewToLocation({ locationId, locationName }: Add
                     </div>
 
                     <label htmlFor="comments" className={clsx(styles.label, styles.comment)}>Comments - optional</label>
-                    <textarea name="comments" className={clsx(styles.input, styles.comment)} />
+                    <textarea name="comments" className={clsx(styles.input, styles.comment)} value={review?.comments ?? undefined} />
 
                     <div className={styles.buttonContainer}>
                         <button className={clsx(styles.button, styles.save)} type="submit">Save</button>

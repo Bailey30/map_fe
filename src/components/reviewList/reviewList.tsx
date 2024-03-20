@@ -1,12 +1,14 @@
 "use client"
 import { useSession } from "next-auth/react"
-import { Review } from "@/utils/types"
+import { formatMoney, formatBase64String } from "@/utils/reviewUtils"
+import { Location, Review } from "@/utils/types"
 import Image from "next/image"
 import clsx from "clsx"
 import styles from "./reviewList.module.scss"
 import formatDate from "../../utils/formatDate"
 import guinness from "../../../public/images/guinness.png"
 import deleteIcon from "../../../public/images/delete.png"
+import editIcon from "../../../public/images/edit.png"
 import { useAppDispatch } from "@/redux/hooks"
 import { useEffect, useState } from "react"
 import { SET_LOADING, TOGGLE_LOADING } from "@/redux/controlsSlice"
@@ -14,14 +16,19 @@ import { EXPORT_MARKER } from "next/dist/shared/lib/constants"
 import DeletePopup from "../deletePopup/deletePopup"
 import { auth } from "@/lib/auth"
 import { Session } from "next-auth"
+import Link from "next/link"
+import { useDispatch } from "react-redux"
+import { SET_IMG_STRING } from "@/redux/reviewSlice"
+import { useRouter } from "next/navigation"
 
 interface ReviewListProps {
     reviews: Review[] | null
     images: { [key: string]: string }
     session: Session | null
+    location: Location
 }
 
-export default function ReviewList({ reviews, images, session }: ReviewListProps) {
+export default function ReviewList({ reviews, images, session, location }: ReviewListProps) {
     const dispatch = useAppDispatch()
     console.log({ session })
     console.log(session?.user?.id)
@@ -36,7 +43,7 @@ export default function ReviewList({ reviews, images, session }: ReviewListProps
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
                     const img = review.imageId ? images[review.imageId.toString()] : null
-                    return <ReviewComponent review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} userId={session?.user.id} />
+                    return <ReviewComponent review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} userId={session?.user.id} location={location} />
 
                 })}
             </div>
@@ -51,12 +58,20 @@ interface ReviewProps {
     totalReviews: number
     image: string | null
     userId: number | undefined
+    location: Location
 }
 
-function ReviewComponent({ review, i, totalReviews, image, userId }: ReviewProps) {
+function ReviewComponent({ review, i, totalReviews, image, userId, location }: ReviewProps) {
+    const dispatch = useDispatch()
+    const router = useRouter()
     const [deletePopup, setDeletePopup] = useState<boolean>(false)
     const ratingArr = [1, 2, 3, 4, 5]
 
+
+    function goToEdit() {
+        dispatch(SET_IMG_STRING(image))
+        router.push(`${location.id}/review/edit/${review.id}`)
+    }
 
     return (
         <div className={clsx(styles.detailsInner)}>
@@ -69,9 +84,12 @@ function ReviewComponent({ review, i, totalReviews, image, userId }: ReviewProps
                 <div className={styles.details}>
                     <div className={clsx(styles.topRow)}>
 
-                        <p className={clsx(styles.reviewDetail, styles.name)}>{review.creator.username}</p>
+                        <p className={clsx(styles.reviewDetail, styles.name)}>{review?.creator?.username}</p>
                         {userId === review.creatorId &&
-                            <span><Image onClick={() => setDeletePopup(true)} src={deleteIcon.src} alt="delete icon" width={20} height={20} /></span>
+                            <span>
+                                <Image src={editIcon.src} alt="edit icon" width={20} height={20} onClick={goToEdit} />
+                                <Image onClick={() => setDeletePopup(true)} src={deleteIcon.src} alt="delete icon" width={20} height={20} />
+                            </span>
                         }
 
                     </div>
@@ -95,17 +113,3 @@ function ReviewComponent({ review, i, totalReviews, image, userId }: ReviewProps
     )
 }
 
-function formatBase64String(string: string): string {
-    return decodeURIComponent("data:image/jpeg;base64, " + string)
-}
-
-function formatMoney(amount: number) {
-    // Check if the amount has a decimal point
-    if (amount % 1 === 0) {
-        // If there is no decimal point, return the amount without decimals
-        return amount.toFixed(0);
-    } else {
-        // If there is a decimal point, return the amount with 2 decimal places
-        return amount.toFixed(2);
-    }
-}

@@ -4,20 +4,23 @@ import clsx from "clsx"
 import CameraPortal from "./CameraPortal"
 import placeholder from "../../../public/images/guinness_placeholder.png"
 import Image from "next/image"
+import { formatBase64String } from "@/utils/reviewUtils"
 
 interface Props {
     setImageData: React.Dispatch<SetStateAction<any>>
+    imgString: string
 }
 
-export default function ReviewImageCreator({ setImageData }: Props) {
+export default function ReviewImageCreator({ setImageData, imgString }: Props) {
     const [streaming, setStreaming] = useState<boolean>(false)
     const [width, setWidth] = useState<number>(window.innerWidth)
     const [height, setHeight] = useState<number>(0)
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
     const [pictureSaved, setPictureSaved] = useState<boolean>(false)
-    const [imageUrl, setImageUrl] = useState<string>(placeholder.src)
+    const [imageUrl, setImageUrl] = useState<string>(formatBase64String(imgString) ?? placeholder.src)
     const [mounted, setMounted] = useState<boolean>(false)
+    console.log({ imgString })
 
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const captureArea = useRef<HTMLDivElement>(null)

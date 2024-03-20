@@ -1,7 +1,7 @@
 import { MapState } from "@/redux/slice"
 
 export type Review = {
-    id: string,
+    id: string | number,
     createdAt: string,
     updatedAt: string,
     price: number,
@@ -9,8 +9,9 @@ export type Review = {
     rating: number,
     locationId: number,
     creatorId: number
-    creator: { username: string }
+    creator?: { username: string }
     imageId?: number
+    location?: Location
 }
 
 export type ReviewRequest = Omit<Review, "id">

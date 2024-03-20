@@ -1,4 +1,5 @@
 import { Location, User } from "@/utils/types";
+import prisma from "../lib/db"
 import { Review } from "@prisma/client";
 
 export async function createReview(location: Location, user: User, data: any, tx: any): Promise<Review> {
@@ -28,7 +29,7 @@ export async function deleteReview(reviewId: number) {
         })
         return deletedReview
     } catch (err: any) {
-        throw new Error("error creating review", err)
+        throw new Error(err)
     }
 }
 
@@ -42,5 +43,22 @@ export async function getReviews(locationId: number): Promise<Review[] | undefin
         return reviews
     } catch (err: any) {
         throw new Error("error getting reviews from location", err)
+    }
+}
+
+export async function getReview(reviewId: string): Promise<any | null> {
+    try {
+        const review = await prisma?.review.findFirst({
+            where: {
+                id: parseInt(reviewId)
+            },
+            include: {
+                location: true
+            }
+        })
+        return review
+    } catch (err: any) {
+        console.log(err)
+        throw new Error(err)
     }
 }

@@ -8,10 +8,11 @@ import clsx from "clsx";
 import StarRating from "@/components/starRating/starRating";
 import { useEffect, useState } from "react";
 import { isPriceRegex } from "@/utils/formValidator";
+import { createReviewSQL } from "@/lib/server_actions";
 
 export default function CreateReviewPanel() {
     const router = useRouter()
-    const { setImageData, message, formAction } = UseCreateReview()
+    const { setImageData, message, formAction } = UseCreateReview(createReviewSQL)
     const [ratingInput, setRatingInput] = useState<number>(1)
     const [price, setPrice] = useState<string>("")
 

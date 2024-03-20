@@ -15,8 +15,7 @@ export default async function GetReviewPanel({ params }: { params: { slug: strin
         ...location, images
     }
 
-    return (<>
+    return (
         <ReviewsDisplay locationData={locationData} session={session} />
-    </>
     )
 }

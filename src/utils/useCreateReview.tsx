@@ -3,7 +3,11 @@ import { useAppSelector } from "@/redux/hooks";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 
-export default function UseCreateReview() {
+
+interface Props {
+    action: any
+}
+export default function UseCreateReview(action: any) {
     const location = useAppSelector((state) => state.map)
     const [imageData, setImageData] = useState<string>("")
     const reviewData = {
@@ -13,6 +17,6 @@ export default function UseCreateReview() {
     const createReviewWithLocation = createReviewSQL.bind(null, reviewData)
     const [message, formAction] = useFormState(createReviewWithLocation, null)
 
-    return { setImageData, message, formAction }
+    return { imageData, setImageData, message, formAction }
 
 }

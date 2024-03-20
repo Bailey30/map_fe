@@ -14,7 +14,7 @@ interface Props {
 
 
 export default function ReviewsDisplay({ locationData, session }: Props) {
-    const buttonLink = session ? `${locationData.id}/add?location=${locationData.name}` : "/login"
+    const buttonLink = session ? `${locationData.id}/review/add?location=${locationData.name}` : "/login"
     console.log("id", session?.user.id)
     return (
         <>
@@ -23,7 +23,7 @@ export default function ReviewsDisplay({ locationData, session }: Props) {
                     <h2>{locationData.name}</h2>
                     <Link href={"/"} className={clsx(styles.button, styles.close)}><Image src={closeImg} alt="close icon" height={20} /></Link>
                 </div>
-                <ReviewList reviews={locationData.Review} images={locationData.images} session={session} />
+                <ReviewList reviews={locationData.Review} images={locationData.images} session={session} location={locationData} />
                 <Link href={buttonLink} className={clsx(styles.button, styles.add)}>Add</Link>
             </div>
         </>

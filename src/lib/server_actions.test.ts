@@ -96,20 +96,44 @@ describe("server_actions tests", () => {
     // test for input errors
     //
 
+    const deleteReviewData = {
+        reviewId: 1,
+        locationId: 1
+    }
+
     test("DeleteReview() should delete review", async () => {
 
         prismaMock.review.delete.mockResolvedValue(mockCreatedReview)
+        prismaMock.review.findMany.mockResolvedValue([mockCreatedReview, mockCreatedReview])
 
-        const reviewId = 1
-        const locationId = 1
-        const reviewData = {
-            reviewId,
-            locationId
-        }
-
-        const response = await deleteReviewAction(reviewId, "", mockFormData)
+        const response = await deleteReviewAction(deleteReviewData, "", mockFormData)
 
         expect(response).toEqual({ success: true, action: "Successfully deleted review" })
+
+    })
+
+    test("DeleteReview() should delete the location if the last review is deleted", async () => {
+        prismaMock.review.delete.mockResolvedValue(mockCreatedReview)
+        prismaMock.review.findMany.mockResolvedValue([])
+
+        const response = await deleteReviewAction(deleteReviewData, "", mockFormData)
+
+        expect(response).toEqual(({ success: true, action: "Successfully deleted last review and location", redirect: true }))
+    })
+
+    const updateReviewData = {
+        reviewId: 1
+    }
+    const updateReviewFormData = {
+        price: 2,
+        rating: 2,
+    }
+
+    const updatedReview = { id: 1, locationId: 1, creatorId: 1, rating: 1, price: 1, comments: "", createdAt: new Date(), updatedAt: new Date(), imageId: 0 }
+    test("Update review should update the correct review and return success", async () => {
+        prismaMock.review.update.mockResolvedValue(updatedReview)
+        const response = await updateReviewAction(updateReviewData, "", updateReviewFormData)
+
 
     })
 })

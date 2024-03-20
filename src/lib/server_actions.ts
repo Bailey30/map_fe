@@ -153,7 +153,6 @@ export async function deleteReviewAction(reviewData: any, prevState: any, formSt
         await deleteReview(reviewData.reviewId)
 
         const reviews = await getReviews(reviewData.locationId)
-        console.log({ reviews })
 
         if (reviews?.length === 0) {
             await deleteLocation(reviewData.locationId)
@@ -175,6 +174,14 @@ export async function deleteReviewAction(reviewData: any, prevState: any, formSt
             success: false,
             error: err
         }
+    }
+}
+
+export async function updateReviewAction(reviewData: ReviewData, prevState: any, formData: FormData): Promise<ServerActionResponse> {
+
+    return {
+        success: true,
+        errors: ""
     }
 }
 

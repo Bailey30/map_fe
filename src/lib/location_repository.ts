@@ -1,4 +1,5 @@
 import { MapState } from "@/redux/slice"
+import prisma from "../lib/db"
 import { Location } from "../utils/types"
 
 export async function createLocation(coordinates: MapState, name: string, tx: any): Promise<Location> {
