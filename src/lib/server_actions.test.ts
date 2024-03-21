@@ -1,7 +1,7 @@
 import { Location, ReviewData } from "@/utils/types";
 import { prismaMock } from "./__mocks__/db";
 import { auth } from "./auth"
-import { createReviewSQL, deleteReviewAction } from "./server_actions";
+import { createReviewSQL, deleteReviewAction, updateReviewAction } from "./server_actions";
 import { revalidateTag } from "next/cache";
 
 
@@ -108,7 +108,7 @@ describe("server_actions tests", () => {
 
         const response = await deleteReviewAction(deleteReviewData, "", mockFormData)
 
-        expect(response).toEqual({ success: true, action: "Successfully deleted review" })
+        expect(response).toEqual({ success: true, action: "Successfully deleted review", errors: null })
 
     })
 
@@ -118,16 +118,15 @@ describe("server_actions tests", () => {
 
         const response = await deleteReviewAction(deleteReviewData, "", mockFormData)
 
-        expect(response).toEqual(({ success: true, action: "Successfully deleted last review and location", redirect: true }))
+        expect(response).toEqual(({ success: true, action: "Successfully deleted last review and location", redirect: true, errors: null }))
     })
 
     const updateReviewData = {
         reviewId: 1
     }
-    const updateReviewFormData = {
-        price: 2,
-        rating: 2,
-    }
+    const updateReviewFormData = new FormData()
+    updateReviewFormData.append("price", "2")
+    updateReviewFormData.append("rating", "2")
 
     const updatedReview = { id: 1, locationId: 1, creatorId: 1, rating: 1, price: 1, comments: "", createdAt: new Date(), updatedAt: new Date(), imageId: 0 }
     test("Update review should update the correct review and return success", async () => {

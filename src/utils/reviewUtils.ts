@@ -1,6 +1,4 @@
-
 export function formatBase64String(string: string): string {
-    console.log(decodeURIComponent("data:image/jpeg;base64, " + string))
     return decodeURIComponent("data:image/jpeg;base64, " + string)
 }
 

@@ -7,6 +7,6 @@ export default function Page({ params, searchParams }: {
 }) {
     console.log({ searchParams })
     return <>
-        <ReviewForm locationId={params.slug} locationName={searchParams.location} actionFunction={createReviewSQL} action="add" />
+        <ReviewForm locationId={params.slug} locationName={searchParams.location} action="add" />
     </>
 }

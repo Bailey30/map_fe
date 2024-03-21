@@ -10,6 +10,7 @@ import clsx from "clsx"
 interface Props {
     session: Session | null
 }
+console.log()
 export default function AddButton({ session }: Props) {
     const router = useRouter()
     const pathname = usePathname()

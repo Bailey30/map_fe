@@ -62,3 +62,22 @@ export async function getReview(reviewId: string): Promise<any | null> {
         throw new Error(err)
     }
 }
+
+export async function updateReview(data: any): Promise<Review> {
+    try {
+        const { id, locationData, ...rest } = data
+        const review = await prisma?.review.update({
+            where: {
+                id: parseInt(data.reviewId)
+            },
+            data: {
+                rating: parseInt(data.rating),
+                price: parseFloat(data.price),
+                comments: data.comments,
+            }
+        })
+        return review
+    } catch (err: any) {
+        throw new Error(err)
+    }
+}

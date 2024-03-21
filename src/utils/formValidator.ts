@@ -21,12 +21,13 @@ type Options = {
     customResponse?: string
 }
 export type Config = {
-    field: string,
+    name: string,
     value: string | undefined,
     required?: boolean | Options,
     minLen?: number | Options,
     maxLen?: number | Options
     isEqual?: any | Options,
+    isPriceRegex?: boolean
 }
 export type ConfigArray = Config[]
 type ValidationResponse = {
@@ -44,7 +45,6 @@ enum ValidationFunctionNames {
 type ValidationFunctions = {
     [Key in ValidationFunctionNames]: ValidationFunction
 }
-
 const validationFunction: ValidationFunctions = {
     [ValidationFunctionNames.required]: required,
     [ValidationFunctionNames.minLen]: minLen,
@@ -52,12 +52,23 @@ const validationFunction: ValidationFunctions = {
     [ValidationFunctionNames.maxLen]: maxLen
 }
 
+export type RegexFunc = (input: number | string, custom?: string) => string | number | undefined
+enum RegexFuncNames {
+    isPriceRegex = "isPriceRegex"
+}
+export type RegexFuncs = {
+    [Key in RegexFuncNames]: RegexFunc
+}
+export const regexFunction: RegexFuncs = {
+    [RegexFuncNames.isPriceRegex]: isPriceRegex
+}
+
 
 // Validation functions
 
 function required(input: Config, options: Options) {
     if (!input.value) {
-        return { valid: false, message: options.customResponse ?? `${input.field} is required` }
+        return { valid: false, message: options.customResponse ?? `${input.name} is required` }
     } else {
         return { valid: true }
     }
@@ -65,7 +76,7 @@ function required(input: Config, options: Options) {
 
 function minLen(input: Config, options: Options) {
     if ((input.value && input.value.length < options.is) || !input.value) {
-        return { valid: false, message: options.customResponse ?? `${input.field} needs to be atleast ${options.is} characters long` }
+        return { valid: false, message: options.customResponse ?? `${input.name} needs to be atleast ${options.is} characters long` }
     } else {
         return { valid: true }
     }
@@ -73,7 +84,7 @@ function minLen(input: Config, options: Options) {
 
 function maxLen(input: Config, options: Options) {
     if (input.value && input.value.length > options.is) {
-        return { valid: false, message: options.customResponse ?? `${input.field} needs to be less than ${options.is} characters long` }
+        return { valid: false, message: options.customResponse ?? `${input.name} needs to be less than ${options.is} characters long` }
     } else {
         return { valid: true }
     }
@@ -81,9 +92,19 @@ function maxLen(input: Config, options: Options) {
 
 function isEqual(input: Config, options: Options) {
     if (input.value === options.is) {
-        return { valid: false, message: options.customResponse ?? `${input.field} already exists` }
+        return { valid: false, message: options.customResponse ?? `${input.name} already exists` }
     } else {
         return { valid: true }
+    }
+}
+
+export function isPriceRegex(input: string | number): string | number | undefined {
+    console.log("ispriceregex")
+    console.log({ input })
+    const regex = /^\d*\.?\d*$/;
+    if (regex.test(input as string)) {
+        console.log("passed regex")
+        return input
     }
 }
 
@@ -105,7 +126,7 @@ export function validate(config: ConfigArray): errorsObj {
             const isValid: ValidationResponse = func(input, isOptions(configValue))
 
             if (isValid.valid === false) {
-                errors[input.field] = isValid.message!
+                errors[input.name] = isValid.message!
             }
         })
     })
@@ -115,7 +136,7 @@ export function validate(config: ConfigArray): errorsObj {
 
 // Internal utils
 
-const notFunctions = ["field", "value"]
+const notFunctions = ["name", "value", "isPriceRegex"]
 
 function isNotAValidator(key: string): boolean {
     return notFunctions.includes(key)
@@ -136,6 +157,8 @@ function createOptions(value: any): Options {
     }
 }
 
+export const regexFunctions = ["isPriceRegex", "regex"]
+
 
 // External utils
 
@@ -147,12 +170,6 @@ export function hasErrors(errors: errorsObj) {
     }
 }
 
-export function isPriceRegex(input: string | number): string | number | undefined {
-    const regex = /^\d*\.?\d*$/;
-    if (regex.test(input as string)) {
-        return input
-    }
-}
 
 
 

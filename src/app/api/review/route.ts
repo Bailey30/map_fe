@@ -23,6 +23,7 @@ type reviewResponse = ({
 
 type reviewRouteResponse = { reviews: reviewResponse, status: number } | { error: string, status: number }
 
+// this gets all LOCATIONS
 export const GET = async (): Promise<NextResponse<reviewRouteResponse>> => {
     try {
         const reviews: reviewResponse = await prisma?.location.findMany({

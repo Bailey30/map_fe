@@ -34,6 +34,9 @@ export const GET = async (request: Request, { params }: { params: { slug: string
             },
             include: {
                 Review: {
+                    orderBy: {
+                        createdAt: "asc"
+                    },
                     include: {
                         creator: { // nested query getting the username using the creastor id. Username is not stored with review or location
                             select: {

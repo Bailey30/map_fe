@@ -7,11 +7,12 @@ import { z } from "zod"
 import prisma from "../lib/db"
 import { auth } from "./auth"
 import { hasErrors, validate } from "@/utils/formValidator"
-import { ReviewData, ServerActionResponse, Location } from "@/utils/types"
+import { ReviewData, ServerActionResponse, Location, UpdateReviewData } from "@/utils/types"
 import uploadImage from "./uploadImage"
 import { getAuthenticatedUser } from "./user_repository"
 import { createLocation, deleteLocation, getLocation } from "./location_repository"
-import { createReview, deleteReview, getReviews } from "./review_repository"
+import { createReview, deleteReview, getReviews, updateReview } from "./review_repository"
+import { extractFormData } from "@/utils/formUtils"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -57,14 +58,11 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
     console.log(formData)
 
     try {
-        const form = Object.fromEntries(formData)
-        const data = Object.fromEntries(
-            Object.entries(form).map(([key, value]) => [key, value as string])
-        )
+        const data = extractFormData(formData)
 
         const errors = validate([
             {
-                field: "price",
+                name: "price",
                 value: data.price,
                 required: {
                     is: true,
@@ -72,12 +70,12 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
                 },
             },
             {
-                field: "rating",
+                name: "rating",
                 value: data.rating,
                 required: true,
             },
             {
-                field: data.id ? "id" : "location",
+                name: data.id ? "id" : "location",
                 value: data.id ? data.id : data.location,
                 required: true,
                 minLen: {
@@ -100,7 +98,7 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
         const user = await getAuthenticatedUser()
 
         const location = await prisma.$transaction(async (tx) => {
-            const location = data.id ? await getLocation(data.id, tx) : await createLocation(reviewData.mapState, data.location, tx)
+            const location = data.id ? await getLocation(data.id, tx) : await createLocation(reviewData?.mapState!, data.location, tx)
             if (!location) {
                 throw new Error("error creating location")
             }
@@ -146,9 +144,11 @@ export async function createReviewSQL(reviewData: ReviewData, prevState: any, fo
         // redirect("/")
     }
 }
+const response = ({ success, action, redirect, errors }: ServerActionResponse): ServerActionResponse => {
+    return { success, action, redirect, errors }
+}
 
-export async function deleteReviewAction(reviewData: any, prevState: any, formState: FormData) {
-
+export async function deleteReviewAction(reviewData: any, prevState: any, formState: FormData): Promise<ServerActionResponse> {
     try {
         await deleteReview(reviewData.reviewId)
 
@@ -156,32 +156,58 @@ export async function deleteReviewAction(reviewData: any, prevState: any, formSt
 
         if (reviews?.length === 0) {
             await deleteLocation(reviewData.locationId)
-            return {
+            return response({
                 success: true,
                 action: "Successfully deleted last review and location",
-                redirect: true
-            }
+                redirect: true,
+                errors: null
+            })
         }
 
         revalidateTag("reviews")
         return {
             success: true,
-            action: "Successfully deleted review"
+            action: "Successfully deleted review",
+            errors: null
         }
     } catch (err: any) {
         console.log("error deleting review", err)
         return {
             success: false,
-            error: err
+            errors: err
         }
     }
 }
 
-export async function updateReviewAction(reviewData: ReviewData, prevState: any, formData: FormData): Promise<ServerActionResponse> {
-
-    return {
-        success: true,
-        errors: ""
+export async function updateReviewAction(reviewData: UpdateReviewData, prevState: any, formData: FormData): Promise<ServerActionResponse> {
+    try {
+        const data = extractFormData(formData)
+        console.log({ data })
+        await updateReview(data)
+        // if (reviewData.imageData) {
+        //         console.log("updating with image id")
+        //         const key = data.id
+        //         await uploadImage(reviewData.imageData, data.locationData, parseInt(key))
+        //
+        //         await prisma?.review.update({
+        //             where: {
+        //                 id: data.id
+        //             },
+        //             data: {
+        //                 imageId: newReview.id
+        //             }
+        //         })
+        revalidateTag("reviews")
+        return {
+            success: true,
+            errors: ""
+        }
+    } catch (err: any) {
+        console.log("error updating review", err)
+        return {
+            success: false,
+            errors: err
+        }
     }
 }
 

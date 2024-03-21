@@ -18,9 +18,8 @@ export default function ReviewImageCreator({ setImageData, imgString }: Props) {
     const [takingPicture, setTakingPicture] = useState<boolean>(false)
     const [confirmingPicture, setConfirmingPicture] = useState<boolean>(false)
     const [pictureSaved, setPictureSaved] = useState<boolean>(false)
-    const [imageUrl, setImageUrl] = useState<string>(formatBase64String(imgString) ?? placeholder.src)
+    const [imageUrl, setImageUrl] = useState<string>(imgString !== "" ? formatBase64String(imgString) : placeholder.src)
     const [mounted, setMounted] = useState<boolean>(false)
-    console.log({ imgString })
 
     const previewCanvas = useRef<HTMLCanvasElement>(null)
     const captureArea = useRef<HTMLDivElement>(null)

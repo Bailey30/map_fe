@@ -14,23 +14,25 @@ import UseFormyBoi from "@/utils/useFormyBoi"
 import { Review, ServerActionResponse } from "@/utils/types"
 import { formatBase64String } from "@/utils/reviewUtils"
 import { useAppSelector } from "@/redux/hooks"
+import { createReviewSQL, updateReviewAction } from "@/lib/server_actions"
 
 interface ReviewFormProps {
     locationId: string,
     locationName: string
     action: "edit" | "add"
-    actionFunction: (...args: any) => Promise<ServerActionResponse>
     review?: Review
 }
 
 export default function ReviewForm({ locationId, locationName, review, action }: ReviewFormProps) {
     const router = useRouter()
-    const { setImageData, message, formAction } = UseCreateReview(action)
+    const { setImageData, message, formAction } = UseCreateReview(action === "edit" ? updateReviewAction : createReviewSQL)
     const [ratingInput, setRatingInput] = useState<number>(review?.rating ?? 1)
-    const [price, setPrice] = useState<string>(review?.price.toString() ?? "")
     const imgString = useAppSelector((state) => state.review.imgString)
 
-    const [values, setState, validators] = UseFormyBoi([{ field: "location", value: "sd", minLen: { is: 3 } }, { field: "price", value: "3", required: true }, { field: "comments", minLen: 3, value: "" }])
+    const { values, setValue, errors, validators } = UseFormyBoi([
+        { name: "location", value: "", minLen: { is: 3 } },
+        { name: "price", value: review?.price.toString() ?? "", required: true, isPriceRegex: true },
+        { name: "comments", minLen: 140, value: review?.comments ?? "" }])
 
     useEffect(() => {
         if (message?.success === true) {
@@ -38,27 +40,24 @@ export default function ReviewForm({ locationId, locationName, review, action }:
         }
     }, [message])
 
-    function validateNumber(e: any) {
-        isPriceRegex(e.target.value) && setPrice(e.target.value)
-    }
-
     return (
         < >
             {message?.success !== true &&
                 <form action={formAction} className={styles.form}>
                     <input name="id" className={clsx(styles.hidden)} value={locationId} readOnly></input>
+                    <input name="reviewId" className={clsx(styles.hidden)} value={review?.id ?? undefined} readOnly></input>
 
                     <div className={styles.imageAndInputsContainer}>
-                        <ReviewImageCreator setImageData={setImageData} imgString={imgString} />
+                        <ReviewImageCreator setImageData={setImageData} imgString={action === "edit" ? imgString : ""} />
 
                         <div className={styles.inputsContainer}>
                             <label htmlFor="locationData" className={clsx(styles.label)}>Location</label>
-                            <input name="locationData" className={clsx(styles.input)} value={locationName} disabled={true} />
+                            <input name="locationData" className={clsx(styles.input)} value={locationName} readOnly />
 
                             <label htmlFor="price" className={styles.label}>Price</label>
                             <div className={clsx(styles.input, styles.priceContainer)}>
                                 <span className={clsx(styles.poundSign)}>£</span>
-                                <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true" onInput={validateNumber} value={price}></input>
+                                <input name="price" type="text" className={clsx(styles.input, styles.price, styles.pricee)} aria-required="true" value={values.price} onChange={setValue}></input>
                             </div>
                             {message?.errors?.price && <p className={styles.errorMessage}>{message?.errors?.price}</p>}
 
@@ -72,7 +71,7 @@ export default function ReviewForm({ locationId, locationName, review, action }:
                     </div>
 
                     <label htmlFor="comments" className={clsx(styles.label, styles.comment)}>Comments - optional</label>
-                    <textarea name="comments" className={clsx(styles.input, styles.comment)} value={review?.comments ?? undefined} />
+                    <textarea name="comments" className={clsx(styles.input, styles.comment)} value={values.comments} onBlur={validators} onChange={setValue} />
 
                     <div className={styles.buttonContainer}>
                         <button className={clsx(styles.button, styles.save)} type="submit">Save</button>

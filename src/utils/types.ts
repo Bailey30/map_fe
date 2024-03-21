@@ -30,6 +30,8 @@ export interface LocationData extends Location {
     }
 }
 
+export type ServerAction = (reviewData: any, prevState: any, formState: any) => Promise<ServerActionResponse>
+
 export type ServerActionResponse = {
     success: boolean
     errors: {
@@ -41,11 +43,16 @@ export type ServerActionResponse = {
     body?: {
         [key: string]: any
     }
+    redirect?: boolean
 }
 
 export type ReviewData = {
-    mapState: MapState
+    mapState?: MapState
     imageData?: string | undefined
+}
+export type UpdateReviewData = {
+    reviewId: number
+    imageData: string
 }
 
 export type User = {
