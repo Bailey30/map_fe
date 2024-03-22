@@ -34,7 +34,7 @@ export default function CreateReviewPanel() {
         <>
             <form action={formAction} className={styles.form}>
                 <div className={styles.imageAndInputsContainer}>
-                    <ReviewImageCreator setImageData={setImageData} />
+                    <ReviewImageCreator setImageData={setImageData} imgString="" />
                     <div className={styles.inputsContainer}>
                         <label htmlFor="location" className={styles.label}>Location</label>
                         <input name="location" className={styles.input} aria-required="true"></input>

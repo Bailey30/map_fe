@@ -36,7 +36,11 @@ export default function ReviewForm({ locationId, locationName, review, action }:
 
     useEffect(() => {
         if (message?.success === true) {
-            router.push("/location/success")
+            if (message.action === "update") {
+                router.push(`/location/success?action=update&location=${locationId}`)
+            } else {
+                router.push(`/location/success?action=create&location=${locationId}`)
+            }
         }
     }, [message])
 
@@ -46,6 +50,7 @@ export default function ReviewForm({ locationId, locationName, review, action }:
                 <form action={formAction} className={styles.form}>
                     <input name="id" className={clsx(styles.hidden)} value={locationId} readOnly></input>
                     <input name="reviewId" className={clsx(styles.hidden)} value={review?.id ?? undefined} readOnly></input>
+                    <input name="imageId" className={clsx(styles.hidden)} value={review?.imageId ?? undefined} readOnly></input>
 
                     <div className={styles.imageAndInputsContainer}>
                         <ReviewImageCreator setImageData={setImageData} imgString={action === "edit" ? imgString : ""} />

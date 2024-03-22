@@ -1,11 +1,7 @@
 "use server"
-import { MapState } from "@/redux/slice"
-import axios from "axios"
-import { revalidatePath, revalidateTag } from "next/cache"
-import { redirect } from "next/navigation"
+import { revalidateTag } from "next/cache"
 import { z } from "zod"
 import prisma from "../lib/db"
-import { auth } from "./auth"
 import { hasErrors, validate } from "@/utils/formValidator"
 import { ReviewData, ServerActionResponse, Location, UpdateReviewData } from "@/utils/types"
 import uploadImage from "./uploadImage"
@@ -13,6 +9,7 @@ import { getAuthenticatedUser } from "./user_repository"
 import { createLocation, deleteLocation, getLocation } from "./location_repository"
 import { createReview, deleteReview, getReviews, updateReview } from "./review_repository"
 import { extractFormData } from "@/utils/formUtils"
+import { v4 as uuidv4 } from "uuid"
 
 const FromSchema = z.object({
     id: z.string(),
@@ -182,26 +179,34 @@ export async function deleteReviewAction(reviewData: any, prevState: any, formSt
 export async function updateReviewAction(reviewData: UpdateReviewData, prevState: any, formData: FormData): Promise<ServerActionResponse> {
     try {
         const data = extractFormData(formData)
-        console.log({ data })
-        await updateReview(data)
-        // if (reviewData.imageData) {
-        //         console.log("updating with image id")
-        //         const key = data.id
-        //         await uploadImage(reviewData.imageData, data.locationData, parseInt(key))
-        //
-        //         await prisma?.review.update({
-        //             where: {
-        //                 id: data.id
-        //             },
-        //             data: {
-        //                 imageId: newReview.id
-        //             }
-        //         })
+
+        const updateData = {
+            rating: parseInt(data.rating),
+            price: parseFloat(data.price),
+            comments: data.comments,
+        }
+
+        let key
+        if (reviewData.imageData) {
+            const imageId = data.imageId ? parseInt(data.imageId) : 0
+            key = imageId + 1
+            await uploadImage(reviewData.imageData, data.locationData, key)
+            Object.assign(updateData, { imageId: key })
+        }
+
+        await updateReview(parseInt(data.reviewId), updateData)
+
         revalidateTag("reviews")
+
         return {
             success: true,
-            errors: ""
+            errors: "",
+            action: "update",
+            body: {
+                message: key ? "Updated review and image" : "Updated review"
+            }
         }
+
     } catch (err: any) {
         console.log("error updating review", err)
         return {

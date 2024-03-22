@@ -8,6 +8,7 @@ import { getImages, getReviews } from "@/lib/data"
 export default async function LocationPage({ params }: { params: { slug: string } }) {
     const locationId = params.slug
     const session = await auth()
+
     // gets the location with all its reviews
     const location: Location = await getReviews(locationId)
     const images = await getImages(location)

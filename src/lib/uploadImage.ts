@@ -2,7 +2,7 @@ import formatLocationName from "@/utils/formatLocationName"
 import axios from "axios"
 import { revalidateTag } from "next/cache"
 
-async function blobify(data: string) {
+export async function blobify(data: string) {
     try {
         const blob = await fetch(data).then(res => res.blob())
         return blob

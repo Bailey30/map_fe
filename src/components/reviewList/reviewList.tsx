@@ -1,5 +1,4 @@
 "use client"
-import { useSession } from "next-auth/react"
 import { formatMoney, formatBase64String } from "@/utils/reviewUtils"
 import { Location, Review } from "@/utils/types"
 import Image from "next/image"
@@ -11,12 +10,9 @@ import deleteIcon from "../../../public/images/delete.png"
 import editIcon from "../../../public/images/edit.png"
 import { useAppDispatch } from "@/redux/hooks"
 import { useEffect, useState } from "react"
-import { SET_LOADING, TOGGLE_LOADING } from "@/redux/controlsSlice"
-import { EXPORT_MARKER } from "next/dist/shared/lib/constants"
+import { SET_LOADING } from "@/redux/controlsSlice"
 import DeletePopup from "../deletePopup/deletePopup"
-import { auth } from "@/lib/auth"
 import { Session } from "next-auth"
-import Link from "next/link"
 import { useDispatch } from "react-redux"
 import { SET_IMG_STRING } from "@/redux/reviewSlice"
 import { useRouter } from "next/navigation"
@@ -43,8 +39,14 @@ export default function ReviewList({ reviews, images, session, location }: Revie
             <div className={styles.detailsContainer} id="details">
                 {reviews && reviews.map((review: Review, i: number) => {
                     const img = review.imageId ? images[review.imageId.toString()] : null
-                    return <ReviewComponent review={review} i={i} key={review.id} totalReviews={reviews.length} image={img} userId={session?.user.id} location={location} />
-
+                    return <ReviewComponent
+                        review={review}
+                        i={i}
+                        key={review.id}
+                        totalReviews={reviews.length}
+                        image={img}
+                        userId={session?.user.id}
+                        location={location} />
                 })}
             </div>
         </>
@@ -66,7 +68,6 @@ function ReviewComponent({ review, i, totalReviews, image, userId, location }: R
     const router = useRouter()
     const [deletePopup, setDeletePopup] = useState<boolean>(false)
     const ratingArr = [1, 2, 3, 4, 5]
-
 
     function goToEdit() {
         dispatch(SET_IMG_STRING(image))

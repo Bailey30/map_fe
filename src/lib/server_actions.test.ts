@@ -3,6 +3,8 @@ import { prismaMock } from "./__mocks__/db";
 import { auth } from "./auth"
 import { createReviewSQL, deleteReviewAction, updateReviewAction } from "./server_actions";
 import { revalidateTag } from "next/cache";
+import { blobify } from "./uploadImage";
+import uploadImage from "./uploadImage";
 
 
 jest.mock("./db")
@@ -14,6 +16,8 @@ jest.mock("next/cache", () => ({
     ...jest.requireActual("next/cache"),
     revalidateTag: jest.fn()
 }))
+jest.mock("./uploadImage")
+
 
 
 
@@ -122,17 +126,35 @@ describe("server_actions tests", () => {
     })
 
     const updateReviewData = {
-        reviewId: 1
+        reviewId: 1,
+        imageData: ""
     }
     const updateReviewFormData = new FormData()
     updateReviewFormData.append("price", "2")
     updateReviewFormData.append("rating", "2")
 
-    const updatedReview = { id: 1, locationId: 1, creatorId: 1, rating: 1, price: 1, comments: "", createdAt: new Date(), updatedAt: new Date(), imageId: 0 }
+    const updatedReview = { id: 1, locationId: 1, creatorId: 1, rating: 1, price: 1, comments: "", createdAt: new Date(), updatedAt: new Date(), imageId: 1 }
     test("Update review should update the correct review and return success", async () => {
         prismaMock.review.update.mockResolvedValue(updatedReview)
         const response = await updateReviewAction(updateReviewData, "", updateReviewFormData)
 
+        expect(response.body?.message).toEqual("Updated review")
+    })
 
+    test("Update review should update review and upload new image when given imageData", async () => {
+        (blobify as jest.Mock).mockResolvedValueOnce("mocked blob data");
+        (uploadImage as jest.Mock).mockResolvedValueOnce("")
+
+        prismaMock.review.update.mockResolvedValue(updatedReview)
+        const updateReviewDataWithImage = {
+            reviewId: 1,
+            imageData: "1111"
+        }
+        updateReviewFormData.append("locationData", "locationName")
+        // specifically not adding imageId - updated resolves with a review with an id of 1, meaning that that is the first image it had, and as their is imageData it means that images was created with this call of the function
+        const response = await updateReviewAction(updateReviewDataWithImage, "", updateReviewFormData)
+
+        expect(uploadImage).toHaveBeenCalledWith("1111", "locationName", 1)
+        expect(response.body?.message).toEqual("Updated review and image")
     })
 })
