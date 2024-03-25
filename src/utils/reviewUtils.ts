@@ -12,3 +12,16 @@ export function formatMoney(amount: number) {
         return amount.toFixed(2);
     }
 }
+
+export async function blobify(data: string): Promise<Blob> {
+    try {
+        console.log({ data })
+        const blob = await fetch(data).then(res => res.blob())
+        console.log({ blob })
+        return blob
+    } catch (err: any) {
+        console.log("error turning image data into a blob", err)
+        throw new Error("error turning image data into a blob", err)
+    }
+}
+

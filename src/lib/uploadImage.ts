@@ -1,24 +1,28 @@
 import formatLocationName from "@/utils/formatLocationName"
+import { blobify } from "@/utils/reviewUtils"
 import axios from "axios"
 import { revalidateTag } from "next/cache"
 
-export async function blobify(data: string) {
-    try {
-        const blob = await fetch(data).then(res => res.blob())
-        return blob
-    } catch (err: any) {
-        console.log("error turning image data into a blob", err)
-        throw new Error("error turning image data into a blob", err)
-    }
-}
 
-export default async function uploadImage(imageData: string, location: string, key: number) {
+export default async function uploadImage(imageData: string, location: string, key: number): Promise<void> {
     try {
         const filename = formatLocationName(location) + "/" + key + ".jpeg"
-        console.log({ filename })
         const blob = await blobify(imageData)
-        const signedUrl = await axios.post(process.env.NEXT_PUBLIC_IMAGE_URL_ENDPOINT as string, JSON.stringify({ key: filename }))
-        const result = await fetch(signedUrl.data.uploadURL, {
+        // const signedUrl = await axios.post(process.env.NEXT_PUBLIC_IMAGE_URL_ENDPOINT as string, JSON.stringify({ key: filename }))
+
+        // get signed url
+        const signedUrlResponse = await fetch(process.env.NEXT_PUBLIC_IMAGE_URL_ENDPOINT as string, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ key: filename })
+        });
+
+        const signedUrl = await signedUrlResponse.json();
+
+        // upload image to S3 using signed url
+        const result = await fetch(signedUrl.uploadURL, {
             method: "PUT",
             body: blob,
             headers: {

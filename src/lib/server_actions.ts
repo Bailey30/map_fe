@@ -9,7 +9,6 @@ import { getAuthenticatedUser } from "./user_repository"
 import { createLocation, deleteLocation, getLocation } from "./location_repository"
 import { createReview, deleteReview, getReviews, updateReview } from "./review_repository"
 import { extractFormData } from "@/utils/formUtils"
-import { v4 as uuidv4 } from "uuid"
 
 const FromSchema = z.object({
     id: z.string(),

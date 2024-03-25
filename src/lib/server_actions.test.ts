@@ -3,7 +3,7 @@ import { prismaMock } from "./__mocks__/db";
 import { auth } from "./auth"
 import { createReviewSQL, deleteReviewAction, updateReviewAction } from "./server_actions";
 import { revalidateTag } from "next/cache";
-import { blobify } from "./uploadImage";
+import { blobify } from "../utils/reviewUtils";
 import uploadImage from "./uploadImage";
 
 
@@ -17,6 +17,7 @@ jest.mock("next/cache", () => ({
     revalidateTag: jest.fn()
 }))
 jest.mock("./uploadImage")
+jest.mock("../utils/reviewUtils")
 
 
 
