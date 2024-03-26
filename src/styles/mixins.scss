@@ -1,7 +1,8 @@
 @use "./variable.scss" as *;
+
 @mixin input {
     width: 100%;
-    background:none;
+    background: none;
     border-style: none;
     border: 1px solid $grey;
     border-radius: 5px;
@@ -39,4 +40,13 @@
 @mixin textArea {
     @include input;
     padding-top: 7px;
+}
+
+@mixin uiButton {
+    position: relative;
+    background: white;
+    height: 29px;
+    padding: 0 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
 }

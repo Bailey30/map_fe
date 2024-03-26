@@ -21,7 +21,6 @@ jest.mock("../utils/reviewUtils", () => ({
 
 describe("Upload image tests", () => {
     beforeAll(() => {
-        // Enable API mocking before all the tests.
         global.fetch = jest.fn();
     })
 

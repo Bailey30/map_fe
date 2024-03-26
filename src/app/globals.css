@@ -129,10 +129,18 @@ button {
     height: 30px;
     width: 30px;
     position: absolute;
-    left: 15px;
-    top: 40px;
+    right: 5px;
+    top: 45px;
     z-index: 99;
 }
+
+.mapboxgl-ctrl-top-right {
+
+    .mapboxgl-ctrl {
+        margin: 0 !important;
+    }
+}
+
 
 .mapboxgl-ctrl-top-left,
 .mapboxgl-ctrl-bottom-left,
@@ -140,4 +148,8 @@ button {
 .mapboxgl-user-location-accuracy-circle,
 .mapboxgl-user-location-dot {
     display: none;
+}
+
+.mapboxgl-ctrl-top-right {
+    right: 1px;
 }

@@ -1,0 +1,41 @@
+@use "../../styles/mixins.scss" as *;
+
+.addButtonContainer {
+    position: absolute;
+    z-index: 200;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    display: flex;
+    justify-content: right;
+}
+
+
+.topBarButtons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px;
+}
+
+.topBarButtons button {
+    pointer-events: auto;
+}
+
+.addButton {
+    @include uiButton;
+    pointer-events: all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 105;
+
+    &.settings {
+        padding: 5px;
+    }
+
+    &.isAdding {
+        margin-top: 40px;
+    }
+}

@@ -1,0 +1,95 @@
+@use "../../styles/mixins.scss" as *;
+
+.settingsDropdown {
+    pointer-events: all;
+    @include uiButton;
+    position: absolute;
+    left: 5px;
+    top: 40px;
+    height: fit-content;
+    width: 65px;
+    font-size: 13px;
+
+    li {
+        list-style-type: none;
+        border-bottom: 1px solid grey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        button,
+        a {
+            height: 29px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img {
+            height: 18px;
+            width: auto;
+        }
+    }
+
+    li:last-child {
+        border: none;
+    }
+}
+
+.displayOptions {
+    @include uiButton;
+    position: absolute;
+    top: 30px;
+    left: 70px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    li {
+        width: 100px;
+        height: 29px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        // checkbox label
+        label {
+            display: inline;
+        }
+
+        // checkbox
+        input {
+            position: absolute;
+            // z-index: 2;
+            right: 5px;
+            opacity: 0;
+            cursor: pointer;
+            height: 20px;
+            width: 20px;
+            pointer-events: all;
+        }
+
+        .checkmark {
+            position: absolute;
+            right: 7px;
+            height: 15px;
+            width: 15px;
+            background: lightgray;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                height: 12px;
+                width: 12px;
+            }
+        }
+
+        input:checked~.checkmark {
+            // background: blue;
+        }
+    }
+}
