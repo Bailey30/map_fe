@@ -5,20 +5,22 @@ import { useFormState } from "react-dom";
 import { SpecIterable } from "undici";
 import { ServerAction, ServerActionResponse } from "./types";
 
-
 interface Props {
-    action: any
+  action: any;
 }
 export default function UseCreateReview(action: ServerAction) {
-    const location = useAppSelector((state) => state.map)
-    const [imageData, setImageData] = useState<string>("")
-    const reviewData = {
-        mapState: location,
-        imageData,
-    }
-    const actionAndData = action.bind(null, reviewData)
-    const [message, formAction]: [state: ServerActionResponse | null, dispatch: (payload: any) => void] = useFormState(actionAndData, null)
+  const location = useAppSelector((state) => state.map);
+  const [imageData, setImageData] = useState<string>("");
+  const reviewData = {
+    mapState: location,
+    imageData,
+  };
+  const actionAndData = action.bind(null, reviewData);
+  const [message, formAction]: [
+    state: ServerActionResponse | null,
+    dispatch: (payload: any) => void,
+    isPending: boolean,
+  ] = useFormState(actionAndData, null);
 
-    return { imageData, setImageData, message, formAction }
-
+  return { imageData, setImageData, message, formAction };
 }
