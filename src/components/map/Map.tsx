@@ -132,6 +132,7 @@ export default function MapComponent({ data }: Props) {
                         );
                     }}
                 />
+
             </Map>
         </div>
     );
