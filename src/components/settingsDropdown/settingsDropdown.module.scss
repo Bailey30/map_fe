@@ -7,7 +7,7 @@
     left: 5px;
     top: 40px;
     height: fit-content;
-    width: 65px;
+    width: 70px;
     font-size: 13px;
 
     li {
@@ -39,8 +39,8 @@
 .displayOptions {
     @include uiButton;
     position: absolute;
-    top: 30px;
-    left: 70px;
+    top: 29px;
+    left: 75px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

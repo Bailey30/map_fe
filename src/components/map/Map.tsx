@@ -1,9 +1,16 @@
 "use client";
 import guinnessArrow from "../../../public/images/guinness_arrow.png";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import styles from "./map.module.css";
-import { GeolocateControl, Map, Marker } from "react-map-gl";
+import {
+    GeolocateControl,
+    HeatmapLayer,
+    Layer,
+    Map,
+    Marker,
+    Source,
+} from "react-map-gl";
 import { MOVE_TO } from "@/redux/slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -12,12 +19,20 @@ import { useRouter } from "next/navigation";
 import { Location } from "@/utils/types";
 import clsx from "clsx";
 import { SET_SHOW_CONTROLS } from "@/redux/controlsSlice";
+import {
+    createGeojson,
+    createHeatmapData,
+    createHeatmapLayer,
+    heatmapLayer,
+} from "@/utils/mapUtils";
+import { InterpolateHeatmap } from "mapbox-gl-heatmap-canvas";
 
 interface Props {
     data: Location[] | undefined;
 }
 
 export default function MapComponent({ data }: Props) {
+    const mapRef = useRef(null) as any;
     const dispatch = useAppDispatch();
     const viewState = useAppSelector((state) => state.map);
     const { recentPrice } = useAppSelector((state) => state.controls);
@@ -108,13 +123,23 @@ export default function MapComponent({ data }: Props) {
             }),
         [data, recentPrice],
     );
-    console.log({ markers });
+    const geojson = useMemo(() => {
+        return data && createGeojson(data);
+    }, [data]);
+
+    // {data && (
+    //         <Source type="geojson" data={geojson}>
+    //         <Layer {...heatmapLayer} />
+    //         </Source>
+    //         )}
+    //
     return (
         <div
             className={styles.mapContainer}
             onClick={() => console.log("clikced mapContainer")}
         >
             <Map
+                ref={mapRef}
                 mapboxAccessToken="pk.eyJ1IjoiYmFpbGV5YSIsImEiOiJjbHM2NW1scXkxdDhrMmpwY2N5OWNlZm54In0.EWhC5rsaB3nMqz9xHQ1cPQ"
                 reuseMaps
                 {...viewState}
@@ -132,7 +157,6 @@ export default function MapComponent({ data }: Props) {
                         );
                     }}
                 />
-
             </Map>
         </div>
     );

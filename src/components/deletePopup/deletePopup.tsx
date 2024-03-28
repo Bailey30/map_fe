@@ -5,13 +5,14 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useFormState } from "react-dom";
 import { deleteReviewAction } from "@/lib/server_actions";
 import Pending from "../pending/pending";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Props {
   review: Review;
   setDeletePopup: Dispatch<SetStateAction<boolean>>;
 }
 export default function DeletePopup({ review, setDeletePopup }: Props) {
+  const router = useRouter();
   const reviewData = {
     reviewId: review.id,
     locationId: review.locationId,
@@ -26,8 +27,11 @@ export default function DeletePopup({ review, setDeletePopup }: Props) {
 
   useEffect(() => {
     console.log({ response });
+    // not working for some reason
+    // seems to be page reload in delete server action
+
     // response?.success === true && setDeletePopup(false);
-    response?.redirect === true && redirect("/");
+    // response?.redirect === true && router.push("/");
   }, [response]);
 
   return (
