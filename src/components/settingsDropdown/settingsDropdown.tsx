@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { SET_RECENT_PRICE } from "@/redux/controlsSlice";
 import { useEffect, useState } from "react";
+import PriceRange from "../priceRange/priceRange";
 
 interface Props {
   session: Session | null;
@@ -19,7 +20,7 @@ interface Props {
 export default function SettingsDropdown({ session }: Props) {
   const recentPrice = useAppSelector((state) => state.controls.recentPrice);
   const dispatch = useAppDispatch();
-  const [showDisplayOptions, setShowDisplayOptions] = useState<boolean>(false);
+  const [showDisplayOptions, setShowDisplayOptions] = useState<boolean>(true);
 
   // close when losing focus for accessibility?
   function handleFocus() {
@@ -98,6 +99,9 @@ export default function SettingsDropdown({ session }: Props) {
                   />
                 )}
               </span>
+            </li>
+            <li>
+              <PriceRange />
             </li>
           </ul>
         </div>

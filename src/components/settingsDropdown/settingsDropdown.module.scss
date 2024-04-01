@@ -45,13 +45,14 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    height: auto;
 
     li {
         width: 100px;
-        height: 29px;
+        min-height: 29px;
         font-size: 13px;
         display: flex;
-        align-items: center;
+        // align-items: center;
         justify-content: space-between;
 
         // checkbox label
@@ -60,7 +61,7 @@
         }
 
         // checkbox
-        input {
+        input[type="checkbox"] {
             position: absolute;
             // z-index: 2;
             right: 5px;

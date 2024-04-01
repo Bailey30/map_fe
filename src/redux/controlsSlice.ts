@@ -10,7 +10,7 @@ const initialState = {
   isAdding: false,
   loading: false,
   recentPrice: false,
-  showControls: false,
+  showControls: true,
 };
 export const controlsSlice = createSlice({
   name: "controls",
