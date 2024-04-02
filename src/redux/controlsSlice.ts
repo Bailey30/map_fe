@@ -5,12 +5,20 @@ type controlsState = {
   loading: boolean;
   recentPrice: boolean;
   showControls: boolean;
+  priceRange: {
+    min: number;
+    max: number;
+  };
 };
 const initialState = {
   isAdding: false,
   loading: false,
   recentPrice: false,
-  showControls: true,
+  showControls: false,
+  priceRange: {
+    min: 0,
+    max: 100,
+  },
 };
 export const controlsSlice = createSlice({
   name: "controls",
@@ -34,6 +42,9 @@ export const controlsSlice = createSlice({
     SET_SHOW_CONTROLS: (state: controlsState, action) => {
       state.showControls = action.payload;
     },
+    SET_PRICE_RANGE: (state: controlsState, action) => {
+      state.priceRange = action.payload;
+    },
   },
 });
 
@@ -44,6 +55,7 @@ export const {
   SET_LOADING,
   SET_RECENT_PRICE,
   SET_SHOW_CONTROLS,
+  SET_PRICE_RANGE,
 } = controlsSlice.actions;
 
 export default controlsSlice.reducer;

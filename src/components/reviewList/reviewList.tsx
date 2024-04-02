@@ -105,7 +105,7 @@ function ReviewComponent({
               {review?.creator?.username}
             </p>
             {userId === review.creatorId && (
-              <span>
+              <span className={`${styles.icons}`}>
                 <Image
                   src={editIcon.src}
                   alt="edit icon"
@@ -160,6 +160,7 @@ function ReviewComponent({
               alt="Guinness for the current review"
               width={100}
               height={100}
+              className={`${styles.reviewImage}`}
             />
           )}
         </div>

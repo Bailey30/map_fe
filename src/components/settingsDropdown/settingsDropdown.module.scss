@@ -7,14 +7,14 @@
     left: 5px;
     top: 40px;
     height: fit-content;
-    width: 70px;
+    width: 200px;
     font-size: 13px;
 
     li {
         list-style-type: none;
         border-bottom: 1px solid grey;
         display: flex;
-        justify-content: center;
+        justify-content: start;
         align-items: center;
 
         button,
@@ -23,6 +23,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 40px;
+            height: 25px;
+            padding-inline: 15px;
+            background-color: #3B3B3B;
+            color: white;
         }
 
         img {
@@ -34,13 +39,13 @@
     li:last-child {
         border: none;
     }
-}
 
-.displayOptions {
+    li:first-child {
+        padding: 10px 0;
+    }
+
     @include uiButton;
     position: absolute;
-    top: 29px;
-    left: 75px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -48,17 +53,12 @@
     height: auto;
 
     li {
-        width: 100px;
         min-height: 29px;
         font-size: 13px;
         display: flex;
         // align-items: center;
         justify-content: space-between;
 
-        // checkbox label
-        label {
-            display: inline;
-        }
 
         // checkbox
         input[type="checkbox"] {
@@ -74,14 +74,15 @@
 
         .checkmark {
             position: absolute;
-            right: 7px;
+            right: 10px;
             height: 15px;
             width: 15px;
-            background: lightgray;
+            // background: lightgray;
             pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid grey;
 
             img {
                 height: 12px;

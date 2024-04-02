@@ -8,33 +8,32 @@ import { Suspense } from "react";
 import MapLoader from "@/components/loaders/mapLoader";
 import Loader from "@/components/loader/loader";
 
-
 export const metadata: Metadata = {
-    title: "Guinness map",
-    description: "Rate and record prices of Guinnesses, big dog."
-}
+  title: "Guinness map",
+  description: "Rate and record prices of Guinnesses, big dog.",
+};
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en">
-            <body>
-                <QueryProvider>
-                    <StoreProvider>
-                        <main style={{ "position": "relative" }} id="main">
-                            <Suspense fallback={<MapLoader />}>
-                                <MainContainer />
-                            </Suspense>
-                            <RouteChangeListener />
-                            <Loader />
-                            {children}
-                        </main>
-                    </StoreProvider>
-                </QueryProvider>
-            </body>
-        </html>
-    );
+  return (
+    <html lang="en">
+      <body>
+        <QueryProvider>
+          <StoreProvider>
+            <main style={{ position: "relative" }} id="main">
+              <Suspense fallback={<MapLoader />}>
+                <MainContainer />
+              </Suspense>
+              <RouteChangeListener />
+              <Loader />
+              {children}
+            </main>
+          </StoreProvider>
+        </QueryProvider>
+      </body>
+    </html>
+  );
 }

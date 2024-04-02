@@ -16,6 +16,7 @@
     bottom: 0;
     top: 50px;
     width: 100%;
+
 }
 
 .arrow {
@@ -137,6 +138,12 @@
 .topRow {
     display: flex;
     justify-content: space-between;
+}
+
+.icons {
+    img {
+        margin-left: 10px;
+    }
 }
 
 .deletePopup {
