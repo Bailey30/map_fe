@@ -20,6 +20,14 @@
     &:focus {
         outline: none;
     }
+
+    &.error {
+        border: 1px solid red;
+    }
+
+    &.noError {
+        border: 1px solid $grey;
+    }
 }
 
 @mixin label {

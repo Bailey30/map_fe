@@ -74,6 +74,31 @@
     width: 100%;
     position: absolute;
     top: 15px;
+
+    button[type="submit"] {
+
+        @include mixins.submitButton;
+        background: $gold;
+        width: 49%;
+    }
+
+    .cancel {
+        width: 49%;
+        text-align: center;
+        border-radius: 15px;
+        border: 1px solid black;
+    }
+
+    p[role="status"] {
+        font-style: italic;
+        font-weight: 400;
+        width: fit-content;
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
 }
 
 .imageAndInputsContainer {
@@ -146,14 +171,8 @@
     @include mixins.submitButton;
 }
 
-.save,
-.cancel {
-    width: 49%;
-}
 
-.save {
-    background: $gold;
-}
+
 
 .success {
     width: 100%;
@@ -169,4 +188,14 @@
         background: $gold;
         margin-top: 40px;
     }
+}
+
+.hiddenAccessibilityAlert {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
 }

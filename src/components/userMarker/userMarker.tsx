@@ -2,9 +2,7 @@ import { Marker } from "react-map-gl";
 import { useAppSelector } from "@/redux/hooks";
 import { memo, useEffect, useState } from "react";
 import Image from "next/image";
-import userMarker from "../../../public/images/user.svg"
 import location from "../../../public/images/location.webp"
-import person from "../../../public/images/person.png"
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./userMarker.module.css"
 

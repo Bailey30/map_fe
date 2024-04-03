@@ -1,0 +1,66 @@
+@use "../../styles/variable.scss" as *;
+@use "../../styles/mixins.scss" as *;
+
+.pageContainer {
+    position: absolute;
+    z-index: 102;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // background: var(--bg);
+    background-color: white;
+
+    .close {
+        position: absolute;
+        top: 5px;
+        right: 0px;
+
+        .x {
+            height: auto;
+        }
+    }
+
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+
+    button[type="submit"] {
+        background-color: $gold;
+        border-radius: 40px;
+        height: 30px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    input {
+        @include input;
+    }
+
+    p.error {
+        font-size: 12px;
+        color: red;
+        margin-bottom: 5px;
+
+    }
+
+    p[role="status"] {
+        font-style: italic;
+        font-weight: 400;
+        width: fit-content;
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

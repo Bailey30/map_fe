@@ -25,7 +25,6 @@ import {
   createHeatmapLayer,
   heatmapLayer,
 } from "@/utils/mapUtils";
-import { InterpolateHeatmap } from "mapbox-gl-heatmap-canvas";
 
 interface Props {
   data: Location[] | undefined;
@@ -134,7 +133,6 @@ export default function MapComponent({ data }: Props) {
         }),
     [data, recentPrice, priceRange],
   );
-  console.log({ markers });
   const geojson = useMemo(() => {
     return data && createGeojson(data);
   }, [data]);

@@ -17,6 +17,7 @@ export default function PriceRange() {
     if (!fromSliderRef.current) return;
     if (!fromInputRef.current) return;
     fromInputRef.current.value = e.target.value;
+    fillSlider();
     if (e.target.value > parseInt(toSliderRef.current.value)) {
       fromSliderRef.current.value = toSliderRef.current.value;
       fromInputRef.current.value = toSliderRef.current.value;
@@ -28,6 +29,7 @@ export default function PriceRange() {
     if (!toInputRef.current) return;
     setToggleAccessble(e);
     toInputRef.current.value = e.target.value;
+    fillSlider();
     if (e.target.value <= parseInt(fromSliderRef.current.value)) {
       e.target.value = parseInt(fromSliderRef.current.value);
       toInputRef.current.value = fromSliderRef.current.value;
@@ -46,6 +48,7 @@ export default function PriceRange() {
     if (!fromSliderRef.current) return;
     if (!toSliderRef.current) return;
     fromSliderRef.current.value = e.target.value;
+    fillSlider();
     if (e.target.value > toSliderRef.current.value) {
       fromSliderRef.current.value = toSliderRef.current.value;
     } else if (e.target.value <= 0) {
@@ -56,6 +59,7 @@ export default function PriceRange() {
     if (!fromSliderRef.current) return;
     if (!toSliderRef.current) return;
     toSliderRef.current.value = e.target.value;
+    fillSlider();
     if (e.target.value <= "0") {
       toSliderRef.current.value = "100";
     } else if (e.target.value < fromSliderRef.current?.value) {
@@ -85,6 +89,33 @@ export default function PriceRange() {
       }),
     );
   }
+
+  function fillSlider() {
+    console.log("fillSlider");
+    if (!fromSliderRef.current) return;
+    if (!toSliderRef.current) return;
+
+    const sliderColor = "#C6C6C6";
+    const rangeColor = "#000000";
+    const fromSlider = fromSliderRef.current;
+    const toSlider = toSliderRef.current;
+    const rangeDistance = parseInt(toSlider.max) - parseInt(toSlider.min);
+    const fromPosition = parseInt(fromSlider.value) - parseInt(toSlider.min);
+    const toPosition = parseInt(toSlider.value) - parseInt(toSlider.min);
+
+    toSlider.style.background = `linear-gradient(
+      to right,
+      ${sliderColor} 0%,
+      ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+      ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+      ${rangeColor} ${(toPosition / rangeDistance) * 100}%, 
+      ${sliderColor} ${(toPosition / rangeDistance) * 100}%, 
+      ${sliderColor} 100%)`;
+  }
+
+  useEffect(() => {
+    fillSlider();
+  }, []);
 
   return (
     <div className={`${styles.rangeContainer}`}>
