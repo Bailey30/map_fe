@@ -15,9 +15,10 @@ import PriceRange from "../priceRange/priceRange";
 
 interface Props {
   session: Session | null;
+  show: boolean;
 }
 
-export default function SettingsDropdown({ session }: Props) {
+export default function SettingsDropdown({ session, show }: Props) {
   const recentPrice = useAppSelector((state) => state.controls.recentPrice);
   const dispatch = useAppDispatch();
   const [showDisplayOptions, setShowDisplayOptions] = useState<boolean>(false);
@@ -50,7 +51,7 @@ export default function SettingsDropdown({ session }: Props) {
   // </li>
   return (
     <div
-      className={clsx(styles.settingsDropdown)}
+      className={clsx(styles.settingsDropdown, show && styles.show)}
       aria-labelledby="settingsDropdownButton"
       role="menu"
       id="settingsDropdown"
@@ -70,7 +71,12 @@ export default function SettingsDropdown({ session }: Props) {
           )}
         </li>
         <li>
-          <label htmlFor="recentPrice">Recent price</label>
+          <label
+            htmlFor="recentPrice"
+            className={clsx(styles.recentPriceLabel)}
+          >
+            Recent price
+          </label>
           <input
             type="checkbox"
             id="recentPrice"
@@ -80,9 +86,7 @@ export default function SettingsDropdown({ session }: Props) {
             onClick={() => dispatch(SET_RECENT_PRICE(!recentPrice))}
           />
           <span className={clsx(styles.checkmark)}>
-            {recentPrice && (
-              <Image src={tick.src} alt="Tick icon" height={11} width={11} />
-            )}
+            <Image src={tick.src} alt="Tick icon" height={11} width={11} />
           </span>
         </li>
         <li>

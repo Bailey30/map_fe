@@ -1,0 +1,88 @@
+@use "../../styles/variable.scss" as *;
+
+.addingOverlayContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    z-index: 99;
+    pointer-events: none;
+}
+
+.instructions {
+    position: absolute;
+    top: 0;
+    width: 100dvw;
+    color: black;
+    text-align: center;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.active {
+    display: block;
+}
+
+.marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30px;
+    width: auto;
+}
+
+.buttonContainer {
+    position: absolute;
+    z-index: 100;
+    font-size: 18px;
+    bottom: 10px;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    width: 300px;
+    background: white;
+    transform: translateX(-50%);
+
+    box-shadow: 0 2px 10px 2px rgba(0, 0, 0, .1);
+    box-shadow: rgba(255, 255, 255, 0.1) 1px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 5px 0px 40px -20px, rgba(0, 0, 0, 0.3) 2px 0px 20px -30px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    border-radius: 15px;
+
+    a {
+        position: relative;
+        height: 45px;
+        width: 90px;
+        background: $gold;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: all;
+        font-weight: 500;
+        border: 1px solid lightgrey;
+
+        img {
+            margin-left: 5px;
+            display: none;
+        }
+
+        &.cancelButton {
+            background: white;
+            margin-left: 10px;
+        }
+
+    }
+}
+
+.containerBg {
+    width: 300px;
+    // backdrop-filter: blur(10px);
+    z-index: 90;
+}

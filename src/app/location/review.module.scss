@@ -38,6 +38,24 @@
     // animation-duration: 1s;
     // animation-fill-mode: forwards;
     // animation: 1s forwards scroll_snap_top;
+
+
+    @media(min-width: 1000px) {
+        top: 0;
+        width: 400px;
+        border-radius: 0;
+
+        // box-shadow: 0 2px 2px 10px rgba(0, 0, 0, .1);
+        box-shadow: rgba(255, 255, 255, 0.1) 1px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 25px 50px 50px -20px, rgba(0, 0, 0, 0.3) 25px 30px 30px -30px;
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dragHandle {
+            display: none;
+        }
+    }
 }
 
 .infoPanelInner {

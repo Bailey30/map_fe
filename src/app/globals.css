@@ -143,12 +143,32 @@ button {
 
 .mapboxgl-control-container {
   display: block;
-  height: 30px;
-  width: 30px;
   position: absolute;
   right: 5px;
-  top: 40px;
+  bottom: 115px;
   z-index: 99;
+  height: 40px;
+  width: 40px;
+
+  .mapboxgl-ctrl-group:not(:empty) {
+    box-shadow:
+      rgba(0, 0, 0, 0.16) 0px 3px 6px,
+      rgba(0, 0, 0, 0.23) 3px 3px 6px;
+  }
+
+  .mapboxgl-ctrl {
+    border-radius: 50%;
+
+    .mapboxgl-ctrl-geolocate {
+      border-radius: 50%;
+      height: 40px;
+      width: 40px;
+
+      .mapboxgl-ctrl-icon {
+        border-radius: 50%;
+      }
+    }
+  }
 }
 
 .mapboxgl-ctrl-top-right {

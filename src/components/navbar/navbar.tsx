@@ -1,5 +1,6 @@
 "use client";
 import styles from "./navbar.module.scss";
+import guinness from "../../../public/images/guinness.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,8 +27,7 @@ export default function Navbar({ session }: Props) {
 
   function onClick() {
     console.log(pathname);
-    if (pathname.includes("/location")) {
-    }
+
     if (pathname.includes("/add")) {
       router.push("/");
     } else {
@@ -41,7 +41,7 @@ export default function Navbar({ session }: Props) {
         {isNotOnAddPage && (
           <>
             <button
-              className={clsx(styles.addButton, styles.settings)}
+              className={clsx(styles.settings)}
               onClick={() => dispatch(SET_SHOW_CONTROLS(!showControls))}
               type="button"
               tabIndex={0}
@@ -57,12 +57,20 @@ export default function Navbar({ session }: Props) {
                 height={20}
               />
             </button>
-            {showControls && <SettingsDropdown session={session} />}
+            <SettingsDropdown session={session} show={showControls} />
           </>
         )}
         {!session ? (
           <Link href="/login" role="presentation" className={styles.addButton}>
-            Login to add guinnesses
+            <>
+              +
+              <Image
+                src={guinness.src}
+                alt="Guinness icon"
+                height={30}
+                width={30}
+              />{" "}
+            </>
           </Link>
         ) : (
           <>
@@ -73,7 +81,19 @@ export default function Navbar({ session }: Props) {
                 !isNotOnAddPage && styles.isAdding,
               )}
             >
-              {isNotOnAddPage ? "Add new Guinness location" : "Cancel"}
+              {isNotOnAddPage ? (
+                <>
+                  +
+                  <Image
+                    src={guinness.src}
+                    alt="Guinness icon"
+                    height={30}
+                    width={30}
+                  />{" "}
+                </>
+              ) : (
+                "Cancel"
+              )}
             </button>
           </>
         )}

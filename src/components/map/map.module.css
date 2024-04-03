@@ -18,6 +18,7 @@
   height: 50px;
   width: auto;
   transform: translateY(-22px);
+  cursor: pointer;
 }
 
 .price {
