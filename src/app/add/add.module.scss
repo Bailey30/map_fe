@@ -16,11 +16,15 @@
     width: 100dvw;
     color: black;
     text-align: center;
-    height: 30px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(5px);
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
+        rgba(0, 0, 0, 0.23) 3px 3px 6px;
+
 }
 
 .active {
@@ -46,7 +50,7 @@
     align-items: center;
     justify-content: center;
     height: 60px;
-    width: 300px;
+    width: 250px;
     background: white;
     transform: translateX(-50%);
 
@@ -79,10 +83,4 @@
         }
 
     }
-}
-
-.containerBg {
-    width: 300px;
-    // backdrop-filter: blur(10px);
-    z-index: 90;
 }

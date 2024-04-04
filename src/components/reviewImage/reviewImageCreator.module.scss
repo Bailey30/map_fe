@@ -121,9 +121,19 @@
     bottom: 30px;
     transform: translateX(-50%);
     z-index: 104;
+    display: flex;
 
     .button {
         background: white;
+        border-radius: 20px;
+        width: auto;
+        height: 30px;
+        padding: 0 10px;
+        margin-right: 5px;
+    }
+
+    &.hide {
+        display: none;
     }
 }
 
@@ -153,6 +163,7 @@
     margin-top: 7px;
     // margin-bottom: 10px;
     display: block;
+    cursor: pointer;
 
     &.takePhoto {
         // @include mixins.submitButton;

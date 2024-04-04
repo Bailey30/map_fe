@@ -7,6 +7,7 @@ import RouteChangeListener from "@/utils/routeChangeListener";
 import { Suspense } from "react";
 import MapLoader from "@/components/loaders/mapLoader";
 import Loader from "@/components/loader/loader";
+import WelcomePopup from "@/components/welcomePopup/welcomePopup";
 
 export const metadata: Metadata = {
   title: "Guinness map",
@@ -28,7 +29,7 @@ export default function RootLayout({
                 <MainContainer />
               </Suspense>
               <RouteChangeListener />
-              <Loader />
+              <WelcomePopup />
               {children}
             </main>
           </StoreProvider>

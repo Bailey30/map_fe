@@ -39,6 +39,7 @@
     // animation-fill-mode: forwards;
     // animation: 1s forwards scroll_snap_top;
 
+    box-shadow: rgba(255, 255, 255, 0.1) 1px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 25px 50px 50px 10px, rgba(0, 0, 0, 0.3) 25px 30px 30px 20px;
 
     @media(min-width: 1000px) {
         top: 0;
@@ -94,13 +95,14 @@
     top: 15px;
 
     button[type="submit"] {
-
         @include mixins.submitButton;
         background: $gold;
         width: 49%;
+        cursor: pointer;
     }
 
     .cancel {
+        cursor: pointer;
         width: 49%;
         text-align: center;
         border-radius: 15px;

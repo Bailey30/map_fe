@@ -19,18 +19,27 @@
   width: auto;
   transform: translateY(-22px);
   cursor: pointer;
+  position: relative;
+  z-index: 9;
+}
+
+.isAdding {
+  opacity: 50%;
 }
 
 .price {
   color: white;
-  width: 100px;
+  /* width: 100px; */
+  width: fit-content;
   text-align: center;
   font-size: 20px;
   font-weight: 800;
   position: absolute;
-  left: 50%;
-  top: -35px;
-  transform: translateX(-50%);
+  z-index: 100;
+  /* left: -50%; */
+  top: 0;
+  /* top: -35px; */
+  transform: translate(-50%, -60px);
   /* text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black; */
   -webkit-text-stroke: 1.5px black;
 }

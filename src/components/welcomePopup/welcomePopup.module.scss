@@ -1,0 +1,116 @@
+.dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 12px;
+    height: 95%;
+    max-height: 600px;
+    width: 95%;
+    padding: 20px;
+    text-align: center;
+
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
+    &::backdrop {
+        background-color: black;
+        opacity: 0.75;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-top: 10px;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: 800;
+
+    }
+
+    p {
+        margin: 10px 0;
+
+        &.two {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        &.account {
+            font-size: 12px;
+        }
+    }
+
+    span {
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        pointer-events: none !important;
+    }
+
+    .buttonContainer {
+        width: 100%;
+    }
+
+    button {
+        // height: 30px;
+        cursor: pointer;
+        background-color: black;
+        padding: 10px 20px;
+        color: white;
+        border-radius: 20px;
+        font-size: 18px;
+        min-width: fit-content;
+        text-wrap: nowrap;
+        margin-top: 20px;
+
+        // position: absolute;
+        bottom: 50px;
+        left: 50%;
+        // transform: translateX(-50%);
+    }
+
+    a {
+        text-decoration: underline;
+        color: blue;
+
+        &:focus-visible {
+            outline: 1px solid black;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+
+        &.source {
+            color: grey;
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-decoration: none;
+            text-wrap: nowrap;
+            font-size: 12px;
+
+        }
+    }
+
+
+    @media(min-width: 1000px) {
+        max-width: 400px;
+        max-height: 500px;
+    }
+}
+
+.addButton {
+    position: relative !important;
+    width: fit-content;
+    margin-top: 0 !important;
+}
+
+.bigAddButton {
+    pointer-events: none;
+}

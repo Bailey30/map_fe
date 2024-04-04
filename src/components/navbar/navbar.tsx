@@ -35,6 +35,11 @@ export default function Navbar({ session }: Props) {
     }
   }
 
+  function showWelcomePopup() {
+    const popup = document.querySelector("dialog");
+    popup?.showModal();
+  }
+
   return (
     <div className={styles.addButtonContainer} role="menubar">
       <div className={styles.topBarButtons}>
@@ -49,6 +54,7 @@ export default function Navbar({ session }: Props) {
               aria-haspopup="menu"
               aria-control="settingsDropdown"
               id="settingsDropdownButton"
+              title="Settings"
             >
               <Image
                 src={settings}
@@ -58,6 +64,13 @@ export default function Navbar({ session }: Props) {
               />
             </button>
             <SettingsDropdown session={session} show={showControls} />
+            <button
+              className={clsx(styles.welcomePopupButton)}
+              onClick={showWelcomePopup}
+              title="Show welcome popup"
+            >
+              ?
+            </button>
           </>
         )}
         {!session ? (
@@ -80,6 +93,7 @@ export default function Navbar({ session }: Props) {
                 styles.addButton,
                 !isNotOnAddPage && styles.isAdding,
               )}
+              title="Add a new Guinness location"
             >
               {isNotOnAddPage ? (
                 <>
