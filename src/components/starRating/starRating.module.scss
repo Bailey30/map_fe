@@ -2,9 +2,11 @@
     display: flex;
     align-items: center;
 }
+
 .star {
     filter: greyscale(100%);
     opacity: 0.5;
+    cursor: pointer;
 
     &.active {
         filter: greyscale(0%);

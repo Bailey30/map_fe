@@ -1,0 +1,72 @@
+.container {
+    @media(max-width:1000px) {
+        display: none;
+    }
+
+    margin-top: 7px;
+}
+
+.buttonContainer {
+
+    label {
+        cursor: pointer;
+        width: 100px;
+        display: block;
+        background: black;
+        color: white;
+        border-radius: 7px;
+        padding: 6px;
+        font-size: 12px;
+        text-align: center;
+        text-wrap: nowrap;
+        margin-top: 7px;
+    }
+
+    input {
+        position: absolute;
+        width: 100px;
+        opacity: 0;
+    }
+}
+
+.cropContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cropContainerInner {
+    justify-content: center;
+    padding-bottom: 10px;
+    background: white;
+    border-radius: 5px;
+
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.controlsContainer {
+    display: flex;
+    justify-content: end;
+    padding-right: 10px;
+    margin-top: 10px;
+
+    button {
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 10px 15px;
+        border: 1px solid black;
+        margin-left: 10px;
+    }
+
+    .cropButton {
+        background: black;
+        color: white;
+    }
+}

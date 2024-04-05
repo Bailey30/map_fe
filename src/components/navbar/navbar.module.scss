@@ -24,6 +24,10 @@
 
 .topBarButtons button {
     pointer-events: auto;
+
+    &:hover {
+        background: #F2F2F2
+    }
 }
 
 .addButton {

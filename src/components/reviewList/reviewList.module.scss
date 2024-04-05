@@ -143,6 +143,7 @@
 .icons {
     img {
         margin-left: 10px;
+        cursor: pointer;
     }
 }
 
@@ -160,11 +161,20 @@
     align-items: center;
     flex-direction: column;
     box-shadow: 1px 1px 5px black;
+    border-radius: 5px;
 
     .buttonContainer {
         width: 50px;
         display: flex;
         justify-content: space-between;
+
+        button {
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
 

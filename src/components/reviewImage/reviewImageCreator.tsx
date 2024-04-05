@@ -227,7 +227,7 @@ export default function ReviewImageCreator({ setImageData, imgString }: Props) {
     };
 
     return (
-        <div>
+        <div className={clsx(styles.imageCreator)}>
             <CameraPortal>
                 <div
                     className={clsx(takingPicture && styles.openCamera, styles.camera)}

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { isPriceRegex } from "@/utils/formValidator";
 import { createReviewSQL } from "@/lib/server_actions";
 import FormButton from "@/components/formButton/formButton";
+import DesktopReviewImage from "@/components/desktopReviewImage/desktopReviewImage";
 
 export default function CreateReviewPanel() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function CreateReviewPanel() {
       <form action={formAction} className={styles.form}>
         <div className={styles.imageAndInputsContainer}>
           <ReviewImageCreator setImageData={setImageData} imgString="" />
+          <DesktopReviewImage setImageData={setImageData} imgString="" />
           <div className={styles.inputsContainer}>
             <label htmlFor="location" className={styles.label}>
               Location

@@ -17,7 +17,7 @@ export default function ReviewsDisplay({ locationData, session }: Props) {
   const buttonLink = session
     ? `${locationData.id}/review/add?location=${locationData.name}`
     : "/login";
-  console.log("id", session?.user.id);
+
   return (
     <>
       <div className={styles.displayContainer}>

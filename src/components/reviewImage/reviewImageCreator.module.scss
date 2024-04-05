@@ -1,5 +1,11 @@
 @use "../../styles/mixins.scss";
 
+.imageCreator {
+    @media(min-width: 1000px) {
+        display: none;
+    }
+}
+
 .camera {
     position: absolute;
     z-index: 101;
