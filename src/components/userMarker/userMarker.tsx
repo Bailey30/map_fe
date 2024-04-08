@@ -15,18 +15,20 @@ export const UserMarker = memo(function UserMarker() {
 
   useEffect(() => {
     setLocation();
+
+    window.addEventListener("devicemotion", (event) => {
+      if (event.acceleration?.x || event.acceleration?.y) {
+        alert(`${event.acceleration.x} " + " ${event.acceleration.y}`);
+      }
+
+      alert(event);
+    });
   }, []);
 
   if (typeof window !== "undefined") {
     window.onload = function () {
       setLocation();
     };
-
-    window.addEventListener("devicemotion", (event) => {
-      if (event.acceleration?.x || event.acceleration?.y) {
-        alert(`${event.acceleration.x} " + " ${event.acceleration.y}`);
-      }
-    });
   }
 
   function setLocation() {
