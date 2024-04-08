@@ -13,7 +13,9 @@ const requestPermission = (
   DeviceOrientationEvent as unknown as DeviceOrientationEventiOS
 ).requestPermission;
 const iOS = typeof requestPermission === "function";
+
 export const UserMarker = memo(function UserMarker() {
+  const [motionPermission, setMotionPermission] = useState<boolean>(false);
   const viewState = useAppSelector((state) => state.map);
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
@@ -36,26 +38,32 @@ export const UserMarker = memo(function UserMarker() {
     } else {
       // alert("device motion not supported")
     }
-
-    document
-      .querySelector(".mapboxgl-canvas")
-      ?.addEventListener("click", () => {
-        if (iOS) {
-          requestPermission()
-            .then((permissionState) => {
-              if (permissionState === "granted") {
-                handleDeviceMotion();
-              }
-            })
-            .catch(console.error);
-        } else {
-          // handle regular non iOS 13+ devices
-          handleDeviceMotion();
-        }
-      });
   }, []);
 
+  useEffect(() => {
+    if (motionPermission === false) {
+      document
+        .querySelector(".mapboxgl-canvas")
+        ?.addEventListener("click", () => {
+          if (iOS) {
+            requestPermission()
+              .then((permissionState) => {
+                if (permissionState === "granted") {
+                  handleDeviceMotion();
+                }
+              })
+              .catch(console.error);
+          } else {
+            // handle regular non iOS 13+ devices
+            handleDeviceMotion();
+          }
+        });
+    }
+  }, [motionPermission]);
+  // permissions state
+
   function handleDeviceMotion() {
+    setMotionPermission(true);
     window.addEventListener("devicemotion", (event) => {
       console.log(event);
       if (event.acceleration?.x || event.acceleration?.y) {
