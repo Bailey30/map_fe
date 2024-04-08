@@ -44,20 +44,25 @@ export const UserMarker = memo(function UserMarker() {
           requestPermission()
             .then((permissionState) => {
               if (permissionState === "granted") {
-                window.addEventListener("devicemotion", () => {
-                  alert("permission granted");
-                });
+                handleDeviceMotion();
               }
             })
             .catch(console.error);
         } else {
           // handle regular non iOS 13+ devices
-          alert("not ios");
+          handleDeviceMotion();
         }
       });
   }, []);
 
-  function handleDeviceMotion() {}
+  function handleDeviceMotion() {
+    window.addEventListener("devicemotion", (event) => {
+      console.log(event);
+      if (event.acceleration?.x || event.acceleration?.y) {
+        alert(`${event.acceleration.x} " + " ${event.acceleration.y}`);
+      }
+    });
+  }
 
   if (typeof window !== "undefined") {
     window.onload = function () {
