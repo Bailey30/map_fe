@@ -59,7 +59,7 @@ export const UserMarker = memo(function UserMarker() {
       const x = event.acceleration?.x;
       const y = event.acceleration?.y;
       if (x && y) {
-        if (x > 1 || x < -1) {
+        if (x) {
           setMotion({ ...motion, x: x });
         } else if (y > 1 || y < -1) {
           setMotion({ ...motion, y: y });
