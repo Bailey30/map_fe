@@ -44,22 +44,24 @@ export const UserMarker = memo(function UserMarker() {
     if (motionPermission === false) {
       document
         .querySelector(".mapboxgl-canvas")
-        ?.addEventListener("click", () => {
-          if (iOS) {
-            requestPermission()
-              .then((permissionState) => {
-                if (permissionState === "granted") {
-                  handleDeviceMotion();
-                }
-              })
-              .catch(console.error);
-          } else {
-            // handle regular non iOS 13+ devices
-            handleDeviceMotion();
-          }
-        });
+        ?.addEventListener("click", handlePermissions);
     }
   }, [motionPermission]);
+
+  function handlePermissions() {
+    if (iOS) {
+      requestPermission()
+        .then((permissionState) => {
+          if (permissionState === "granted") {
+            handleDeviceMotion();
+          }
+        })
+        .catch(console.error);
+    } else {
+      // handle regular non iOS 13+ devices
+      handleDeviceMotion();
+    }
+  }
   // permissions state
 
   function handleDeviceMotion() {
@@ -70,6 +72,9 @@ export const UserMarker = memo(function UserMarker() {
         alert(`${event.acceleration.x} " + " ${event.acceleration.y}`);
       }
     });
+    document
+      .querySelector(".mapboxgl-canvas")
+      ?.removeEventListener("click", handlePermissions);
   }
 
   if (typeof window !== "undefined") {
