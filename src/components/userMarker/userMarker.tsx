@@ -26,20 +26,6 @@ export const UserMarker = memo(function UserMarker() {
 
   useEffect(() => {
     setLocation();
-
-    window.addEventListener("devicemotion", (event) => {
-      if (event.acceleration?.x || event.acceleration?.y) {
-        // alert(`${event.acceleration.x} " + " ${event.acceleration.y}`);
-      }
-
-      // alert(event);
-    });
-
-    if (window.DeviceMotionEvent) {
-      // alert("device motion supported")
-    } else {
-      // alert("device motion not supported")
-    }
   }, []);
 
   useEffect(() => {
@@ -74,7 +60,7 @@ export const UserMarker = memo(function UserMarker() {
       const y = event.acceleration?.y;
       if (x && y) {
         if (x > 1 || x < -1) {
-          setMotion({ x: x, ...motion });
+          setMotion({ ...motion, x: x });
         } else if (y > 1 || y < -1) {
           setMotion({ ...motion, y: y });
         }
