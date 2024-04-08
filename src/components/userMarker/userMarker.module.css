@@ -5,13 +5,3 @@
 .userMarker > img {
   height: 100%;
 }
-
-.motion {
-  position: absolute;
-  border: 1px solid red;
-  height: 20px;
-  min-width: fit-content;
-  width: 300px;
-  display: flex;
-  top: -20px;
-}

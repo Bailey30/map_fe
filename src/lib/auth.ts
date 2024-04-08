@@ -20,9 +20,7 @@ export const {
     CredentialsProvider({
       // this is to login in a previously created user
       async authorize(credentials: any, _: any): Promise<any> {
-        console.log("calling authorize");
         const { email, password, id } = credentials;
-        console.log({ id });
         const user = await prisma.user.findFirst({
           where: {
             email: email,
@@ -32,7 +30,6 @@ export const {
           return null;
         }
         const isValid = await bcrypt.compare(password as string, user.password);
-        console.log({ isValid });
         if (!isValid) {
           return null;
         }
@@ -47,11 +44,9 @@ export const {
   callbacks: {
     // When using the Credentials Provider the user object is the response returned from the authorize callback and the profile object is the raw body of the HTTP POST submission.
     async signIn({ user, account }) {
-      console.log("sign in callback");
       return true;
     },
     async redirect({ url, baseUrl }) {
-      console.log("redirect callbac");
       // called after any redirect. Login causes a redirect
       if (url.includes("/login")) {
         return baseUrl;
@@ -78,11 +73,7 @@ export const {
     },
   },
   events: {
-    async signIn({ user, account }) {
-      console.log("sign in event");
-    },
-    async signOut() {
-      console.log("sign out event");
-    },
+    async signIn({ user, account }) {},
+    async signOut() {},
   },
 });

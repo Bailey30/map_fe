@@ -31,11 +31,8 @@ export default function ReviewList({
   location,
 }: ReviewListProps) {
   const dispatch = useAppDispatch();
-  console.log({ session });
-  console.log(session?.user?.id);
 
   useEffect(() => {
-    console.log("review list useffect");
     dispatch(SET_LOADING(false));
   }, []);
 
@@ -44,7 +41,6 @@ export default function ReviewList({
       <div className={styles.detailsContainer} id="details">
         {reviews &&
           reviews.map((review: Review, i: number) => {
-            console.log(images);
             const img = review.imageId
               ? images[review.imageId.toString()]
               : null;

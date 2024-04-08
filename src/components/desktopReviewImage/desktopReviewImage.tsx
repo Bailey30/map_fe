@@ -54,7 +54,6 @@ export default function DesktopReviewImage({ setImageData, imgString }: Props) {
 
       // convert dataUrl to file so we can compress it
       const file = dataUrlToFile(cropped, "image.jpeg");
-      console.log({ file });
 
       // compress the file
       new Compressor(file, {
@@ -143,7 +142,6 @@ const resizeImg = (file: any) => {
         100, // new image quality
         0, // rotation degree
         (uri) => {
-          console.log(uri); // resized new image uri
           img = uri;
           resolve(uri);
         },

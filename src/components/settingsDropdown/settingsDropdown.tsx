@@ -2,7 +2,6 @@
 import eye from "../../../public/images/eye.png";
 import { logOut } from "@/lib/user_server_actions";
 import styles from "./settingsDropdown.module.scss";
-console.log({ styles });
 import clsx from "clsx";
 import Image from "next/image";
 import tick from "../../../public/images/tick.svg";
@@ -27,10 +26,6 @@ export default function SettingsDropdown({ session, show }: Props) {
   function handleFocus() {
     console.log("on blur");
   }
-
-  useEffect(() => {
-    console.log({ recentPrice });
-  }, [recentPrice]);
 
   // <li onBlur={handleFocus} onFocus={() => console.log("focus")}>
   //   <button

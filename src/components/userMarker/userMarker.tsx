@@ -6,13 +6,13 @@ import location from "../../../public/images/location.webp";
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./userMarker.module.css";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+import { group } from "console";
 
-interface DeviceOrientationEventiOS extends DeviceOrientationEvent {
+interface DeviceMotionEventiOS extends DeviceMotionEvent {
   requestPermission?: () => Promise<"granted" | "denied">;
 }
-const requestPermission = (
-  DeviceOrientationEvent as unknown as DeviceOrientationEventiOS
-).requestPermission;
+const requestPermission = (DeviceMotionEvent as unknown as DeviceMotionEventiOS)
+  .requestPermission;
 const iOS = typeof requestPermission === "function";
 
 export const UserMarker = memo(function UserMarker() {
@@ -24,10 +24,21 @@ export const UserMarker = memo(function UserMarker() {
     longitude: number;
   }>({ latitude: 0, longitude: 0 });
 
+  // set location of user marker on initial load then sets window functions to update location
   useEffect(() => {
     setLocation();
+
+    if (typeof window !== "undefined") {
+      window.onload = function () {
+        setLocation();
+      };
+      window.onfocus = function () {
+        setLocation();
+      };
+    }
   }, []);
 
+  // initialise onClick handler on map as permission for motion device events can only be triggered after user interaction
   useEffect(() => {
     if (motionPermission === false) {
       document
@@ -36,6 +47,7 @@ export const UserMarker = memo(function UserMarker() {
     }
   }, [motionPermission]);
 
+  // request the permission for motion events
   function handlePermissions() {
     if (iOS) {
       requestPermission()
@@ -50,20 +62,21 @@ export const UserMarker = memo(function UserMarker() {
       handleDeviceMotion();
     }
   }
-  // permissions state
 
+  // detect motion and update location
   function handleDeviceMotion() {
     setMotionPermission(true);
     window.addEventListener("devicemotion", (event) => {
-      console.log(event);
       const x = event.acceleration?.x;
       const y = event.acceleration?.y;
       if (x && y) {
         if (x > 1 || x < -1) {
-          setMotion((existing: any) => ({ ...existing, x: x }));
+          // setMotion((existing: any) => ({ ...existing, x: x }));
+          setLocation();
         }
         if (y > 1 || y < -1) {
-          setMotion((existing: any) => ({ ...existing, y: y }));
+          // setMotion((existing: any) => ({ ...existing, y: y }));
+          setLocation();
         }
       }
     });
@@ -72,17 +85,8 @@ export const UserMarker = memo(function UserMarker() {
       ?.removeEventListener("click", handlePermissions);
   }
 
-  if (typeof window !== "undefined") {
-    window.onload = function () {
-      setLocation();
-    };
-    window.onfocus = function () {
-      setLocation();
-    };
-  }
-
+  // set the position of the use marker with the coordinates of the device
   function setLocation() {
-    console.log("setting user location");
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         setUserLocation({
@@ -99,9 +103,6 @@ export const UserMarker = memo(function UserMarker() {
         latitude={userLocation.latitude}
         longitude={userLocation.longitude}
       >
-        <div className={styles.motion}>
-          {motion.x} {motion.y}
-        </div>
         <Image src={location} alt={"location of user"} height={40} width={40} />
       </Marker>
     </div>

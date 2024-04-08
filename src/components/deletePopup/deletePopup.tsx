@@ -26,10 +26,8 @@ export default function DeletePopup({ review, setDeletePopup }: Props) {
   }
 
   useEffect(() => {
-    console.log({ response });
     // not working for some reason
     // seems to be page reload in delete server action
-
     // response?.success === true && setDeletePopup(false);
     // response?.redirect === true && router.push("/");
   }, [response]);
