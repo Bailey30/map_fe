@@ -13,7 +13,7 @@ import clsx from "clsx";
 
 const LoginPage = () => {
   const router = useRouter();
-  const [errorMessage, dispatch, isPending] = useFormState(login, undefined);
+  const [errorMessage, dispatch, _] = useFormState(login, undefined);
 
   useEffect(() => {
     console.log("login error", errorMessage);
@@ -45,6 +45,9 @@ const LoginPage = () => {
           </p>
         )}
         <Link href="/register">Don&apos;t have an account? Create one.</Link>
+        <Link href="/resetpassword" className={styles.password}>
+          Forgot your password?
+        </Link>
         <Pending />
       </form>
     </div>

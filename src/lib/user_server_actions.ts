@@ -22,7 +22,6 @@ export async function register(
       String(username).toLowerCase(),
     );
 
-    console.log({ user });
     // const errors = validate([
     //     {
     //         field: "username",
@@ -38,7 +37,6 @@ export async function register(
 
     const errors = validateRegisterInputs(formData, user);
     if (errors.success === false) {
-      // console.log({ response })
       console.log("there was errors", errors.errors);
       return {
         success: false,
@@ -94,4 +92,34 @@ export async function login(prevState: any, formData: any) {
 export async function logOut() {
   console.log("logging out");
   await signOut();
+}
+
+export async function sendPasswordResetEmail(
+  prevState: any,
+  formData: FormData,
+): Promise<ServerActionResponse> {
+  const { email } = Object.fromEntries(formData);
+
+  if (!email) {
+    return {
+      success: false,
+      errors: "No email entered",
+    };
+  }
+
+  const user = await findUser(String(email), "");
+  console.log({ email });
+
+  if (user) {
+    const res = await fetch("http://localhost:3001/sendemail", {
+      method: "POST",
+      body: JSON.stringify({ email: String(email), userId: user.id }),
+    });
+    console.log({ res });
+  }
+
+  return {
+    success: true,
+    errors: null,
+  };
 }

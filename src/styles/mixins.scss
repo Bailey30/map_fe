@@ -1,60 +1,60 @@
 @use "./variable.scss" as *;
 
 @mixin input {
-    width: 100%;
-    background: none;
-    border-style: none;
+  width: 100%;
+  background: none;
+  border-style: none;
+  border: 1px solid $grey;
+  border-radius: 5px;
+  height: 34px;
+  margin-bottom: 7px;
+  padding-left: 7px;
+  font-size: 16px;
+  color: $font;
+
+  &.comment {
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.error {
+    border: 1px solid red;
+  }
+
+  &.noError {
     border: 1px solid $grey;
-    border-radius: 5px;
-    height: 34px;
-    margin-bottom: 7px;
-    padding-left: 7px;
-    font-size: 16px;
-    color: $font;
-
-    &.comment {
-        height: 40px;
-        margin-bottom: 10px;
-    }
-
-    &:focus {
-        outline: none;
-    }
-
-    &.error {
-        border: 1px solid red;
-    }
-
-    &.noError {
-        border: 1px solid $grey;
-    }
+  }
 }
 
 @mixin label {
-    display: block;
-    margin-bottom: 5px;
-    // color: #F0D878;
-    font-size: 16px;
-    font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+  // color: #F0D878;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 @mixin submitButton {
-    background: white;
-    border-radius: 15px;
-    padding: 10px;
-    color: black;
+  background: white;
+  border-radius: 15px;
+  padding: 10px;
+  color: black;
 }
 
 @mixin textArea {
-    @include input;
-    padding-top: 7px;
+  @include input;
+  padding-top: 7px;
 }
 
 @mixin uiButton {
-    position: relative;
-    background: white;
-    height: 29px;
-    padding: 0 10px;
-    border-radius: 4px;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
+  position: relative;
+  background: white;
+  height: 29px;
+  padding: 0 10px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
 }

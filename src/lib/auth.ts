@@ -54,6 +54,7 @@ export const {
       return url;
     },
     async jwt({ token, account }) {
+      console.log({ token });
       if (account) {
         token.accessToken = account.access_token;
       }
