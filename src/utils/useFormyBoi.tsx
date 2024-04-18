@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import {
   Config,
   ConfigArray,
@@ -30,7 +30,7 @@ const valuesReducer = (state: FormyState, action: any) => {
 type Errors = {
   [key: string]: errorsObj;
 };
-const errorsReducer = (errors: Errors, action: any) => {
+const errorsReducer = (errors: errorsObj, action: any) => {
   switch (action.type) {
     case "SET_ERRORS":
       console.log({ action });
@@ -38,7 +38,8 @@ const errorsReducer = (errors: Errors, action: any) => {
       // remove all console logs
       return {
         ...errors,
-        [action.name]: action.value,
+        ...action.errObj,
+        // [action.name]: action.value,
       };
     default:
       return errors;
@@ -66,7 +67,46 @@ export default function UseFormyBoi(
 ) {
   const [regexFuncState, regexFuncDispatch] = useReducer(regexReducer, {});
 
+  // state the holds the modified config array. Exists because the config needs to be modified after the user creates it.
+  const [configState, setConfigState] = useState<ConfigArray>([]);
+
+  function createConfigState(fieldsArr: ConfigArray) {
+    const state: ConfigArray = [...fieldsArr];
+    fieldsArr.forEach((field: Config) => {
+      if (Object.hasOwn(field, "mustMatchField")) {
+        // get the name of the field it must match
+        const fieldToMatch = isOptions(field.mustMatchField).is;
+
+        // get index of the config to modify
+        const indexOfConfigToModify = state.findIndex(
+          (f: Config) => f.name === fieldToMatch,
+        );
+
+        // get the config object out of the config array
+        const configToModify = state.find(
+          (f: Config) => f.name === fieldToMatch,
+        );
+        if (configToModify) {
+          // modify the object in the array
+          state[indexOfConfigToModify] = {
+            ...configToModify,
+            mustMatchField: field.name,
+          };
+        }
+      }
+
+      console.log({ state });
+
+      setConfigState(state);
+
+      return state;
+    });
+  }
+
+  // creates the state object that holds values for the input fields
+  // also creates regex function state
   function createState(fieldsArr: ConfigArray): FormyState {
+    createConfigState(fieldsArr);
     const state: FormyState = {};
     fieldsArr.forEach((field: Config) => {
       createRegexFunctions(field);
@@ -75,12 +115,16 @@ export default function UseFormyBoi(
     return state;
   }
 
+  // state managing the values of the input fields
   const [values, valuesDispatch] = useReducer(
     valuesReducer,
     useMemo(() => createState(fields), [init]),
   );
+
+  // state managing errors of the input fields
   const [errors, errorsDispatch] = useReducer(errorsReducer, {});
 
+  // regex function are run onChange instead of onBlur so seperated into their own state
   function createRegexFunctions(field: Config): void {
     // if one of the keys in the config object has the name of a function that validates agaist regex
     if (regexFunctions.some((func) => Object.keys(field).includes(func))) {
@@ -89,7 +133,6 @@ export default function UseFormyBoi(
       const fieldRegex = Object.keys(field).filter((key: string) =>
         regexFunctions.includes(key),
       );
-      console.log({ fieldRegex });
       regexFuncDispatch({
         type: "SET_REGEX",
         name: field.name,
@@ -111,11 +154,10 @@ export default function UseFormyBoi(
     return regexFunc(value);
   }
 
+  // function that updates formy state, also checks values against any regex given
   const setValue = useCallback(
     (event: any) => {
-      console.log("set value");
       const { name, value } = event.target;
-      console.log({ name });
       const handledValue = handleAnyRegex(name, value);
       if (handledValue !== undefined) {
         valuesDispatch({ type: "SET_STATE", field: name, value: handledValue });
@@ -127,43 +169,63 @@ export default function UseFormyBoi(
   // function that performs any validation function
   const validators = useCallback(
     (e?: React.ChangeEvent<any>) => {
-      const { name } = e?.target;
-      // get the config for the field from the array of fields
-      const field = fields.filter((field: Config) => field.name === name);
+      const name = e?.target.name ?? "all";
+
+      console.log({ name });
+
+      console.log({ configState });
+      // get the config of field and any fields that must match it
+      const fieldsToValidate = getFieldsToValidate(configState, name);
+
+      console.log({ fieldsToValidate });
+
+      // update the array of fields with the current values from state
+      const currentFieldWithFieldsToMatch = fieldsToValidate.map(
+        (field: Config) => {
+          return { ...field, value: values[field.name] };
+        },
+      );
+
+      console.log({ currentFieldWithFieldsToMatch });
+
       // function that performs validation functions for the specific field
+      const errObj = validate(currentFieldWithFieldsToMatch, values);
 
-      const fieldWithCurrentValue = {
-        ...field[0],
-        value: values[field[0].name],
-      };
-      console.log({ fieldWithCurrentValue });
-      const errObj = validate([fieldWithCurrentValue], values);
-
-      // handle mustMatc here
-      // const matches = handleMustMatch(field[0], values);
-
-      const key = Object.keys(errObj)[0];
-      const value = Object.values(errObj)[0];
-      console.log("validators");
-      errorsDispatch({ type: "SET_ERRORS", name: key, value: value });
+      console.log({ errObj });
+      // const key = Object.keys(errObj)[0];
+      // const value = Object.values(errObj)[0];
+      // errorsDispatch({ type: "SET_ERRORS", name: key, value: value });
+      errorsDispatch({ type: "SET_ERRORS", errObj });
     },
-    [values],
+    [values, configState],
   );
 
   return { values, setValue, errors, validators };
 }
 
-function handleMustMatch(field: Config, values: FormyState) {
-  if (Object.hasOwn(field, "mustMatchField")) {
-    // const valueToMatch = values.filter((fieldToMatch: Config) => fieldToMatch.name === field.mustMatchField && fieldToMatch.)
-    // const valueToMatch = values[field.name];
-    // const matches = mustMatchField(
-    //   field,
-    //   isOptions(field.mustMatchField),
-    //   valueToMatch,
-    // );
-    // return matches;
-  } else {
-    return null;
-  }
+// gets the config of the field in use (or just onBlurred) and any fields which must match it. Currently only matters for matching passwords
+function getFieldsToValidate(
+  configState: ConfigArray,
+  name: string,
+): ConfigArray {
+  console.log({ configState });
+  console.log({ name });
+  // get the config for the field from the array of fields
+  const field =
+    name === "all"
+      ? configState
+      : configState.filter((field: Config) => field.name === name);
+
+  console.log({ field });
+
+  // get any fields that match the mustMatch field key
+  const matchFields = configState.filter(
+    (f: Config) => isOptions(field[0].mustMatchField).is === f.name,
+  );
+
+  // join the array of fields to be validated
+  // matching fields need to be validated at the same time
+  const allFields = field.concat(matchFields);
+
+  return allFields;
 }

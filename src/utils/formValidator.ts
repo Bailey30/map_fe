@@ -78,7 +78,8 @@ export const regexFunction: RegexFuncs = {
 // Validation functions
 
 function required(input: Config, options: Options) {
-  if (!input.value) {
+  console.log("required", input.value);
+  if (!input.value || input.value === null) {
     return {
       valid: false,
       message: options.customResponse ?? `${input.name} is required`,
@@ -169,15 +170,18 @@ export function validate(
   formyState?: FormyState,
 ): errorsObj {
   const errors: errorsObj = {};
-
+  // for each input
   config.forEach((input: Config) => {
+    // errors are null until proven otherwise, but field name must exists in errors object so state can be modified. Checks only care if the value is null or not
+    errors[input.name] = null;
+    // for each validation function
     // each key value pair is a function that validates the input (except for "name" and "value"), this goes over each pair
     Object.entries(input).forEach((entry) => {
       // key is the name of the function
       const [key, configValue]: [string, any] = entry;
       const functionKey = key as ValidationFunctionNames;
 
-      // some functions dont need to run at the same time as other so are not counted as validators
+      // some functions dont need to run at the same time as other so are not counted as validators - also includes "name" and "value"
       if (isNotAValidator(functionKey)) return;
 
       // select the function using the function key from the config object
@@ -190,10 +194,10 @@ export function validate(
         formyState,
       );
 
+      console.log({ isValid });
+
       if (isValid.valid === false) {
         errors[input.name] = isValid.message!;
-      } else {
-        errors[input.name] = null;
       }
     });
   });
@@ -229,10 +233,13 @@ export const regexFunctions = ["isPriceRegex", "regex"];
 
 // External utils
 
+// check if there are values that are not null in the object
 export function hasErrors(errors: errorsObj) {
-  if (Object.keys(errors).length > 0) {
-    return true;
-  } else {
-    return false;
-  }
+  let hasErrs = false;
+  Object.values(errors).forEach((err) => {
+    if (err !== null) {
+      hasErrs = true;
+    }
+  });
+  return hasErrs;
 }
