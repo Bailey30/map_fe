@@ -12,10 +12,17 @@ import {
   isOptions,
 } from "./formValidator";
 
+type keyT = keyof ReturnType<typeof createFormyState>;
 export type FormyState = {
-  [value: string]: number | string | undefined;
+  [key: string]: number | string | undefined;
 };
-const valuesReducer = (state: FormyState, action: any) => {
+// export type FormyState<T> = Record<string, T>;
+function fn() {
+  return { one: "one", two: "two" };
+}
+
+export type FormySte = ReturnType<typeof createFormyState>;
+function valuesReducer(state: FormyState, action: any) {
   switch (action.type) {
     case "SET_STATE":
       return {
@@ -25,21 +32,16 @@ const valuesReducer = (state: FormyState, action: any) => {
     default:
       return state;
   }
-};
+}
 
-type Errors = {
-  [key: string]: errorsObj;
-};
 const errorsReducer = (errors: errorsObj, action: any) => {
   switch (action.type) {
     case "SET_ERRORS":
-      console.log({ action });
       // should it remove the field name from state if the error is null?
       // remove all console logs
       return {
         ...errors,
         ...action.errObj,
-        // [action.name]: action.value,
       };
     default:
       return errors;
@@ -60,6 +62,18 @@ const regexReducer = (fieldRegex: FieldRegex, action: any) => {
       return fieldRegex;
   }
 };
+
+function createFormyState(
+  fieldsArr: ConfigArray,
+  createRegexFunctions: (field: Config) => void,
+) {
+  const state: FormyState = {};
+  fieldsArr.forEach((field: Config) => {
+    createRegexFunctions(field);
+    state[field.name] = (field.value as typeof field.name) ?? "";
+  });
+  return state;
+}
 
 export default function UseFormyBoi(
   fields: ConfigArray,
@@ -95,8 +109,6 @@ export default function UseFormyBoi(
         }
       }
 
-      console.log({ state });
-
       setConfigState(state);
 
       return state;
@@ -107,11 +119,13 @@ export default function UseFormyBoi(
   // also creates regex function state
   function createState(fieldsArr: ConfigArray): FormyState {
     createConfigState(fieldsArr);
-    const state: FormyState = {};
-    fieldsArr.forEach((field: Config) => {
-      createRegexFunctions(field);
-      state[field.name] = field.value ?? "";
-    });
+    // const state: FormyState = {};
+    // fieldsArr.forEach((field: Config) => {
+    //     createRegexFunctions(field);
+    //     state[field.name] = field.value ?? "";
+    // });
+
+    const state = createFormyState(fieldsArr, createRegexFunctions);
     return state;
   }
 
@@ -171,13 +185,8 @@ export default function UseFormyBoi(
     (e?: React.ChangeEvent<any>) => {
       const name = e?.target.name ?? "all";
 
-      console.log({ name });
-
-      console.log({ configState });
       // get the config of field and any fields that must match it
       const fieldsToValidate = getFieldsToValidate(configState, name);
-
-      console.log({ fieldsToValidate });
 
       // update the array of fields with the current values from state
       const currentFieldWithFieldsToMatch = fieldsToValidate.map(
@@ -186,15 +195,12 @@ export default function UseFormyBoi(
         },
       );
 
-      console.log({ currentFieldWithFieldsToMatch });
-
       // function that performs validation functions for the specific field
       const errObj = validate(currentFieldWithFieldsToMatch, values);
 
-      console.log({ errObj });
       // const key = Object.keys(errObj)[0];
       // const value = Object.values(errObj)[0];
-      // errorsDispatch({ type: "SET_ERRORS", name: key, value: value });
+      // errorsDispatch({type: "SET_ERRORS", name: key, value: value });
       errorsDispatch({ type: "SET_ERRORS", errObj });
     },
     [values, configState],
@@ -208,15 +214,11 @@ function getFieldsToValidate(
   configState: ConfigArray,
   name: string,
 ): ConfigArray {
-  console.log({ configState });
-  console.log({ name });
   // get the config for the field from the array of fields
   const field =
     name === "all"
       ? configState
       : configState.filter((field: Config) => field.name === name);
-
-  console.log({ field });
 
   // get any fields that match the mustMatch field key
   const matchFields = configState.filter(

@@ -1,138 +1,143 @@
 @use "../../styles/mixins.scss" as *;
 
 .settingsDropdown {
-    pointer-events: all;
-    @include uiButton;
+  pointer-events: all;
+  @include uiButton;
 
-    border-radius: 15px;
-    position: absolute;
-    right: 160px;
-    height: fit-content;
-    width: 200px;
+  border-radius: 15px;
+  position: absolute;
+  right: 160px;
+  height: fit-content;
+  width: 200px;
+  font-size: 13px;
+
+  li {
+    list-style-type: none;
+    border-bottom: 1px solid grey;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    button,
+    a {
+      cursor: pointer;
+      height: 29px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 40px;
+      height: 25px;
+      padding-inline: 15px;
+      background-color: #3B3B3B;
+      color: white;
+
+      &:hover {
+        background: #3B3B3B;
+      }
+    }
+
+    img {
+      height: 18px;
+      width: auto;
+    }
+  }
+
+  li:last-child {
+    border: none;
+  }
+
+  li:first-child {
+    padding: 10px 0;
+  }
+
+  position: absolute;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  height: auto;
+
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
+  rgba(0, 0, 0, 0.23) 3px 3px 6px;
+
+  li {
+    min-height: 29px;
     font-size: 13px;
+    display: flex;
+    justify-content: space-between;
 
-    li {
-        list-style-type: none;
-        border-bottom: 1px solid grey;
-        display: flex;
-        justify-content: start;
-        align-items: center;
-
-        button,
-        a {
-            height: 29px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 40px;
-            height: 25px;
-            padding-inline: 15px;
-            background-color: #3B3B3B;
-            color: white;
-        }
-
-        img {
-            height: 18px;
-            width: auto;
-        }
+    // checkbox
+    input[type="checkbox"] {
+      position: absolute;
+      // z-index: 2;
+      right: 5px;
+      opacity: 0;
+      cursor: pointer;
+      height: 20px;
+      width: 20px;
     }
 
-    li:last-child {
-        border: none;
-    }
-
-    li:first-child {
-        padding: 10px 0;
-    }
-
-    position: absolute;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    height: auto;
-
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
-    rgba(0, 0, 0, 0.23) 3px 3px 6px;
-
-    li {
-        min-height: 29px;
-        font-size: 13px;
-        display: flex;
-        justify-content: space-between;
-
-        // checkbox
-        input[type="checkbox"] {
-            position: absolute;
-            // z-index: 2;
-            right: 5px;
-            opacity: 0;
-            cursor: pointer;
-            height: 20px;
-            width: 20px;
-        }
-
-        input[type="checkbox"]:focus {
-            &~.checkmark::before {
-                // ~ general sibling combinator select siblings after the input element
-                opacity: 1;
-                border: 1px solid black;
-            }
-        }
-
-        input[type="checkbox"]:checked+.checkmark img {
-            opacity: 1;
-        }
-
-        .checkmark {
-            // opacity: 0;
-            position: absolute;
-            right: 10px;
-            height: 15px;
-            width: 15px;
-            // background: lightgray;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid grey;
-
-            img {
-                opacity: 0;
-                height: 12px;
-                width: 12px;
-            }
-
-            &::before {
-                content: "";
-                position: absolute;
-                width: 150%;
-                height: 150%;
-                left: -32%;
-                top: -25%;
-                opacity: 0;
-            }
-        }
-
-    }
-
-    transform: scale(0);
-    opacity: 0;
-    transform-origin:bottom right;
-    transition: all 0.25s ease;
-    pointer-events: none;
-    // display: none;
-    visibility: hidden;
-
-    &.show {
-        // display: block;
-        visibility: visible;
+    input[type="checkbox"]:focus {
+      &~.checkmark::before {
+        // ~ general sibling combinator select siblings after the input element
         opacity: 1;
-        transform: scale(1);
-        pointer-events: all;
+        border: 1px solid black;
+      }
     }
+
+    input[type="checkbox"]:checked+.checkmark img {
+      opacity: 1;
+    }
+
+    .checkmark {
+      // opacity: 0;
+      position: absolute;
+      right: 10px;
+      height: 15px;
+      width: 15px;
+      // background: lightgray;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid grey;
+
+      img {
+        opacity: 0;
+        height: 12px;
+        width: 12px;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 150%;
+        height: 150%;
+        left: -32%;
+        top: -25%;
+        opacity: 0;
+      }
+    }
+
+  }
+
+  transform: scale(0);
+  opacity: 0;
+  transform-origin:bottom right;
+  transition: all 0.25s ease;
+  pointer-events: none;
+  // display: none;
+  visibility: hidden;
+
+  &.show {
+    // display: block;
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: all;
+  }
 }
 
 .settingsDropdown ul li input[type=checkbox]:focus+.recentPriceLabel {
-    border: 1px solid red;
+  border: 1px solid red;
 }

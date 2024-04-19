@@ -57,7 +57,11 @@ export default function SettingsDropdown({ session, show }: Props) {
         <li role="presentation" tabIndex={-1}>
           {session ? (
             <form action={logOut}>
-              <button className={styles.addButton} role="menuitem">
+              <button
+                className={clsx(styles.addButton, styles.noHover)}
+                id="noHover"
+                role="menuitem"
+              >
                 Log out
               </button>
             </form>
