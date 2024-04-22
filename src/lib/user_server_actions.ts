@@ -1,11 +1,12 @@
 "use server";
 import { redirect } from "next/navigation";
 import prisma from "../lib/db";
-import { signIn, signOut } from "./auth";
+import { POST, signIn, signOut } from "./auth";
 import { AuthError } from "next-auth";
 import { generatePassword, validateRegisterInputs } from "../utils/userUtils";
-import { ServerActionResponse } from "@/utils/types";
-import { createUser, findUser } from "./user_repository";
+import { PasswordResetCodeResponse, ServerActionResponse } from "@/utils/types";
+import { createUser, findUser, updatePassword } from "./user_repository";
+import { extractFormData } from "@/utils/formUtils";
 
 export async function register(
   prevData: any,
@@ -108,18 +109,64 @@ export async function sendPasswordResetEmail(
   }
 
   const user = await findUser(String(email), "");
-  console.log({ email });
 
   if (user) {
-    const res = await fetch("http://localhost:3001/sendemail", {
-      method: "POST",
-      body: JSON.stringify({ email: String(email), userId: user.id }),
-    });
-    console.log({ res });
+    await fetch(
+      (process.env.NEXT_PUBLIC_GUINNESS_MAP_SERVICES_URL as string) +
+        "/sendemail",
+      {
+        method: "POST",
+        body: JSON.stringify({ email: String(email), userId: user.id }),
+      },
+    );
   }
 
+  // it will return success regardless of whether there is a user or not
   return {
     success: true,
     errors: null,
   };
+}
+
+export async function resetPassword(
+  extraData: any,
+  prevState: any,
+  formData: FormData,
+): Promise<ServerActionResponse> {
+  const { password } = extractFormData(formData);
+
+  try {
+    const res: PasswordResetCodeResponse = await fetch(
+      (process.env.NEXT_PUBLIC_GUINNESS_MAP_SERVICES_URL as string) +
+        "/validatetoken",
+      {
+        method: "POST",
+        body: JSON.stringify({ token: extraData.code }),
+      },
+    ).then(async (res) => {
+      return await res.json();
+    });
+
+    if (res.Success === true) {
+      console.log("res Success");
+      // reset the password
+      const hashedPassword = await generatePassword(password);
+      await updatePassword(hashedPassword, res.UserId);
+    } else {
+      return {
+        success: false,
+        errors: "Error validating token. Request new email.",
+      };
+    }
+
+    return {
+      success: true,
+      errors: null,
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      errors: err.message,
+    };
+  }
 }

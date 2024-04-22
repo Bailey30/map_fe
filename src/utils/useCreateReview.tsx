@@ -10,12 +10,16 @@ interface Props {
 }
 export default function UseCreateReview(action: ServerAction) {
   const location = useAppSelector((state) => state.map);
+
   const [imageData, setImageData] = useState<string>("");
+
   const reviewData = {
     mapState: location,
     imageData,
   };
+
   const actionAndData = action.bind(null, reviewData);
+
   const [message, formAction]: [
     state: ServerActionResponse | null,
     dispatch: (payload: any) => void,

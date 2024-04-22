@@ -33,10 +33,6 @@ export default function RegisterPage() {
     }
   }, [messages]);
 
-  useEffect(() => {
-    console.log({ isPending });
-  }, [isPending]);
-
   return (
     <div className={styles.pageContainer}>
       <button onClick={back} className={`${styles.close}`}>

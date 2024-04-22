@@ -66,8 +66,8 @@ export default function ResetPasswordPage() {
         <form className={styles.form}>
           <h1>Email sent!</h1>
           <p>
-            If there is an account associated with the email you entered, you'll
-            receive a link to reset your password.
+            If there is an account associated with the email you entered,
+            you&apos;ll receive a link to reset your password.
           </p>
           <p className={clsx(styles.instruction)}>
             Make sure to check your junk or spam folders.

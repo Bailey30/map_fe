@@ -88,3 +88,8 @@ export type GeoJSON = {
   type: string;
   features: GeoJSONFeature[];
 };
+
+export type PasswordResetCodeResponse = {
+  Success: boolean;
+  UserId: number;
+};

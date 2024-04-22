@@ -12,6 +12,7 @@
   align-items: center;
   // background: var(--bg);
   background-color: white;
+  padding: 20px;
 
   .close {
     cursor: pointer;
@@ -93,4 +94,27 @@
     left: 50%;
     transform: translateX(-50%);
   }
+
+  a {
+    text-align: center;
+    font-size: 14px;
+
+  }
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+
+
+  .link {
+    display: inline-block;
+    text-align: center;
+    text-decoration: underline;
+
+    cursor: pointer;
+    padding-top: 20px;
+
+  }
+
 }
