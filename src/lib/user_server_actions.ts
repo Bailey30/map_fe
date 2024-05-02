@@ -147,12 +147,15 @@ export async function resetPassword(
       return await res.json();
     });
 
-    if (res.Success === true) {
-      console.log("res Success");
+    console.log({ res });
+
+    if (res.success === true) {
+      console.log("success was true");
       // reset the password
       const hashedPassword = await generatePassword(password);
-      await updatePassword(hashedPassword, res.UserId);
+      await updatePassword(hashedPassword, res.userId);
     } else {
+      console.log("res was not success");
       return {
         success: false,
         errors: "Error validating token. Request new email.",

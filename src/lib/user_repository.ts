@@ -72,6 +72,7 @@ export async function updatePassword(
 ): Promise<User> {
   console.log("updating password");
   console.log({ password });
+  console.log({ userId });
   try {
     const user = await prisma?.user.update({
       where: { id: userId },
@@ -84,6 +85,7 @@ export async function updatePassword(
 
     return user;
   } catch (err: any) {
+    console.log("error resetting password", err);
     throw new Error("Error resetting password", err);
   }
 }

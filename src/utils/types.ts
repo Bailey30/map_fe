@@ -90,6 +90,6 @@ export type GeoJSON = {
 };
 
 export type PasswordResetCodeResponse = {
-  Success: boolean;
-  UserId: number;
+  success: boolean;
+  userId: number;
 };
