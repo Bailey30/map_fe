@@ -22,18 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryProvider>
-          <StoreProvider>
-            <main style={{ position: "relative" }} id="main">
-              <Suspense fallback={<MapLoader />}>
-                <MainContainer />
-              </Suspense>
-              <RouteChangeListener />
-              <WelcomePopup />
-              {children}
-            </main>
-          </StoreProvider>
-        </QueryProvider>
+        <StoreProvider>
+          <main style={{ position: "relative" }} id="main">
+            <Suspense fallback={<MapLoader />}>
+              <MainContainer />
+            </Suspense>
+            <RouteChangeListener />
+            <WelcomePopup />
+            {children}
+          </main>
+        </StoreProvider>
       </body>
     </html>
   );

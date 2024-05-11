@@ -47,6 +47,7 @@ export const {
       return true;
     },
     async redirect({ url, baseUrl }) {
+      console.log("redirect called");
       // called after any redirect. Login causes a redirect
       if (url.includes("/login")) {
         return baseUrl;

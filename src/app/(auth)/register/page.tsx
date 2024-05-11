@@ -2,7 +2,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import Image from "next/image";
 import close from "../../../../public/images/close.png";
-import { register } from "@/lib/user_server_actions";
+import { login, register } from "@/lib/user_server_actions";
 import styles from "../auth.module.scss";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,20 +16,26 @@ import clsx from "clsx";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [messages, serverAction]: [
+  const [messages, serverAction, _]: [
     state: ServerActionResponse | undefined,
     dispatch: (payload: FormData) => void,
     isPending: boolean,
   ] = useFormState(register, undefined);
 
-  console.log("register messages", messages);
   function back() {
     router.push("/");
   }
+
   useEffect(() => {
-    console.log({ messages });
     if (messages?.success === true) {
-      router.push("/");
+      const { email, password } = messages!.body!.user;
+      const formData = new FormData();
+      formData.append("password", password);
+      formData.append("email", email);
+
+      login("", formData).then(() => {
+        console.log("Redirecting to / after logging in");
+      });
     }
   }, [messages]);
 
