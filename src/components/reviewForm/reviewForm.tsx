@@ -9,10 +9,9 @@ import Pending from "../pending/pending";
 import StarRating from "../starRating/starRating";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { isPriceRegex } from "@/utils/formValidator";
+import { hasErrors, isPriceRegex } from "@/utils/formValidator";
 import UseFormyBoi from "@/utils/useFormyBoi";
-import { Review, ServerActionResponse } from "@/utils/types";
-import { formatBase64String } from "@/utils/reviewUtils";
+import { Review } from "@/utils/types";
 import { useAppSelector } from "@/redux/hooks";
 import { createReviewSQL, updateReviewAction } from "@/lib/server_actions";
 import FormButton from "../formButton/formButton";
@@ -26,6 +25,10 @@ interface ReviewFormProps {
   action: "edit" | "add";
   review?: Review;
 }
+
+// ReviewForm is used for the edit review component and add new review to location component
+// Creating a location and review uses the form defined in location/page.tsx
+// When adding a review it returns form errors from the server response as well
 
 export default function ReviewForm({
   locationId,
@@ -47,11 +50,14 @@ export default function ReviewForm({
       value: review?.price.toString() ?? "",
       required: true,
       isPriceRegex: true,
+      maxValue: 100,
     },
     { name: "comments", minLen: 140, value: review?.comments ?? "" },
   ]);
 
   useEffect(() => {
+    console.log({ errors });
+    console.log({ message });
     if (message?.success === true) {
       if (message.action === "update") {
         router.push(`/location/success?action=update&location=${locationId}`);
@@ -60,6 +66,10 @@ export default function ReviewForm({
       }
     }
   }, [message]);
+
+  useEffect(() => {
+    console.log({ errors });
+  }, [errors]);
 
   return (
     <>
@@ -125,14 +135,16 @@ export default function ReviewForm({
                     styles.input,
                     styles.price,
                     styles.pricee,
-                    message?.errors?.price && styles.error,
+                    errors?.price && styles.error,
+                    message?.errors.price && styles.error,
                   )}
                   aria-required="true"
                   value={values.price}
                   onChange={setValue}
+                  onBlur={validators}
                 ></input>
               </div>
-              {message?.errors?.price && (
+              {(message?.errors?.price || errors.price) && (
                 <p className={clsx(styles.hiddenAccessibilityAlert)}>
                   {message?.errors?.price}
                 </p>
@@ -172,7 +184,13 @@ export default function ReviewForm({
           />
 
           <div className={styles.buttonContainer}>
-            <FormButton text={"Save"} />
+            <FormButton
+              text={"Save"}
+              disabled={
+                hasErrors(errors) ||
+                (message?.errors && hasErrors(message?.errors))
+              }
+            />
             <Link
               className={clsx(styles.button, styles.cancel)}
               href={`/location/${locationId}`}

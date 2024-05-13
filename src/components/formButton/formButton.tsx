@@ -9,10 +9,6 @@ interface Props {
 export default function FormButton({ text, disabled, onClick }: Props) {
   const status = useFormStatus();
 
-  useEffect(() => {
-    console.log({ disabled });
-  });
-
   return (
     <button
       type="submit"

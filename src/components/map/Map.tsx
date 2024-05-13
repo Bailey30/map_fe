@@ -85,11 +85,13 @@ export default function MapComponent({ data }: Props) {
     router.push(`/location/${mark.id}`);
   }
 
+  console.log({ data });
   const markers = useMemo(
     () =>
       data
         ?.filter((mark: Location) => {
           const recentReview = mark.Review![mark.Review!.length - 1];
+          console.log({ recentReview });
           return (
             recentReview.price >= priceRange.min &&
             recentReview.price <= priceRange.max &&
@@ -125,9 +127,10 @@ export default function MapComponent({ data }: Props) {
       data
         ?.filter((mark: Location) => {
           const recentReview = mark.Review![mark.Review!.length - 1];
+          console.log({ recentReview });
           return (
-            recentReview.price >= priceRange.min &&
-            recentReview.price <= priceRange.max &&
+            recentReview?.price >= priceRange.min &&
+            recentReview?.price <= priceRange.max &&
             mark
           );
         })

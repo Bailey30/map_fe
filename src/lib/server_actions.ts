@@ -79,6 +79,7 @@ export async function createReviewSQL(
           is: true,
           customResponse: "please add how much the guinness cost",
         },
+        maxValue: 100,
       },
       {
         name: "rating",

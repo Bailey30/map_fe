@@ -27,6 +27,7 @@ export type Config = {
   required?: boolean | Options;
   minLen?: number | Options;
   maxLen?: number | Options;
+  maxValue?: number | Options;
   isEqual?: any | Options;
   isPriceRegex?: boolean;
   mustMatchField?: string | Options;
@@ -46,17 +47,22 @@ enum ValidationFunctionNames {
   required = "required",
   minLen = "minLen",
   maxLen = "maxLen",
+  maxValue = "maxValue",
+  minValue = "minValue",
   isEqual = "isEqual",
   mustMatchField = "mustMatchField",
 }
 type ValidationFunctions = {
   [Key in ValidationFunctionNames]: ValidationFunction;
 };
+// functions are indexed from here in Validate()
 const validationFunction: ValidationFunctions = {
   [ValidationFunctionNames.required]: required,
   [ValidationFunctionNames.minLen]: minLen,
   [ValidationFunctionNames.isEqual]: isEqual,
   [ValidationFunctionNames.maxLen]: maxLen,
+  [ValidationFunctionNames.maxValue]: maxValue,
+  [ValidationFunctionNames.minValue]: minValue,
   [ValidationFunctionNames.mustMatchField]: mustMatchField,
 };
 
@@ -118,6 +124,31 @@ function maxLen(input: Config, options: Options) {
   }
 }
 
+function maxValue(input: Config, options: Options) {
+  console.log(input);
+  if (input.value && input.value > options.is) {
+    return {
+      valid: false,
+      message:
+        options.customResponse ?? `Value needs to be less than ${options.is}`,
+    };
+  } else {
+    return { valid: true };
+  }
+}
+
+function minValue(input: Config, options: Options) {
+  if (input.value && input.value < options.is) {
+    return {
+      valid: false,
+      message:
+        options.customResponse ?? `Value needs to be more than ${options.is}`,
+    };
+  } else {
+    return { valid: true };
+  }
+}
+
 function isEqual(input: Config, options: Options) {
   if (input.value === options.is) {
     return {
@@ -132,7 +163,7 @@ function isEqual(input: Config, options: Options) {
 export function isPriceRegex(
   input: string | number,
 ): string | number | undefined {
-  const regex = /^\d*\.?\d*$/;
+  const regex = /^(\d*\.?\d*)?$/;
   if (regex.test(input as string)) {
     console.log("passed regex");
     return input;
